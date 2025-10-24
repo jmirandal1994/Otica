@@ -10,15 +10,16 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        /* PALETA DE COLORES - AZUL PROFUNDO Y ORO/VERDE SOFISTICADO */
+        /* PALETA DE COLORES - AZUL PROFUNDO Y ACENTO VIVO */
         :root {
             --primary-dark: #0F2038; /* Azul Noche (Fondo, Texto principal) */
-            --secondary-accent: #2196F3; /* Azul Eléctrico (Acento visual) */
+            --secondary-accent: #2196F3; /* Azul Eléctrico (Acento visual - Botón Principal) */
             --green-action: #4CAF50; /* Verde Lima (Botones de CTA) */
-            --light-bg: #F8F8F8; /* Gris Claro Cálido */
+            --light-bg: #F8F8F8; /* Gris Claro Cálido (Fondo del Body) */
             --white: #FFFFFF; 
-            --dark-text: #222222; 
+            --dark-text: #222222; /* Texto principal oscuro */
             --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.2);
+            --header-bg: #FFFFFF; /* Fondo del header blanco */
         }
 
         body {
@@ -38,7 +39,7 @@
 
         /* --- HEADER Y NAVEGACIÓN --- */
         header {
-            background-color: var(--white);
+            background-color: var(--header-bg);
             padding: 15px 0;
             box-shadow: var(--shadow-strong); 
             position: sticky;
@@ -49,16 +50,16 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            flex-wrap: nowrap; /* Evita que los elementos se envuelvan prematuramente */
+            flex-wrap: nowrap; 
         }
         
-        /* Logo (Izquierda) */
+        /* Logo */
         .logo-area { display: flex; align-items: center; }
         .logo-area img { 
-            height: 110px; /* Tamaño grande para PC */
+            height: 120px; 
+            max-height: 120px;
             width: auto;
             object-fit: contain;
-            transition: height 0.3s;
         } 
         
         /* Nav y Botones (Derecha) */
@@ -66,24 +67,41 @@
             display: flex; 
             align-items: center; 
             gap: 25px; 
-            transition: gap 0.3s;
         }
+
+        /* ICONOS SOCIALES - CORRECCIÓN CLAVE: Colores de Marca */
+        .social-icons { display: flex; gap: 10px; }
+        .social-icon { 
+            width: 38px; height: 38px; 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            color: var(--white); 
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+        .social-icon:hover { transform: scale(1.1); }
+        .social-icon.facebook { background-color: #3b5998; }
+        /* Instagram usa su degradado correcto */
+        .social-icon.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+        .social-icon.tiktok { background-color: #000000; }
+        /* FIN CORRECCIÓN ICONOS */
 
         .nav-links { display: flex; gap: 18px; }
         .nav-link { 
-            color: var(--primary-dark); 
+            color: var(--dark-text); /* Texto en color oscuro para buena legibilidad */
             padding: 10px 0; 
             text-decoration: none; 
             font-weight: 600; 
             border-bottom: 2px solid transparent;
             transition: border-color 0.3s, color 0.3s;
         }
+        /* CORRECCIÓN: Acento de color en hover */
         .nav-link:hover { 
             color: var(--secondary-accent); 
             border-bottom: 2px solid var(--secondary-accent);
         }
 
-        /* Botón de Agenda (El más importante) */
+        /* Botón de Agenda */
         .btn-agenda-main {
             background-color: var(--secondary-accent); 
             color: var(--white);
@@ -92,16 +110,16 @@
             text-decoration: none;
             font-weight: 700;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4); 
+            box-shadow: 0 4px 0 var(--primary-light); /* Sombra 3D en azul oscuro */
             display: flex; align-items: center; gap: 8px;
         }
         .btn-agenda-main:hover {
             background-color: var(--primary-light); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.6);
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--primary-light); 
         }
         
-        /* --- SECTION HERO (PRIMERA VISTA) --- */
+        /* --- SECTION HERO --- */
         .hero-section {
             position: relative;
             height: 90vh; 
@@ -109,6 +127,7 @@
             align-items: center;
             padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); 
             overflow: hidden;
             color: var(--white);
         }
@@ -119,7 +138,7 @@
         }
         .hero-content p:first-child { 
             font-size: 1.2rem;
-            color: var(--secondary-accent);
+            color: var(--green-action); /* Acento de color vivo para la etiqueta */
             font-weight: 700;
             margin-bottom: 15px;
             letter-spacing: 2px;
@@ -150,13 +169,13 @@
             display: flex; align-items: center; gap: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        .btn-whatsapp { background-color: var(--green-action); color: var(--white); }
+        .btn-whatsapp { background-color: var(--green-action); color: var(--white); border: none; }
         .btn-whatsapp:hover { background-color: #388E3C; transform: translateY(-3px); }
         .btn-call { background-color: var(--white); color: var(--primary-dark); border: 2px solid var(--white); }
-        .btn-call:hover { background-color: var(--light-blue); transform: translateY(-3px); }
+        .btn-call:hover { background-color: var(--light-bg); transform: translateY(-3px); }
 
 
-        /* IMAGEN FLOTANTE DEL HERO (Diseño Limpio) */
+        /* IMAGEN FLOTANTE DEL HERO */
         .hero-floating-image {
             position: absolute; 
             right: 0; 
@@ -165,6 +184,7 @@
             width: 50%; 
             max-width: 650px; 
             z-index: 10;
+            opacity: 0.95;
         }
         .hero-floating-image img {
             height: 100%; 
@@ -174,7 +194,7 @@
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
         }
 
-        /* --- FOOTER --- */
+        /* --- FOOTER (CORRECCIÓN: Más legible) --- */
         footer {
             background-color: var(--primary-dark);
             color: var(--white);
@@ -183,7 +203,7 @@
         .footer-content {
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Alineación limpia */
+            align-items: center; 
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 20px;
@@ -235,16 +255,10 @@
         @media (max-width: 992px) {
             
             /* HEADER MÓVIL */
-            header {
-                padding: 10px 0;
-            }
-            .navbar { 
-                flex-direction: column; 
-                gap: 10px; 
-                padding: 0 10px; /* Padding para evitar que los elementos toquen los bordes */
-            }
+            header { padding: 10px 0; }
+            .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
             
-            /* LOGO MÁS GRANDE Y PRIORITARIO EN MÓVIL (70px alto) */
+            /* LOGO MÓVIL: Mantiene la visibilidad máxima */
             .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
             .logo-area img { 
                 height: 70px; 
@@ -258,7 +272,7 @@
                 gap: 10px; 
                 flex-wrap: wrap; 
                 justify-content: center;
-                order: 2; /* Mueve los links debajo del botón de agenda */
+                order: 2;
                 width: 100%;
             }
             .nav-link { padding: 5px 10px; font-size: 0.85rem; }
@@ -268,7 +282,8 @@
                 width: 100%; 
                 justify-content: center; 
                 padding: 10px 20px; 
-                order: 1; /* Prioridad de botón */
+                order: 1; 
+                box-shadow: 0 4px 0 var(--primary-light); /* Mantiene la sombra 3D en móvil */
             }
             
             /* HERO SECTION MÓVIL */
@@ -280,32 +295,13 @@
                 padding: 40px 5%;
             }
             .hero-content { max-width: 100%; padding: 0; order: 2; }
-            .hero-content p:first-child { font-size: 1rem; }
             .hero-content h1 { font-size: 2.8rem; line-height: 1.2; }
             .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
-            
-            .hero-buttons { 
-                flex-direction: column; 
-                width: 100%; 
-                gap: 15px; 
-            }
-            .btn-hero { 
-                width: 100%; 
-                justify-content: center; 
-                padding: 12px 20px; 
-            }
+            .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
+            .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
             
             /* IMAGEN HERO MÓVIL */
-            .hero-floating-image { 
-                position: relative; 
-                width: 90%; 
-                height: 40vh; 
-                bottom: auto; 
-                right: auto; 
-                margin-bottom: 30px; 
-                order: 1; 
-                opacity: 1;
-            }
+            .hero-floating-image { position: relative; width: 90%; height: 40vh; margin-bottom: 30px; order: 1; opacity: 1; }
             
             /* FOOTER MÓVIL */
             footer { padding: 20px 10px; }
@@ -313,17 +309,13 @@
             .footer-info { flex-direction: column; gap: 10px; }
             .footer-info span { justify-content: center; }
             
-            .social-icons { width: 100%; justify-content: center; }
-
+            .social-icons { width: 100%; justify-content: center; margin-top: 15px; } /* Aseguramos que los iconos se centren y se separen */
         }
 
         @media (max-width: 576px) {
             .hero-content h1 { font-size: 2.2rem; }
             .hero-content p:nth-of-type(2) { font-size: 1rem; }
-            /* Logo en pantallas muy pequeñas */
-            .logo-area img { 
-                height: 60px; 
-            }
+            .logo-area img { height: 60px; }
         }
     </style>
 </head>
@@ -381,7 +373,7 @@
         </div>
     </section>
     
-    </main>
+</main>
 
 <footer>
     <div class="container">
@@ -391,7 +383,7 @@
                 <span><i class="fas fa-calendar-alt"></i> Reembolsable con ISAPRES. Valor diferencial FONASA.</span>
                 <span><i class="fas fa-envelope"></i> info@otica.cl</span>
             </div>
-            <div class="social-icons">
+            <div class="social-icons" style="margin-top: 0;">
                 <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="social-icon tiktok" target="_blank"><i class="fab fa-tiktok"></i></a>
@@ -409,17 +401,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Redirige todos los botones de agenda a tu servicio de reserva
         document.querySelectorAll('.btn-agenda-main, .btn-hero-agenda').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
-                // **REEMPLAZA ESTO CON TU ENLACE REAL DE AGENDAMIENTO**
                 alert('Redirigiendo a la plataforma de agendamiento profesional. Por favor, reemplaza este alert con tu URL de reservas.');
             });
         });
-        
-        // Cargar script de agendamiento si aplica
-        // ...
     });
 </script>
 </body>
