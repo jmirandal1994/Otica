@@ -12,11 +12,12 @@
     <style>
         /* PALETA DE COLORES - AZUL PROFUNDO Y ACENTO VIVO */
         :root {
-            --primary-dark: #0F2038; /* Azul Noche (Fondo, Texto principal, Footer) */
-            --primary-light: #1A4D6F; /* Azul Marino */
-            --secondary-accent: #2196F3; /* Azul Eléctrico (Acento visual - Botón Principal) */
-            --green-action: #4CAF50; /* Verde Lima (Botones de CTA) */
-            --light-bg: #F8F8F8; /* Gris Claro Cálido (Fondo del Body y secciones claras) */
+            --primary-dark: #0F2038; 
+            --primary-light: #1A4D6F; 
+            --secondary-accent: #2196F3; 
+            --green-action: #69C95B; /* Verde Lima CLARO para el fondo del botón */
+            --green-shadow: #50A045; /* Verde Oscuro para el borde o sombra inferior */
+            --light-bg: #F8F8F8; 
             --white: #FFFFFF; 
             --dark-text: #222222; 
             --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -28,7 +29,7 @@
             margin: 0;
             line-height: 1.6;
             color: var(--dark-text);
-            overflow-x: hidden; /* CLAVE: Previene el scroll horizontal no deseado */
+            overflow-x: hidden; 
             background-color: var(--light-bg);
         }
 
@@ -51,7 +52,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            flex-wrap: wrap; /* Permite el flujo en móvil */
+            flex-wrap: nowrap; 
         }
         
         /* Logo (Tamaño PC) */
@@ -64,8 +65,8 @@
         } 
         
         .nav-right { display: flex; align-items: center; gap: 25px; }
-        
-        /* Iconos Sociales */
+
+        /* Iconos Sociales y Links */
         .social-icons { display: flex; gap: 10px; }
         .social-icon { 
             width: 38px; height: 38px; border-radius: 50%; 
@@ -73,11 +74,10 @@
             color: var(--white); font-size: 1.2rem;
             transition: transform 0.3s;
         }
-        .social-icon:hover { transform: scale(1.1); }
         .social-icon.facebook { background-color: #3b5998; }
         .social-icon.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
         .social-icon.tiktok { background-color: #000000; }
-
+        
         .nav-links { display: flex; gap: 18px; }
         .nav-link { 
             color: var(--dark-text); padding: 10px 0; text-decoration: none; 
@@ -89,35 +89,39 @@
             border-bottom: 2px solid var(--secondary-accent);
         }
 
-        /* Botón de Agenda (Animado) */
+        /* BOTÓN DE AGENDA - IMPLEMENTACIÓN DEL DISEÑO ÓVALO VERDE LIMA */
         .btn-agenda-main {
-            background-color: var(--secondary-accent); color: var(--white);
-            padding: 12px 25px; border-radius: 5px; font-weight: 700;
-            box-shadow: 0 4px 0 var(--primary-light); 
+            background: linear-gradient(to bottom, var(--green-action) 0%, #50B84A 100%); /* Degradado sutil */
+            color: var(--white);
+            padding: 12px 25px; 
+            border-radius: 50px; /* Óvalo con radio grande */
+            font-weight: 700;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 0 var(--green-shadow), 0 0 15px rgba(105, 201, 91, 0.7); /* Sombra 3D y brillo exterior */
             display: flex; align-items: center; gap: 8px;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            animation: pulse-zoom 2s infinite ease-in-out; /* EFECTO ZOOM */
+            
+            /* Animación de Pulso/Zoom */
+            animation: pulse-zoom 2s infinite ease-in-out; 
         }
         .btn-agenda-main:hover {
-            background-color: var(--primary-light); 
-            transform: translateY(2px) scale(1.05); /* Ligeramente más grande al pasar el cursor */
-            box-shadow: 0 2px 0 var(--primary-light); 
+            transform: translateY(2px) scale(1.02);
+            box-shadow: 0 2px 0 var(--green-shadow), 0 0 18px rgba(105, 201, 91, 0.9); /* Efecto de click/presión */
             animation: none; /* Detenemos la animación al pasar el cursor */
         }
         @keyframes pulse-zoom {
-            0% { transform: scale(1); box-shadow: 0 4px 0 var(--primary-light); }
-            50% { transform: scale(1.02); box-shadow: 0 6px 10px rgba(33, 150, 243, 0.5); }
-            100% { transform: scale(1); box-shadow: 0 4px 0 var(--primary-light); }
+            0% { transform: scale(1); box-shadow: 0 4px 0 var(--green-shadow), 0 0 15px rgba(105, 201, 91, 0.7); }
+            50% { transform: scale(1.03); box-shadow: 0 6px 15px var(--green-shadow), 0 0 20px rgba(105, 201, 91, 0.9); }
+            100% { transform: scale(1); box-shadow: 0 4px 0 var(--green-shadow), 0 0 15px rgba(105, 201, 91, 0.7); }
         }
         
-        /* --- SECTION HERO --- */
+        /* --- SECTION HERO --- (Resto de estilos se mantiene) */
         .hero-section {
             position: relative;
             height: 90vh; display: flex; align-items: center; padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
             box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); overflow: hidden; color: var(--white);
         }
-
         .hero-content { z-index: 20; max-width: 60%; }
         .hero-content p:first-child { 
             font-size: 1.2rem; color: var(--green-action); font-weight: 700; 
@@ -149,7 +153,7 @@
             opacity: 0.95;
         }
 
-        /* --- SECCIÓN DE SERVICIOS --- */
+        /* --- SECCIÓN DE SERVICIOS (PARA ROMPER MONOTONÍA) --- */
         .services-section {
             background-color: var(--white); 
             padding: 80px 0;
@@ -160,9 +164,7 @@
             color: var(--primary-dark); margin-bottom: 50px;
         }
         .service-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
         }
         .service-card {
             background-color: var(--light-bg); border-radius: 10px; padding: 30px;
@@ -174,9 +176,9 @@
         .service-card h3 { font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
 
 
-        /* --- FOOTER (ES AZUL PROFUNDO) --- */
+        /* --- FOOTER (AZUL PROFUNDO) --- */
         footer {
-            background-color: var(--primary-dark); /* Color Azul Profundo */
+            background-color: var(--primary-dark);
             color: var(--white);
             padding: 30px 0 15px; 
         }
@@ -203,7 +205,6 @@
             position: fixed; width: 60px; height: 60px; bottom: 30px; right: 30px;
             background-color: #25d366; color: #FFF; border-radius: 50px; z-index: 1001;
             display: flex; align-items: center; justify-content: center;
-            transition: transform 0.3s ease;
         }
 
         /* ========================================= */
@@ -215,24 +216,20 @@
             header { padding: 10px 0; }
             .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
             
-            /* LOGO MÓVIL: AUMENTADO PARA PRIORIDAD */
+            /* LOGO MÓVIL: Visibilidad máxima */
             .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
             .logo-area img { 
-                height: 75px; /* Altura máxima visible y legible */
+                height: 75px; 
                 max-height: 75px;
             } 
             
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
             
-            /* Botones y Links en Fila, Ajustados (Arreglo de desbordamiento) */
+            /* Botones y Links en Fila, Ajustados */
             .social-icons { width: 100%; justify-content: center; order: 3; }
             .nav-links { 
-                gap: 5px; /* Reducimos el espacio */
-                flex-wrap: wrap; 
-                justify-content: center;
-                order: 2;
-                width: 100%;
-                padding: 5px 0; /* Aseguramos que no haya padding excesivo */
+                gap: 5px; flex-wrap: wrap; justify-content: center;
+                order: 2; width: 100%; padding: 5px 0;
             }
             .nav-link { padding: 5px 8px; font-size: 0.8rem; }
             
@@ -242,7 +239,8 @@
                 justify-content: center; 
                 padding: 10px 20px; 
                 order: 1; 
-                animation: pulse-zoom 2s infinite ease-in-out; /* Mantenemos el pulso */
+                animation: pulse-zoom 2s infinite ease-in-out; 
+                border-radius: 50px; /* Mantener la forma de óvalo en móvil */
             }
             
             /* HERO SECTION MÓVIL */
@@ -253,13 +251,12 @@
             
             /* FOOTER MÓVIL */
             .footer-info { flex-direction: column; gap: 10px; }
-            .footer-info span { justify-content: center; }
         }
 
         @media (max-width: 576px) {
             .hero-content h1 { font-size: 2.2rem; }
             .hero-content p:nth-of-type(2) { font-size: 1rem; }
-            .logo-area img { height: 65px; } /* Ajuste fino para pantallas pequeñas */
+            .logo-area img { height: 65px; }
         }
     </style>
 </head>
