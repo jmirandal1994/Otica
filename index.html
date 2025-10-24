@@ -52,7 +52,20 @@
         
         /* Logo e info (izquierda) */
         .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-area img { height: 60px; } 
+        
+        /* CORRECCIÓN CLAVE: Aumentar el tamaño del logo */
+        .logo-area img { 
+            height: 90px; /* Aumentado a 90px (era 60px) */
+            max-height: 90px;
+            width: auto;
+            object-fit: contain;
+        } 
+        /* CORRECCIÓN CLAVE: Aumentar el padding del header para darle espacio al logo */
+        header {
+            padding: 10px 0; /* Menos padding vertical para que no se vea tan vacío */
+        }
+        /* Fin corrección logo */
+        
         .logo-text h1 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -120,13 +133,11 @@
         /* --- SECTION HERO --- */
         .hero-section {
             position: relative;
-            height: 90vh; /* Ajustado para que el footer no quede tan pegado */
+            height: 90vh; 
             display: flex;
             align-items: center;
             padding: 0 5%;
             overflow: hidden;
-            
-            /* Fondo degradado azul/verde como la plantilla */
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
         }
 
@@ -135,9 +146,9 @@
             max-width: 60%; 
             padding-right: 40px;
         }
-        .hero-content p:first-child { /* Texto "BIENVENIDO AL CENTRO AUDIOLÓGICO..." */
+        .hero-content p:first-child { 
             font-size: 1.1rem;
-            color: var(--light-blue); /* Color claro para destacar */
+            color: var(--light-blue); 
             font-weight: 600;
             margin-bottom: 10px;
         }
@@ -149,7 +160,7 @@
             color: var(--white); 
             text-shadow: 2px 2px 8px rgba(0,0,0,0.4); 
         }
-        .hero-content p:nth-of-type(2) { /* Párrafo descriptivo */
+        .hero-content p:nth-of-type(2) { 
             font-size: 1.25rem; 
             margin-bottom: 40px;
             font-weight: 300; 
@@ -187,9 +198,8 @@
             background-color: rgba(255, 255, 255, 0.2); 
             transform: translateY(-2px);
         }
-        /* Botón de agenda en hero, con un estilo similar al de Psicofit pero con el color de acento */
         .btn-hero-agenda {
-            background-color: var(--light-blue); /* Diferente al principal, pero llamativo */
+            background-color: var(--light-blue); 
             color: var(--primary-dark);
             border: 2px solid var(--light-blue);
             box-shadow: 0 4px 10px rgba(173, 216, 230, 0.5);
@@ -202,17 +212,17 @@
         }
 
 
-        /* IMAGEN FLOTANTE DEL HERO (AHORA ES DE AUDICIÓN) */
+        /* IMAGEN FLOTANTE DEL HERO */
         .hero-floating-image {
             position: absolute; 
             right: 0; 
-            bottom: -50px; /* Ajuste para que la parte de abajo de la imagen no quede cortada */
-            height: 100%; /* Cubre casi toda la altura de la sección */
-            width: 50%; /* Ocupa la mitad derecha */
-            max-width: 600px; /* Tamaño máximo para la imagen */
+            bottom: -50px; 
+            height: 100%; 
+            width: 50%; 
+            max-width: 600px; 
             z-index: 10;
             opacity: 0.9;
-            pointer-events: none; /* Para no interferir con clicks */
+            pointer-events: none; 
         }
         .hero-floating-image img {
             height: 100%; 
@@ -222,7 +232,7 @@
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3)); 
         }
         
-        /* Círculos decorativos del hero (manteniendo la idea de la plantilla) */
+        /* Círculos decorativos del hero */
         .hero-decorative-circles {
             position: absolute;
             top: 0; left: 0;
@@ -275,21 +285,21 @@
         footer {
             background-color: var(--primary-dark);
             color: var(--white);
-            padding: 25px 0 15px; /* Ajuste de padding para el detalle inferior */
+            padding: 25px 0 15px; 
             position: relative;
-            z-index: 20; /* Aseguramos que esté por encima de otros elementos */
+            z-index: 20; 
         }
         .footer-content {
             display: flex;
             justify-content: space-between;
-            align-items: flex-end; /* Alinea los elementos al final */
+            align-items: flex-end; 
             margin-bottom: 15px;
         }
         .footer-info {
             display: flex;
             gap: 25px;
             font-size: 0.95rem;
-            flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+            flex-wrap: wrap; 
         }
         .footer-info span {
             display: flex;
@@ -298,7 +308,7 @@
             color: var(--gray-text);
         }
         .footer-info span i {
-            color: var(--secondary-green); /* Íconos con color de acento */
+            color: var(--secondary-green); 
             font-size: 1.1rem;
         }
         .footer-bottom-text {
@@ -310,8 +320,12 @@
             margin-top: 15px;
         }
 
-        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (Basado en la plantilla) --- */
+        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (Aseguramos que no se salga) --- */
         @media (max-width: 992px) {
+            .logo-area img { 
+                height: 55px; /* Reducimos un poco el tamaño en móvil para que quepa */
+            } 
+            /* El resto del media query móvil se mantiene */
             .navbar { flex-direction: column; gap: 15px; }
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
             .social-icons { justify-content: center; }
@@ -341,15 +355,15 @@
                 right: auto; 
                 margin-bottom: 30px; 
                 order: 1; 
-                opacity: 1; /* Para que la imagen se vea bien en móvil */
+                opacity: 1;
             }
             .hero-floating-image img { 
                 object-position: center bottom; 
-                filter: none; /* Quitamos el drop-shadow para móvil si es muy fuerte */
+                filter: none; 
                 box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-                border-radius: 8px; /* Darle un poco de forma */
+                border-radius: 8px;
             }
-            .hero-decorative-circles { display: none; } /* Ocultar círculos en móvil */
+            .hero-decorative-circles { display: none; } 
 
             .footer-content { flex-direction: column; align-items: center; gap: 15px; }
             .footer-info { flex-direction: column; gap: 10px; text-align: center; }
@@ -368,7 +382,7 @@
     <div class="container navbar">
         <div class="logo-area">
             <a href="index.html">
-                <img src="logo-otica.png" alt="Logo Ótica" style="height: 55px;"/> 
+                <img src="logo-otica.png" alt="Logo Ótica"/> 
             </a>
         </div>
         <div class="nav-right">
@@ -418,7 +432,8 @@
         </div>
     </section>
 
-    </main>
+    
+</main>
 
 <footer>
     <div class="container">
@@ -439,21 +454,15 @@
 
 
 <script>
-    // Script para la funcionalidad de los botones (simulando clics o redirecciones)
     document.addEventListener('DOMContentLoaded', () => {
-        // Redireccionar botones de agenda
         document.querySelectorAll('.btn-agenda-main, .btn-hero-agenda').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
-                // Aquí iría la lógica para abrir un calendario de reservas,
-                // un formulario, o una sección de la web.
-                // Por ejemplo, podríamos redirigir a un Calendly o una página de servicios:
                 alert('¡Redirigiendo a la página de agendamiento! (Este es un placeholder)');
-                // window.location.href = 'https://calendly.com/tu-perfil-otica'; // Reemplaza con tu URL de agendamiento
+                // Reemplaza el alert con tu URL de agendamiento
+                // window.location.href = 'https://calendly.com/tu-perfil-otica'; 
             });
         });
-        
-        // Puedes añadir aquí scripts para animaciones o carruseles si agregas más secciones
     });
 </script>
 </body>
