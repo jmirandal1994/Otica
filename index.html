@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ÓTICA | Audición y Lavado de Oídos a Domicilio - Región Metropolitana</title>
+    <title>ÓTICA | Limpieza de Oídos a Domicilio - Región Metropolitana</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        /* PALETA DE COLORES - ADAPTADA: Usaremos un azul limpio para el logo de OÍDOS, manteniendo la sofisticación */
+        /* PALETA DE COLORES - NUEVA: Azules y Verdes Oceánicos para frescura y limpieza */
         :root {
-            --primary: #2C3A47; /* Gris Azulado Oscuro (Texto principal/Fondo oscuro) */
-            --accent: #007BFF; /* Azul Brillante/Claro (Nuevo color de ACENTO, relacionado con limpieza/salud) */
-            --bg: #F9F7F1; /* Blanco Roto Cálido (Base) */
-            --bg-light: #FFFFFF; /* Blanco Puro */
-            --muted: #A3A3A3; /* Gris Suave */
-            --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08);
-            --bright-accent: #FFC107; /* Amarillo/Dorado Brillante para usar en fondos oscuros */
-            --secondary-dark: #1E88E5; /* Azul Secundario para botones y hover */
+            --primary-dark: #1A4D6F; /* Azul Marino Oscuro (para textos principales, footer, fondo hero) */
+            --primary-light: #15739B; /* Azul Oceánico (para degradados, acentos) */
+            --secondary-green: #2ECC71; /* Verde Esmeralda (para botones de acción, WhatsApp) */
+            --light-blue: #ADD8E6; /* Azul Claro Suave (para botones secundarios) */
+            --white: #FFFFFF; /* Blanco Puro */
+            --gray-text: #E0E0E0; /* Gris muy claro para texto en fondos oscuros */
+            --dark-gray: #4A4A4A; /* Gris oscuro para texto en fondos claros */
+            --button-hover: #27AE60; /* Verde más oscuro para hover de botones */
+            --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
             margin: 0;
             line-height: 1.7;
-            color: var(--primary);
+            color: var(--dark-gray);
             overflow-x: hidden;
-            font-weight: 300;
-            background-color: var(--bg);
+            font-weight: 400;
+            background-color: var(--white);
         }
 
         .container {
@@ -40,223 +41,324 @@
 
         /* --- HEADER --- */
         header {
-            background-color: var(--bg-light);
-            padding: 18px 0;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.08); 
+            background-color: var(--white);
+            padding: 15px 0;
+            box-shadow: var(--shadow-subtle); 
             position: sticky;
             top: 0;
             z-index: 1000;
         }
         .navbar { display: flex; justify-content: space-between; align-items: center; }
         
-        /* LOGO */
+        /* Logo e info (izquierda) */
         .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-area img { height: 60px; } /* Usaremos el logo que diseñamos */
+        .logo-area img { height: 60px; } 
         .logo-text h1 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            color: var(--primary);
+            color: var(--primary-dark);
             margin: 0;
             line-height: 1;
         }
         .logo-text p {
             font-size: 0.9rem;
-            color: var(--muted);
+            color: var(--dark-gray);
             margin: 0;
             line-height: 1;
-            font-weight: 400;
+            font-weight: 300;
         }
 
-        /* Botones y Hover */
-        .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 700; transition: all 0.2s; display: inline-block; }
-        
-        /* BOTÓN DE AGENDAMIENTO: Más llamativo y con un color fuerte (como solicitaste) */
-        .btn-agenda { 
-            background-color: var(--accent); 
-            color: white; 
-            border: 2px solid var(--accent); 
-            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
-            font-weight: 900; 
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4); /* Sombra para destacarlo */
+        /* Nav y Botones (derecha) */
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .social-icons { display: flex; gap: 10px; }
+        .social-icon { 
+            width: 38px; height: 38px; 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            color: var(--white); 
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
         }
-        .btn-agenda:hover { 
-            transform: translateY(-3px) scale(1.03); 
-            background-color: var(--secondary-dark); 
-            border-color: var(--secondary-dark); 
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6); 
+        .social-icon.facebook { background-color: #3b5998; }
+        .social-icon.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .social-icon.tiktok { background-color: #000; }
+        .social-icon:hover { opacity: 0.8; }
+
+        .nav-links { display: flex; gap: 15px; margin: 0 20px; }
+        .nav-link { 
+            background-color: transparent; 
+            color: var(--dark-gray); 
+            padding: 10px 18px; 
+            border-radius: 25px; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: background-color 0.3s, color 0.3s;
         }
-        .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
-        .btn-panel:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
+        .nav-link:hover { 
+            background-color: var(--light-blue); 
+            color: var(--primary-dark); 
+        }
+
+        /* BOTÓN PRINCIPAL DE AGENDAMIENTO */
+        .btn-agenda-main {
+            background-color: var(--secondary-green); 
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4); /* Sombra verde */
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-agenda-main:hover {
+            background-color: var(--button-hover); 
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 7px 20px rgba(46, 204, 113, 0.6);
+        }
 
         /* --- SECTION HERO --- */
-        .hero {
+        .hero-section {
             position: relative;
-            height: 85vh; 
+            height: 90vh; /* Ajustado para que el footer no quede tan pegado */
             display: flex;
             align-items: center;
-            justify-content: space-between; 
             padding: 0 5%;
-            margin-bottom: 80px; 
-            overflow: hidden; 
+            overflow: hidden;
             
-            /* FONDO AZUL/VERDE SOFISTICADO (Adaptación del morado de la plantilla) */
-            background: linear-gradient(135deg, #1A4D6F 0%, #15739B 100%);
-            box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2); 
+            /* Fondo degradado azul/verde como la plantilla */
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
         }
+
         .hero-content {
             z-index: 20; 
             max-width: 60%; 
             padding-right: 40px;
         }
-        .hero h1 {
+        .hero-content p:first-child { /* Texto "BIENVENIDO AL CENTRO AUDIOLÓGICO..." */
+            font-size: 1.1rem;
+            color: var(--light-blue); /* Color claro para destacar */
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .hero-content h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4.5rem; 
-            margin-bottom: 15px;
-            line-height: 1;
-            color: white; 
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.5); 
+            font-size: 4rem; 
+            margin-bottom: 20px;
+            line-height: 1.1;
+            color: var(--white); 
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4); 
         }
-        .hero p {
-            font-size: 1.3rem; 
-            margin-bottom: 50px;
-            font-weight: 400; 
-            color: rgba(255, 255, 255, 0.9); 
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.5); 
-        }
-        .hero-content p:nth-child(1) {
-             color: var(--bright-accent) !important; 
-             text-shadow: none;
-             font-weight: 700 !important;
+        .hero-content p:nth-of-type(2) { /* Párrafo descriptivo */
+            font-size: 1.25rem; 
+            margin-bottom: 40px;
+            font-weight: 300; 
+            color: var(--gray-text); 
+            line-height: 1.6;
         }
 
-        /* Contenedor de la Imagen: Ahora es de AUDICIÓN */
-        .hero-image {
-            position: absolute; 
-            right: 5%; 
-            bottom: 0%; 
-            height: 95%;
-            width: 40%; 
-            max-width: 450px; 
-            z-index: 10;
+        .hero-buttons { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-hero { 
+            padding: 14px 28px; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 10px;
         }
-        .hero-image img {
+        .btn-whatsapp { 
+            background-color: var(--secondary-green); 
+            color: var(--white); 
+            border: 2px solid var(--secondary-green); 
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        .btn-whatsapp:hover { 
+            background-color: var(--button-hover); 
+            border-color: var(--button-hover); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.5);
+        }
+        .btn-call { 
+            background-color: transparent; 
+            color: var(--white); 
+            border: 2px solid var(--white); 
+        }
+        .btn-call:hover { 
+            background-color: rgba(255, 255, 255, 0.2); 
+            transform: translateY(-2px);
+        }
+        /* Botón de agenda en hero, con un estilo similar al de Psicofit pero con el color de acento */
+        .btn-hero-agenda {
+            background-color: var(--light-blue); /* Diferente al principal, pero llamativo */
+            color: var(--primary-dark);
+            border: 2px solid var(--light-blue);
+            box-shadow: 0 4px 10px rgba(173, 216, 230, 0.5);
+        }
+        .btn-hero-agenda:hover {
+            background-color: var(--white);
+            border-color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(173, 216, 230, 0.7);
+        }
+
+
+        /* IMAGEN FLOTANTE DEL HERO (AHORA ES DE AUDICIÓN) */
+        .hero-floating-image {
+            position: absolute; 
+            right: 0; 
+            bottom: -50px; /* Ajuste para que la parte de abajo de la imagen no quede cortada */
+            height: 100%; /* Cubre casi toda la altura de la sección */
+            width: 50%; /* Ocupa la mitad derecha */
+            max-width: 600px; /* Tamaño máximo para la imagen */
+            z-index: 10;
+            opacity: 0.9;
+            pointer-events: none; /* Para no interferir con clicks */
+        }
+        .hero-floating-image img {
             height: 100%; 
             width: 100%;
             object-fit: contain; 
             object-position: right bottom; 
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)) brightness(1.1); 
-        }
-
-        /* --- SECCIONES GENERALES --- */
-        .section { 
-            padding: 100px 0; 
-            background-color: var(--bg-light); 
-            margin-bottom: 60px; 
-            box-shadow: var(--shadow-subtle);
-        }
-        .section:nth-child(even) { background-color: var(--bg); box-shadow: none; }
-        
-        h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem; 
-            color: var(--accent); 
-            text-align: center;
-            margin-bottom: 60px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3)); 
         }
         
-        /* Sección de Reembolso */
-        .reimbursement-info {
-            background-color: var(--bg-light);
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-subtle);
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto 60px;
-        }
-        .reimbursement-info h3 {
-             color: var(--primary);
-             font-size: 1.5rem;
-             margin-top: 0;
-        }
-        
-        /* Sección Sobre Mí/Enfoque */
-        .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
-        .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
-        .about-text h2 { 
-            text-align: left; 
-            margin-bottom: 25px; 
-            color:var(--accent); 
-            font-size: 2.2rem; 
-        }
-
-        /* --- CARRUSEL DE LOGOS (ISAPRES/FONASA) --- */
-        .slider-container {
-            width: 100%;
+        /* Círculos decorativos del hero (manteniendo la idea de la plantilla) */
+        .hero-decorative-circles {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
-            padding: 30px 0; 
-            border-top: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
-            background-color: var(--bg-light);
+            z-index: 5;
+            opacity: 0.3;
         }
-        .slider-track {
-            display: flex; 
-            width: fit-content; 
-            animation: scroll-logos 30s linear infinite; 
+        .circle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: moveCircles 15s infinite ease-in-out alternate;
         }
-        .slider-logo {
-            height: 70px; 
-            width: auto;
-            margin: 0 40px;
-            vertical-align: middle;
-            filter: opacity(85%); 
-            transition: filter 0.3s;
+        .circle:nth-child(1) { width: 150px; height: 150px; top: 10%; left: 5%; animation-delay: 0s; }
+        .circle:nth-child(2) { width: 250px; height: 250px; top: 60%; left: 30%; animation-delay: 5s; }
+        .circle:nth-child(3) { width: 100px; height: 100px; top: 40%; left: 20%; animation-delay: 10s; }
+        
+        @keyframes moveCircles {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, 30px) scale(1.05); }
+            100% { transform: translate(0, 0) scale(1); }
         }
-        @keyframes scroll-logos {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50.1%); } 
+
+        /* --- WHATSAPP FLOTANTE --- */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.05);
+            background-color: #128C7E;
         }
 
         /* --- FOOTER --- */
-        footer { background-color: var(--primary); padding: 30px 0; }
-        footer p { color: #f5f5f5; font-size: 0.9rem; text-align: center; }
-        
-        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (Mantenemos la lógica de la plantilla) --- */
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 25px 0 15px; /* Ajuste de padding para el detalle inferior */
+            position: relative;
+            z-index: 20; /* Aseguramos que esté por encima de otros elementos */
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end; /* Alinea los elementos al final */
+            margin-bottom: 15px;
+        }
+        .footer-info {
+            display: flex;
+            gap: 25px;
+            font-size: 0.95rem;
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+        }
+        .footer-info span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-text);
+        }
+        .footer-info span i {
+            color: var(--secondary-green); /* Íconos con color de acento */
+            font-size: 1.1rem;
+        }
+        .footer-bottom-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+        }
+
+        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (Basado en la plantilla) --- */
         @media (max-width: 992px) {
-            
             .navbar { flex-direction: column; gap: 15px; }
-            .nav-buttons { display: flex; justify-content: center; width: 100%; gap: 10px;}
-            .btn-agenda, .btn-panel { flex-grow: 1; text-align: center; margin-left: 0; }
-            .logo-area { margin-bottom: 10px; }
-            .logo-area img { height: 40px; } 
-            .logo-text h1 { font-size: 1.5rem; }
-            
-            .hero { 
+            .nav-right { flex-direction: column; width: 100%; gap: 10px; }
+            .social-icons { justify-content: center; }
+            .nav-links { margin: 0; justify-content: center; flex-wrap: wrap; }
+            .nav-link { padding: 8px 15px; font-size: 0.9rem; }
+            .btn-agenda-main { width: 100%; justify-content: center; margin-top: 10px; }
+
+            .hero-section { 
                 height: auto; 
-                min-height: 80vh; 
+                min-height: 85vh; 
                 flex-direction: column; 
-                justify-content: center; 
-                align-items: center; 
                 text-align: center; 
-                padding: 40px 5%;
-                background-position: center center; 
-                box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); 
+                padding: 50px 5%;
             }
             .hero-content { max-width: 100%; padding-right: 0; order: 2; }
-            .hero h1 { font-size: 3rem; line-height: 1.1; text-align: center; }
-            .hero p { font-size: 1.2rem; }
+            .hero-content h1 { font-size: 2.8rem; }
+            .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
+            .hero-buttons { flex-direction: column; width: 100%; }
+            .btn-hero { width: 100%; justify-content: center; }
             
-            /* IMAGEN DE AUDICIÓN: Adaptada para móvil */
-            .hero-image { position: relative; height: 35vh; margin-top: 0; margin-bottom: 20px; width: 80%; max-width: 350px; right: auto; transform: translateX(0) translateY(0); order: 1; }
-            .hero-image img { filter: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); border-radius: 8px; object-position: center; } 
-            
-            .about-content { flex-direction: column; }
-            .about-image { order: 1; margin-bottom: 20px; }
-            .about-text { order: 2; text-align: center; }
-            .about-text h2 { text-align: center; }
-            
-            .slider-logo { height: 40px; margin: 0 20px; }
-            .reimbursement-info { padding: 25px; }
+            .hero-floating-image { 
+                position: relative; 
+                width: 80%; 
+                height: 40vh; 
+                max-width: 400px; 
+                bottom: auto; 
+                right: auto; 
+                margin-bottom: 30px; 
+                order: 1; 
+                opacity: 1; /* Para que la imagen se vea bien en móvil */
+            }
+            .hero-floating-image img { 
+                object-position: center bottom; 
+                filter: none; /* Quitamos el drop-shadow para móvil si es muy fuerte */
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                border-radius: 8px; /* Darle un poco de forma */
+            }
+            .hero-decorative-circles { display: none; } /* Ocultar círculos en móvil */
+
+            .footer-content { flex-direction: column; align-items: center; gap: 15px; }
+            .footer-info { flex-direction: column; gap: 10px; text-align: center; }
+            .footer-info span { justify-content: center; }
+        }
+
+        @media (max-width: 576px) {
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content p:nth-of-type(2) { font-size: 1rem; }
         }
     </style>
 </head>
@@ -265,129 +367,93 @@
 <header>
     <div class="container navbar">
         <div class="logo-area">
-            <a href="index.html" class="logo-text-only-icon">
-                <img src="logo-otica.png" alt="Logo Ótica" style="height: 60px;"/> 
+            <a href="index.html">
+                <img src="logo-otica.png" alt="Logo Ótica" style="height: 55px;"/> 
             </a>
-            <div class="logo-text">
-                <h1>ÓTICA</h1>
-                <p>Audición & Oídos</p>
-            </div>
         </div>
-        <div class="nav-buttons">
-            <a href="#servicios" class="btn btn-panel">Servicios</a>
-            <a href="#reembolso" class="btn btn-panel">Convenios</a>
-            <a href="#" class="btn btn-agenda btn-main-action" style="display:flex; align-items:center; gap: 8px;">
-                <i class="fas fa-calendar-check"></i> AGENDA TU HORA A DOMICILIO
+        <div class="nav-right">
+            <div class="social-icons">
+                <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon tiktok" target="_blank"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <nav class="nav-links">
+                <a href="#home" class="nav-link">Inicio</a>
+                <a href="#preguntas" class="nav-link">Preguntas frecuentes</a>
+            </nav>
+            <a href="#" class="btn-agenda-main">
+                <i class="fas fa-calendar-check"></i> AGENDA TU HORA ACÁ
             </a>
         </div>
     </div>
 </header>
 
 <main>
-    <section class="hero" id="home">
+    <section class="hero-section" id="home">
+        <div class="hero-decorative-circles">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+
         <div class="hero-content">
-            <p>TU SALUD AUDITIVA, NUESTRA PRIORIDAD</p>
-            <h1>Limpieza de Oídos y Evaluación Auditiva en la Comodidad de tu Hogar.</h1>
-            <p>Ofrecemos atención profesional de Fonoaudiologia especialista, con seguridad y la calidez que mereces. Cubrimos toda la Región Metropolitana.</p>
-             <a href="#" class="btn btn-agenda btn-main-action btn-lg" style="font-size: 1.2rem; padding: 15px 30px;">
-                <i class="fas fa-home"></i> AGENDA A DOMICILIO HOY
-            </a>
+            <p>BIENVENIDO A ÓTICA</p>
+            <h1>Cuidado Auditivo Profesional a Domicilio en Región Metropolitana.</h1>
+            <p>Recupera la claridad de tu audición. Ofrecemos limpieza de oídos experta y evaluación auditiva, con la comodidad y seguridad de tu hogar.</p>
+            <div class="hero-buttons">
+                <a href="https://wa.me/XXXXXXXXXXX" class="btn-hero btn-whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Whatsapp
+                </a>
+                <a href="tel:+569XXXXXXXX" class="btn-hero btn-call">
+                    <i class="fas fa-phone-alt"></i> Llámanos
+                </a>
+                <a href="#" class="btn-hero btn-hero-agenda">
+                    <i class="fas fa-calendar-alt"></i> Agenda tu hora
+                </a>
+            </div>
         </div>
         
-        <div class="hero-image" id="hero-image-container">
-            <img src="oído-limpio-hero.png" alt="Servicio de Limpieza de Oídos a Domicilio">
+        <div class="hero-floating-image">
+            <img src="oído-limpio-hero-profesional.png" alt="Profesional realizando limpieza de oído">
         </div>
     </section>
 
-    <section class="section reimbursement-section" id="reembolso">
-        <div class="container">
-            <h2 style="margin-bottom: 20px;">Reembolsable y Convenios</h2>
-            
-            <div class="reimbursement-info">
-                <h3>¡Ahorra en tu Atención!</h3>
-                <p style="font-weight: 400; color: var(--primary); font-size: 1.1rem;">
-                    Nuestros servicios son **reembolsables mediante la mayoría de las ISAPRES** y ofrecemos **valor diferencial para atenciones FONASA**. Te entregamos el comprobante para que gestiones tu reembolso fácilmente.
-                </p>
-            </div>
-
-            <div class="slider-container">
-                <div class="slider-track">
-                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo">
-                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo">
-                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo">
-                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo">
-                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo">
-                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo">
-                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo">
-                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo">
-                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo">
-                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section about-section" id="servicios">
-        <div class="container about-content" style="flex-direction: row-reverse; gap: 40px;">
-            <div class="about-image" style="flex-basis: 40%;">
-                <img src="lavado-oidos-profesional.jpg" alt="Tecnólogo Médico realizando limpieza de oídos">
-            </div>
-            <div class="about-text" style="flex-basis: 60%;">
-                <h2 style="text-align: left; margin-bottom: 25px; color:var(--accent); font-size: 2.2rem;">Nuestros Servicios Principales</h2>
-                <p>Nos especializamos en el cuidado integral de tu audición. Entendemos que los problemas de oído pueden ser molestos y limitar tu día a día, por eso llevamos el servicio de calidad directamente a tu casa.</p>
-                
-                <h3 style="font-weight: 700; color: var(--primary); margin-top: 30px;">Limpieza de Oídos (Extracción de Tapón de Cerumen)</h3>
-                <p>Utilizamos métodos seguros como el lavado con jeringa o aspiración, siempre realizado por un Fonoaudiologo/a calificado. Rápido, indoloro y efectivo para recuperar tu audición.</p>
-                
-                <h3 style="font-weight: 700; color: var(--primary); margin-top: 30px;">Evaluación Auditiva Básica a Domicilio</h3>
-                <p>Ideal para personas que no pueden desplazarse. Realizamos pruebas básicas para detectar posibles problemas auditivos y entregamos recomendaciones claras para los siguientes pasos.</p>
-                
-                <a href="#" class="btn btn-agenda btn-main-action" style="margin-top: 35px;"><i class="fas fa-calendar-alt"></i> Ver Precios y Agendar</a>
-            </div>
-        </div>
-    </section>
-    
-</main>
+    </main>
 
 <footer>
     <div class="container">
-        <p>&copy; 2025 ÓTICA. Todos los derechos reservados. | Servicio de Audición y Limpieza de Oídos.</p>
+        <div class="footer-content">
+            <div class="footer-info">
+                <span><i class="fas fa-map-marker-alt"></i> ¡Atención a Domicilio en toda la Región Metropolitana!</span>
+                <span><i class="fas fa-calendar-alt"></i> Reembolsable con ISAPRES y valor diferencial FONASA.</span>
+            </div>
+        </div>
+        <p class="footer-bottom-text">
+            &copy; 2024 ÓTICA. Todos los derechos reservados.
+        </p>
     </div>
+    <a href="https://wa.me/XXXXXXXXXXX" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 </footer>
 
 
 <script>
-    // --- LÓGICA DE REDIRECCIÓN Y EFECTOS ---
-    
-    // Función de redirección para el agendamiento (Imita el flujo de Psicofit)
-    function redirectToBooking(event) {
-        event.preventDefault(); 
-        
-        // Simular la redirección a la página de selección de servicio/agendamiento
-        // En tu caso, quizás quieres ir directo a un formulario o a la sección de servicios.
-        // Aquí simularemos el flujo de la plantilla original (va a una sección de agendamiento)
-        // Como no tenemos esa sección en este index, simplemente redirigiremos a un hipotético
-        // calendario.
-        
-        // **NOTA IMPORTANTE:** Para funcionar como la plantilla de Psicofit, necesitarías
-        // una página con los tipos de servicio (ej: Limpieza Fonasa, Limpieza Isapre).
-        
-        // Por ahora, redirigiremos al inicio de la sección de servicios:
-        const targetSection = document.getElementById('servicios');
-        if (targetSection) {
-             targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        
-        // Si necesitas emular el flujo de Psicofit, el enlace debería ser:
-        // window.location.href = 'calendario-reserva.html?service_id=1&service_name=Limpieza%20Oídos%20(Isapre)';
-
-    }
-    
+    // Script para la funcionalidad de los botones (simulando clics o redirecciones)
     document.addEventListener('DOMContentLoaded', () => {
-        // Asignar la función a todos los botones de acción principal
-        document.querySelectorAll('.btn-main-action').forEach(btn => {
-            btn.addEventListener('click', redirectToBooking);
+        // Redireccionar botones de agenda
+        document.querySelectorAll('.btn-agenda-main, .btn-hero-agenda').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                // Aquí iría la lógica para abrir un calendario de reservas,
+                // un formulario, o una sección de la web.
+                // Por ejemplo, podríamos redirigir a un Calendly o una página de servicios:
+                alert('¡Redirigiendo a la página de agendamiento! (Este es un placeholder)');
+                // window.location.href = 'https://calendly.com/tu-perfil-otica'; // Reemplaza con tu URL de agendamiento
+            });
         });
+        
+        // Puedes añadir aquí scripts para animaciones o carruseles si agregas más secciones
     });
 </script>
 </body>
