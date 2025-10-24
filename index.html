@@ -14,10 +14,9 @@
         :root {
             --primary-dark: #0F2038; 
             --primary-light: #1A4D6F; 
-            --secondary-accent: #2196F3; 
-            --green-action: #69C95B; /* Verde Lima CLARO para el fondo del botón */
-            --green-shadow: #50A045; /* Verde Oscuro para el borde o sombra inferior */
-            --light-bg: #F8F8F8; 
+            --secondary-accent: #2196F3; /* Azul Eléctrico */
+            --green-whatsapp: #5DCF52; 
+            --blue-light-float: #D9EDF7; 
             --white: #FFFFFF; 
             --dark-text: #222222; 
             --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -29,7 +28,7 @@
             margin: 0;
             line-height: 1.6;
             color: var(--dark-text);
-            overflow-x: hidden; 
+            overflow-x: hidden;
             background-color: var(--light-bg);
         }
 
@@ -39,21 +38,28 @@
             margin: 0 auto;
         }
 
-        /* --- HEADER Y NAVEGACIÓN --- */
-        header {
-            background-color: var(--header-bg);
-            padding: 15px 0;
-            box-shadow: var(--shadow-strong); 
+        /* --- HEADER Y NAVEGACIÓN (HEADER COMPLETO ES STICKY) --- */
+        .sticky-header-wrap {
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: var(--shadow-strong);
         }
-        .navbar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            flex-wrap: nowrap; 
+
+        /* NUEVA BANDA SUPERIOR (IMITA LA FRAJA DE COLOR DE LA IMAGEN) */
+        .top-bar {
+            background-color: var(--secondary-accent); /* Color de la franja */
+            color: var(--white);
+            padding: 5px 0;
+            font-size: 0.9rem;
+            text-align: center;
         }
+
+        header {
+            background-color: var(--header-bg);
+            padding: 15px 0;
+        }
+        .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; }
         
         /* Logo (Tamaño PC) */
         .logo-area { display: flex; align-items: center; }
@@ -66,233 +72,186 @@
         
         .nav-right { display: flex; align-items: center; gap: 25px; }
 
-        /* Iconos Sociales y Links */
+        /* Iconos Sociales y Links (Estilos PC) */
         .social-icons { display: flex; gap: 10px; }
         .social-icon { 
-            width: 38px; height: 38px; border-radius: 50%; 
+            width: 38px; height: 38px; border-radius: 50px; 
             display: flex; align-items: center; justify-content: center;
-            color: var(--white); font-size: 1.2rem;
-            transition: transform 0.3s;
+            color: var(--white); font-size: 1.2rem; transition: transform 0.3s;
         }
         .social-icon.facebook { background-color: #3b5998; }
         .social-icon.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
         .social-icon.tiktok { background-color: #000000; }
-        
+
         .nav-links { display: flex; gap: 18px; }
         .nav-link { 
             color: var(--dark-text); padding: 10px 0; text-decoration: none; 
             font-weight: 600; border-bottom: 2px solid transparent;
             transition: border-color 0.3s, color 0.3s;
         }
-        .nav-link:hover { 
-            color: var(--secondary-accent); 
-            border-bottom: 2px solid var(--secondary-accent);
-        }
+        .nav-link:hover { color: var(--secondary-accent); border-bottom: 2px solid var(--secondary-accent); }
 
-        /* BOTÓN DE AGENDA - IMPLEMENTACIÓN DEL DISEÑO ÓVALO VERDE LIMA */
+        /* BOTÓN PRINCIPAL DE AGENDA (HEADER) - ZOOM POTENTE */
         .btn-agenda-main {
-            background: linear-gradient(to bottom, var(--green-action) 0%, #50B84A 100%); /* Degradado sutil */
+            background-color: var(--secondary-accent); 
             color: var(--white);
             padding: 12px 25px; 
-            border-radius: 50px; /* Óvalo con radio grande */
-            font-weight: 700;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 4px 0 var(--green-shadow), 0 0 15px rgba(105, 201, 91, 0.7); /* Sombra 3D y brillo exterior */
+            border-radius: 50px; 
+            font-weight: 900; 
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
             display: flex; align-items: center; gap: 8px;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            
-            /* Animación de Pulso/Zoom */
-            animation: pulse-zoom 2s infinite ease-in-out; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: pulse-zoom-smooth 2s infinite ease-in-out; 
         }
         .btn-agenda-main:hover {
-            transform: translateY(2px) scale(1.02);
-            box-shadow: 0 2px 0 var(--green-shadow), 0 0 18px rgba(105, 201, 91, 0.9); /* Efecto de click/presión */
-            animation: none; /* Detenemos la animación al pasar el cursor */
+            transform: scale(1.06); 
+            animation: none; 
         }
-        @keyframes pulse-zoom {
-            0% { transform: scale(1); box-shadow: 0 4px 0 var(--green-shadow), 0 0 15px rgba(105, 201, 91, 0.7); }
-            50% { transform: scale(1.03); box-shadow: 0 6px 15px var(--green-shadow), 0 0 20px rgba(105, 201, 91, 0.9); }
-            100% { transform: scale(1); box-shadow: 0 4px 0 var(--green-shadow), 0 0 15px rgba(105, 201, 91, 0.7); }
+        @keyframes pulse-zoom-smooth {
+            0% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(33, 150, 243, 0.9); }
+            100% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
         }
         
-        /* --- SECTION HERO --- (Resto de estilos se mantiene) */
+        /* --- SECTION HERO (Estilos se mantienen) --- */
         .hero-section {
-            position: relative;
-            height: 90vh; display: flex; align-items: center; padding: 0 5%;
+            position: relative; height: 90vh; display: flex; align-items: center; padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
             box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); overflow: hidden; color: var(--white);
         }
         .hero-content { z-index: 20; max-width: 60%; }
-        .hero-content p:first-child { 
-            font-size: 1.2rem; color: var(--green-action); font-weight: 700; 
-            margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;
-        }
         .hero-content h1 {
-            font-family: 'Playfair Display', serif; font-size: 4.8rem; 
-            font-weight: 900; margin-bottom: 25px; line-height: 1.1;
+            font-family: 'Playfair Display', serif; font-size: 4.8rem; font-weight: 900; margin-bottom: 25px; line-height: 1.1;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.7); 
         }
-        .hero-content p:nth-of-type(2) { 
-            font-size: 1.5rem; margin-bottom: 50px; font-weight: 300; 
-            color: rgba(255, 255, 255, 0.9);
-        }
+
+        /* BOTONES HERO - NUEVOS ESTILOS DE REFERENCIA (ÓVALOS) */
         .hero-buttons { display: flex; gap: 20px; }
         .btn-hero { 
             padding: 15px 30px; border-radius: 30px; font-weight: 700; 
-            transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
         }
-        .btn-whatsapp { background-color: var(--green-action); color: var(--white); border: none; }
-        .btn-whatsapp:hover { background-color: #388E3C; transform: translateY(-3px); }
-        .btn-call { background-color: var(--white); color: var(--primary-dark); border: 2px solid var(--white); }
-        .btn-call:hover { background-color: var(--light-bg); transform: translateY(-3px); }
+        
+        /* WhatsApp: Verde Sólido Óvalo */
+        .btn-hero.whatsapp {
+            background-color: var(--green-whatsapp); 
+            color: var(--white); border: none;
+            box-shadow: 0 0 15px rgba(93, 207, 82, 0.8);
+        }
+        .btn-hero.whatsapp:hover { background-color: #4CAF50; transform: translateY(-3px); }
 
-        /* IMAGEN FLOTANTE DEL HERO */
-        .hero-floating-image {
-            position: absolute; right: 0; bottom: -50px; 
-            height: 100%; width: 50%; max-width: 650px; z-index: 10;
-            opacity: 0.95;
+        /* Llámanos: Borde Blanco/Azul Óvalo */
+        .btn-hero.call {
+            background-color: transparent; 
+            color: var(--white); 
+            border: 2px solid var(--white); /* Borde blanco flotante */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
+        .btn-hero.call:hover { background-color: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
 
-        /* --- SECCIÓN DE SERVICIOS (PARA ROMPER MONOTONÍA) --- */
-        .services-section {
-            background-color: var(--white); 
-            padding: 80px 0;
-            text-align: center;
+        /* Agenda tu hora: Azul Claro Óvalo */
+        .btn-hero.agenda {
+            background-color: var(--blue-light-float); 
+            color: var(--primary-dark); border: none; 
+            box-shadow: 0 0 10px rgba(217, 237, 247, 0.8);
         }
-        .services-section h2 {
-            font-family: 'Playfair Display', serif; font-size: 3rem;
-            color: var(--primary-dark); margin-bottom: 50px;
-        }
-        .service-cards-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
-        }
-        .service-card {
-            background-color: var(--light-bg); border-radius: 10px; padding: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 5px solid var(--secondary-accent);
-        }
-        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-strong); }
-        .service-card i { font-size: 3rem; color: var(--secondary-accent); margin-bottom: 15px; }
-        .service-card h3 { font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
+        .btn-hero.agenda:hover { background-color: var(--white); transform: translateY(-3px); }
 
+
+        /* --- SECCIÓN DE SERVICIOS --- */
+        .services-section { background-color: var(--white); padding: 80px 0; text-align: center; }
 
         /* --- FOOTER (AZUL PROFUNDO) --- */
-        footer {
-            background-color: var(--primary-dark);
-            color: var(--white);
-            padding: 30px 0 15px; 
-        }
-        .footer-content {
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 20px;
-        }
-        .footer-info {
-            display: flex; gap: 30px; font-size: 0.9rem;
-        }
-        .footer-info span {
-            display: flex; align-items: center; gap: 8px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        .footer-info span i {
-            color: var(--secondary-accent); font-size: 1.1rem;
-        }
-        .footer-bottom-text {
-            text-align: center; font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .whatsapp-float {
-            position: fixed; width: 60px; height: 60px; bottom: 30px; right: 30px;
-            background-color: #25d366; color: #FFF; border-radius: 50px; z-index: 1001;
-            display: flex; align-items: center; justify-content: center;
-        }
-
+        footer { background-color: var(--primary-dark); color: var(--white); padding: 30px 0 15px; }
+        
         /* ========================================= */
         /* --- MEDIA QUERIES (OPTIMIZACIÓN MÓVIL) --- */
         /* ========================================= */
         @media (max-width: 992px) {
             
-            /* HEADER MÓVIL: Arreglo de Barras */
+            /* HEADER MÓVIL: CORRECCIÓN FINAL DE APILAMIENTO Y LOGO */
+            .sticky-header-wrap { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+            .top-bar { display: none; } /* Ocultamos la franja de color en móvil si es muy larga */
+
             header { padding: 10px 0; }
             .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
             
             /* LOGO MÓVIL: Visibilidad máxima */
-            .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
-            .logo-area img { 
-                height: 75px; 
-                max-height: 75px;
-            } 
+            .logo-area { width: 100%; justify-content: center; margin-bottom: 15px; }
+            .logo-area img { height: 75px; max-height: 75px; } 
             
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
             
-            /* Botones y Links en Fila, Ajustados */
-            .social-icons { width: 100%; justify-content: center; order: 3; }
+            /* BOTÓN DE AGENDA: 100% Ancho y se ubica primero (orden 1) */
+            .btn-agenda-main { width: 100%; justify-content: center; padding: 12px 20px; order: 1; }
+            
+            /* MENÚ DE ENLACES: FIX DEL DESBORDAMIENTO (Apilados horizontalmente sin salto) */
             .nav-links { 
-                gap: 5px; flex-wrap: wrap; justify-content: center;
-                order: 2; width: 100%; padding: 5px 0;
-            }
-            .nav-link { padding: 5px 8px; font-size: 0.8rem; }
-            
-            /* BOTÓN DE AGENDA 100% ANCHO */
-            .btn-agenda-main { 
                 width: 100%; 
-                justify-content: center; 
-                padding: 10px 20px; 
-                order: 1; 
-                animation: pulse-zoom 2s infinite ease-in-out; 
-                border-radius: 50px; /* Mantener la forma de óvalo en móvil */
+                justify-content: space-evenly; 
+                gap: 0; 
+                flex-wrap: nowrap; /* CRÍTICO: No dejar que los enlaces salten */
+                padding: 10px 0;
+                order: 2;
+                background-color: var(--header-bg); 
+                /* QUITAMOS EL BORDE DEL FINAL, ya que la barra se ve como una sola */
             }
-            
-            /* HERO SECTION MÓVIL */
-            .hero-content h1 { font-size: 2.8rem; line-height: 1.2; }
-            .hero-content p:first-child { font-size: 1rem; }
-            .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
+            .nav-link { padding: 5px 0; font-size: 0.9rem; flex: 1 1 auto; text-align: center; }
+
+            /* ICONOS SOCIALES: Se ubican al final */
+            .social-icons { width: 100%; justify-content: center; order: 3; margin-top: 10px; }
+
+            /* HERO SECTION MÓVIL: Fix de Desbordamiento de Títulos */
+            .hero-content h1 { font-size: 2.5rem; line-height: 1.2; } 
             .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
-            
-            /* FOOTER MÓVIL */
-            .footer-info { flex-direction: column; gap: 10px; }
+            .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
         }
 
         @media (max-width: 576px) {
-            .hero-content h1 { font-size: 2.2rem; }
-            .hero-content p:nth-of-type(2) { font-size: 1rem; }
+            .hero-content h1 { font-size: 2.0rem; }
             .logo-area img { height: 65px; }
+            .nav-link { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-
-<header>
-    <div class="container navbar">
-        <div class="logo-area">
-            <a href="index.html">
-                <img src="logo-otica.png" alt="Logo Ótica"/> 
-            </a>
+    <div class="sticky-header-wrap">
+        <div class="top-bar">
+            ¡Reembolsable con ISAPRES y valor diferencial FONASA!
         </div>
-        <div class="nav-right">
-            
-            <button class="btn-agenda-main">
-                <i class="fas fa-calendar-check"></i> AGENDA TU HORA ACÁ
-            </button>
-            
-            <nav class="nav-links">
-                <a href="#home" class="nav-link">Inicio</a>
-                <a href="#servicios" class="nav-link">Servicios</a>
-                <a href="#convenios" class="nav-link">Convenios</a>
-                <a href="#contacto" class="nav-link">Contacto</a>
-            </nav>
-            
-            <div class="social-icons">
-                <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon tiktok" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <header>
+            <div class="container navbar">
+                <div class="logo-area">
+                    <a href="index.html">
+                        <img src="logo-otica.png" alt="Logo Ótica"/> 
+                    </a>
+                </div>
+                <div class="nav-right">
+                    
+                    <button class="btn-agenda-main">
+                        <i class="fas fa-calendar-check"></i> AGENDA TU HORA ACÁ
+                    </button>
+                    
+                    <nav class="nav-links">
+                        <a href="#home" class="nav-link">Inicio</a>
+                        <a href="#servicios" class="nav-link">Servicios</a>
+                        <a href="#convenios" class="nav-link">Convenios</a>
+                        <a href="#contacto" class="nav-link">Contacto</a>
+                    </nav>
+                    
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon tiktok" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                    
+                </div>
             </div>
-            
-        </div>
+        </header>
     </div>
-</header>
-
-<main>
+    <main>
     <section class="hero-section" id="home">
         
         <div class="hero-content">
@@ -300,11 +259,14 @@
             <h1>Tu Audiología Premium a Domicilio.</h1>
             <p>Recupera la claridad de tu audición al instante. Servicio profesional de limpieza y evaluación de oídos en la comodidad y seguridad de tu hogar.</p>
             <div class="hero-buttons">
-                <a href="https://wa.me/XXXXXXXXXXX" class="btn-hero btn-whatsapp" target="_blank">
-                    <i class="fab fa-whatsapp"></i> Contáctanos
+                <a href="https://wa.me/XXXXXXXXXXX" class="btn-hero whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Whatsapp
                 </a>
-                <a href="tel:+569XXXXXXXX" class="btn-hero btn-call">
-                    <i class="fas fa-phone-alt"></i> Llámanos Ahora
+                <a href="tel:+569XXXXXXXX" class="btn-hero call">
+                    <i class="fas fa-phone-alt"></i> Llámanos
+                </a>
+                <a href="#" class="btn-hero agenda">
+                    <i class="fas fa-calendar-alt"></i> Agenda tu hora
                 </a>
             </div>
         </div>
@@ -369,7 +331,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.btn-agenda-main, .btn-hero-agenda').forEach(button => {
+        document.querySelectorAll('.btn-agenda-main, .btn-hero.agenda').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
                 alert('Redirigiendo a la plataforma de agendamiento profesional. Por favor, reemplaza este alert con tu URL de reservas.');
