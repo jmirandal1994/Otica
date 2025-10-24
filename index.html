@@ -28,7 +28,7 @@
             margin: 0;
             line-height: 1.6;
             color: var(--dark-text);
-            overflow-x: hidden; /* CRÍTICO */
+            overflow-x: hidden; /* CRÍTICO: Previene el scroll horizontal no deseado */
             background-color: var(--light-bg);
         }
 
@@ -51,7 +51,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            flex-wrap: nowrap; /* PC: Mantiene en una línea */
+            flex-wrap: nowrap; 
         }
         
         /* Logo (Tamaño PC) */
@@ -92,11 +92,10 @@
             border-radius: 50px; 
             font-weight: 900; 
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Sin relieve */
+            box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); 
             display: flex; align-items: center; gap: 8px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             
-            /* Animación de Pulso/Zoom MUY POTENTE */
             animation: pulse-zoom-smooth 2s infinite ease-in-out; 
         }
         .btn-agenda-main:hover {
@@ -105,21 +104,17 @@
         }
         @keyframes pulse-zoom-smooth {
             0% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
-            50% { transform: scale(1.05); /* ESCALA AUMENTADA PARA MÁS IMPACTO */ box-shadow: 0 0 20px rgba(33, 150, 243, 1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(33, 150, 243, 0.9); }
             100% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
         }
         
-        /* --- SECTION HERO (Fix de Desbordamiento) --- */
+        /* --- SECTION HERO (Estilos se mantienen) --- */
         .hero-section {
             position: relative; height: 90vh; display: flex; align-items: center; padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
             box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); overflow: hidden; color: var(--white);
         }
         .hero-content { z-index: 20; max-width: 60%; }
-        .hero-content p:first-child { 
-            font-size: 1.2rem; color: var(--green-whatsapp); font-weight: 700; 
-            margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;
-        }
         .hero-content h1 {
             font-family: 'Playfair Display', serif; font-size: 4.8rem; font-weight: 900; margin-bottom: 25px; line-height: 1.1;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.7); 
@@ -151,13 +146,6 @@
 
         /* --- SECCIÓN DE SERVICIOS --- */
         .services-section { background-color: var(--white); padding: 80px 0; text-align: center; }
-        .services-section h2 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--primary-dark); margin-bottom: 50px; }
-        .service-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .service-card {
-            background-color: var(--light-bg); border-radius: 10px; padding: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 5px solid var(--secondary-accent);
-        }
 
         /* --- FOOTER (AZUL PROFUNDO) --- */
         footer { background-color: var(--primary-dark); color: var(--white); padding: 30px 0 15px; }
@@ -167,48 +155,61 @@
         /* ========================================= */
         @media (max-width: 992px) {
             
-            /* HEADER MÓVIL: Corrección de Apilamiento y Logo */
+            /* HEADER MÓVIL: CORRECCIÓN FINAL DE APILAMIENTO Y LOGO */
             header { padding: 10px 0; }
             .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
             
             /* LOGO MÓVIL: Visibilidad máxima y CENTRADO */
-            .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
+            .logo-area { 
+                width: 100%; 
+                justify-content: center; 
+                margin-bottom: 15px; /* Más espacio debajo del logo */
+            }
             .logo-area img { 
-                height: 75px; /* Altura ajustada para que sea visible y no se desconfigure */
+                height: 75px; 
                 max-height: 75px;
             } 
             
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
             
-            /* BOTÓN DE AGENDA: Se ajusta al ancho completo (100% fix) */
+            /* BOTÓN DE AGENDA: 100% Ancho y se ubica primero (orden 1) */
             .btn-agenda-main { 
                 width: 100%; 
                 justify-content: center; 
                 padding: 12px 20px; 
-                order: 1; /* Prioridad de visualización */
-                animation: pulse-zoom-smooth 2s infinite ease-in-out; /* Animación activa */
+                order: 1; 
             }
             
-            /* Links y Sociales (Fix de Desbordamiento) */
+            /* MENÚ DE ENLACES: Arreglo de la barra desconfigurada */
             .nav-links { 
-                gap: 5px; flex-wrap: wrap; justify-content: center;
-                order: 2; width: 100%; padding: 5px 0;
+                /* Se convierte en un contenedor que toma todo el ancho */
+                width: 100%; 
+                justify-content: space-evenly; /* Distribuye el espacio equitativamente */
+                gap: 0; /* Elimina gaps innecesarios */
+                flex-wrap: nowrap; /* CRÍTICO: Evita que los enlaces salten y se desconfiguren */
+                padding: 10px 0;
+                order: 2;
+                /* Agregamos una barra sólida para que se vea como en la imagen de referencia */
+                background-color: var(--header-bg); 
+                border-top: 1px solid var(--light-bg); 
             }
-            .social-icons { width: 100%; justify-content: center; order: 3; }
+            .nav-link { padding: 5px 0; font-size: 0.9rem; flex: 1 1 auto; text-align: center; }
+
+            /* ICONOS SOCIALES: Se ubican en el centro (orden 3) */
+            .social-icons { width: 100%; justify-content: center; order: 3; margin-top: 10px; }
+
 
             /* HERO SECTION MÓVIL: Fix de Desbordamiento de Títulos */
-            .hero-section { height: auto; min-height: 80vh; flex-direction: column; text-align: center; padding: 40px 5%; }
-            .hero-content { max-width: 100%; padding: 0; order: 2; }
-            /* TAMAÑO DE TÍTULO REDUCIDO PARA QUE NO SE SALGA */
-            .hero-content h1 { font-size: 2.5rem; line-height: 1.2; } 
-            .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
+            .hero-content { max-width: 100%; padding: 0; order: 2; text-align: center; }
+            .hero-content h1 { font-size: 2.5rem; line-height: 1.2; } /* TAMAÑO PEQUEÑO FIJO */
             .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
             .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
         }
 
         @media (max-width: 576px) {
-            .hero-content h1 { font-size: 2.0rem; } /* Ajuste fino para pantallas muy pequeñas */
+            .hero-content h1 { font-size: 2.0rem; }
             .logo-area img { height: 65px; }
+            .nav-link { font-size: 0.8rem; }
         }
     </style>
 </head>
