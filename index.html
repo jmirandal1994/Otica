@@ -14,7 +14,7 @@
         :root {
             --primary-dark: #0F2038; 
             --primary-light: #1A4D6F; 
-            --secondary-accent: #2196F3; /* Azul Eléctrico (Acento visual - Botón Principal) */
+            --secondary-accent: #2196F3; 
             --green-whatsapp: #5DCF52; 
             --blue-light-float: #D9EDF7; 
             --white: #FFFFFF; 
@@ -28,7 +28,7 @@
             margin: 0;
             line-height: 1.6;
             color: var(--dark-text);
-            overflow-x: hidden; /* CLAVE: Previene el scroll horizontal no deseado */
+            overflow-x: hidden; /* CRÍTICO */
             background-color: var(--light-bg);
         }
 
@@ -51,7 +51,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            flex-wrap: wrap; /* CLAVE para el responsive */
+            flex-wrap: nowrap; /* PC: Mantiene en una línea */
         }
         
         /* Logo (Tamaño PC) */
@@ -65,13 +65,12 @@
         
         .nav-right { display: flex; align-items: center; gap: 25px; }
 
-        /* Iconos Sociales y Links */
+        /* Iconos Sociales y Links (Estilos PC) */
         .social-icons { display: flex; gap: 10px; }
         .social-icon { 
             width: 38px; height: 38px; border-radius: 50px; 
             display: flex; align-items: center; justify-content: center;
-            color: var(--white); font-size: 1.2rem;
-            transition: transform 0.3s;
+            color: var(--white); font-size: 1.2rem; transition: transform 0.3s;
         }
         .social-icon.facebook { background-color: #3b5998; }
         .social-icon.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
@@ -85,7 +84,7 @@
         }
         .nav-link:hover { color: var(--secondary-accent); border-bottom: 2px solid var(--secondary-accent); }
 
-        /* BOTÓN PRINCIPAL DE AGENDA (HEADER) - ZOOM SIN RELIEVE */
+        /* BOTÓN PRINCIPAL DE AGENDA (HEADER) - ZOOM POTENTE */
         .btn-agenda-main {
             background-color: var(--secondary-accent); 
             color: var(--white);
@@ -93,24 +92,24 @@
             border-radius: 50px; 
             font-weight: 900; 
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Sombra suave, sin relieve 3D */
+            box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Sin relieve */
             display: flex; align-items: center; gap: 8px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             
-            /* Animación de Pulso/Zoom Suave */
-            animation: pulse-zoom-smooth 2.5s infinite ease-in-out; 
+            /* Animación de Pulso/Zoom MUY POTENTE */
+            animation: pulse-zoom-smooth 2s infinite ease-in-out; 
         }
         .btn-agenda-main:hover {
-            transform: scale(1.05); /* Ligeramente más grande al pasar el cursor */
-            animation: none; /* Detenemos la animación al pasar el cursor */
+            transform: scale(1.06); 
+            animation: none; 
         }
         @keyframes pulse-zoom-smooth {
             0% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
-            50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(33, 150, 243, 0.9); }
+            50% { transform: scale(1.05); /* ESCALA AUMENTADA PARA MÁS IMPACTO */ box-shadow: 0 0 20px rgba(33, 150, 243, 1); }
             100% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
         }
         
-        /* --- SECTION HERO (Resto de estilos se mantiene) --- */
+        /* --- SECTION HERO (Fix de Desbordamiento) --- */
         .hero-section {
             position: relative; height: 90vh; display: flex; align-items: center; padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
@@ -136,103 +135,79 @@
             transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
         }
-        
         .btn-hero.whatsapp {
-            background-color: var(--green-whatsapp); 
-            color: var(--white); border: none;
+            background-color: var(--green-whatsapp); color: var(--white); border: none;
             box-shadow: 0 0 10px rgba(93, 207, 82, 0.8);
         }
-        .btn-hero.whatsapp:hover { background-color: #4CAF50; transform: translateY(-3px); }
-
         .btn-hero.call {
-            background-color: transparent; 
-            color: var(--white); 
-            border: 2px solid var(--white); /* Borde blanco flotante */
+            background-color: transparent; color: var(--white); 
+            border: 2px solid var(--white); 
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
-        .btn-hero.call:hover { background-color: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
-
         .btn-hero.agenda {
-            background-color: var(--blue-light-float); 
-            color: var(--primary-dark); border: none; 
+            background-color: var(--blue-light-float); color: var(--primary-dark); border: none; 
             box-shadow: 0 0 10px rgba(217, 237, 247, 0.8);
         }
-        .btn-hero.agenda:hover { background-color: var(--white); transform: translateY(-3px); }
 
-
-        /* --- SECCIÓN DE SERVICIOS (PARA ROMPER MONOTONÍA) --- */
-        .services-section {
-            background-color: var(--white); 
-            padding: 80px 0;
-            text-align: center;
-        }
-        .services-section h2 {
-            font-family: 'Playfair Display', serif; font-size: 3rem;
-            color: var(--primary-dark); margin-bottom: 50px;
-        }
-        .service-cards-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
-        }
+        /* --- SECCIÓN DE SERVICIOS --- */
+        .services-section { background-color: var(--white); padding: 80px 0; text-align: center; }
+        .services-section h2 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--primary-dark); margin-bottom: 50px; }
+        .service-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .service-card {
             background-color: var(--light-bg); border-radius: 10px; padding: 30px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s, box-shadow 0.3s;
             border-top: 5px solid var(--secondary-accent);
         }
-        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-strong); }
-        .service-card i { font-size: 3rem; color: var(--secondary-accent); margin-bottom: 15px; }
-        .service-card h3 { font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
-
 
         /* --- FOOTER (AZUL PROFUNDO) --- */
-        footer {
-            background-color: var(--primary-dark);
-            color: var(--white);
-            padding: 30px 0 15px; 
-        }
+        footer { background-color: var(--primary-dark); color: var(--white); padding: 30px 0 15px; }
         
         /* ========================================= */
         /* --- MEDIA QUERIES (OPTIMIZACIÓN MÓVIL) --- */
         /* ========================================= */
         @media (max-width: 992px) {
             
-            /* HEADER MÓVIL: Arreglo de Desbordamiento */
+            /* HEADER MÓVIL: Corrección de Apilamiento y Logo */
             header { padding: 10px 0; }
             .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
             
-            /* LOGO MÓVIL: Visibilidad máxima */
+            /* LOGO MÓVIL: Visibilidad máxima y CENTRADO */
             .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
             .logo-area img { 
-                height: 75px; 
+                height: 75px; /* Altura ajustada para que sea visible y no se desconfigure */
                 max-height: 75px;
             } 
             
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
             
-            /* Fix de Desbordamiento: Los elementos se ajustan al 100% en columna */
-            .social-icons { width: 100%; justify-content: center; order: 3; }
+            /* BOTÓN DE AGENDA: Se ajusta al ancho completo (100% fix) */
+            .btn-agenda-main { 
+                width: 100%; 
+                justify-content: center; 
+                padding: 12px 20px; 
+                order: 1; /* Prioridad de visualización */
+                animation: pulse-zoom-smooth 2s infinite ease-in-out; /* Animación activa */
+            }
+            
+            /* Links y Sociales (Fix de Desbordamiento) */
             .nav-links { 
                 gap: 5px; flex-wrap: wrap; justify-content: center;
                 order: 2; width: 100%; padding: 5px 0;
             }
-            .nav-link { padding: 5px 8px; font-size: 0.8rem; }
-            
-            /* BOTÓN DE AGENDA 100% ANCHO */
-            .btn-agenda-main { 
-                width: 100%; 
-                justify-content: center; 
-                padding: 10px 20px; 
-                order: 1; 
-                animation: pulse-zoom-smooth 2.5s infinite ease-in-out; /* Animación activa */
-            }
-            
-            /* HERO SECTION MÓVIL */
-            .hero-content h1 { font-size: 2.8rem; line-height: 1.2; }
+            .social-icons { width: 100%; justify-content: center; order: 3; }
+
+            /* HERO SECTION MÓVIL: Fix de Desbordamiento de Títulos */
+            .hero-section { height: auto; min-height: 80vh; flex-direction: column; text-align: center; padding: 40px 5%; }
+            .hero-content { max-width: 100%; padding: 0; order: 2; }
+            /* TAMAÑO DE TÍTULO REDUCIDO PARA QUE NO SE SALGA */
+            .hero-content h1 { font-size: 2.5rem; line-height: 1.2; } 
+            .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
             .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
             .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
         }
 
         @media (max-width: 576px) {
-            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content h1 { font-size: 2.0rem; } /* Ajuste fino para pantallas muy pequeñas */
             .logo-area img { height: 65px; }
         }
     </style>
