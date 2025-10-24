@@ -1,327 +1,499 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ÓTICA | Audiología Premium</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ÓTICA | Audiología Premium — Limpieza de oídos a domicilio</title>
+
+  <!-- Fuentes & icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    :root {
-      --azul1: #1e3c72;
-      --azul2: #2a5298;
-      --turquesa: #00c6ff;
-      --bg-light: #f9fbff;
-      --text-dark: #0b1220;
-      --muted: #6b7280;
-      --radius: 18px;
+    /* ===== VARIABLES & RESET ===== */
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#071227;
+      --muted:#6b7280;
+      --accent-1:#0f4c81;  /* azul profundo */
+      --accent-2:#00c6d7;  /* turquesa */
+      --accent-3:#2b8af6;  /* brillo azul */
+      --glass: rgba(255,255,255,0.6);
+      --radius:16px;
+      --shadow-lg: 0 18px 50px rgba(10,25,50,0.08);
+      --shadow-md: 0 10px 30px rgba(10,25,50,0.06);
+      --maxw:1200px;
     }
-
-    * {box-sizing: border-box;}
-    body {
-      margin: 0;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
       font-family: 'Montserrat', sans-serif;
-      color: var(--text-dark);
-      background-color: var(--bg-light);
-      overflow-x: hidden;
+      background: linear-gradient(180deg,var(--bg),#ffffff 70%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      overflow-x:hidden;
+    }
+    a {color:inherit; text-decoration:none}
+    img{max-width:100%;height:auto;display:block}
+
+    .container{width:94%;max-width:var(--maxw);margin:0 auto}
+
+    /* ===== TOP BAR ===== */
+    .topbar{
+      background: linear-gradient(90deg,var(--accent-3),var(--accent-2));
+      color:white;
+      text-align:center;
+      padding:7px 10px;
+      font-weight:700;
+      font-size:0.92rem;
+      letter-spacing:0.2px;
     }
 
-    a {text-decoration: none; color: inherit;}
-    img {max-width: 100%; display: block;}
-
-    /* ---------------- NAV ---------------- */
-    header {
-      position: sticky;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
+    /* ===== HEADER ===== */
+    header{
+      position:sticky;top:0;z-index:1200;
       backdrop-filter: blur(8px);
       background: rgba(255,255,255,0.7);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 6px 20px rgba(8,20,40,0.04);
+    }
+    .nav{
+      display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 0;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:96px;height:auto;border-radius:10px;object-fit:contain}
+    .brand .title{font-weight:800;font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)}
+    nav.primary{display:flex;gap:18px;align-items:center}
+    nav.primary a{font-weight:700;padding:8px 12px;border-radius:10px;transition:all .16s}
+    nav.primary a:hover{color:var(--accent-3);background:rgba(43,138,246,0.06)}
+
+    .actions{display:flex;gap:12px;align-items:center}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;font-weight:800;cursor:pointer;border:0;
+    }
+    .btn-primary{
+      background: linear-gradient(90deg,var(--accent-3),var(--accent-2));
+      color:white;box-shadow: 0 10px 30px rgba(43,138,246,0.16);
+    }
+    .btn-ghost{background:transparent;border:1px solid rgba(10,20,40,0.06);color:var(--text);padding:8px 12px;border-radius:10px;font-weight:700}
+
+    .hamburger{display:none;background:var(--card);border-radius:10px;padding:8px;border:0;box-shadow:var(--shadow-md);cursor:pointer}
+
+    /* ===== HERO ===== */
+    .hero{
+      position:relative;overflow:hidden;
+      border-radius:20px;
+      padding:68px 0 48px;
+      margin-top:18px;
+    }
+    .hero-inner{
+      position:relative;z-index:6;padding:32px 0;
+      display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center;
+      max-width:var(--maxw);margin:0 auto;
     }
 
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 5%;
+    /* hero background layer: gradient + waves + ear svg */
+    .hero-bg{
+      position:absolute;inset:0;border-radius:20px;
+      background: linear-gradient(135deg,var(--accent-1),var(--accent-3) 45%,var(--accent-2) 100%);
+      filter: saturate(1.05) contrast(1.02);
+      transform-origin:center;
+      z-index:1;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    /* subtle animated wave overlay */
+    .waves{
+      position:absolute;inset:-10% -5% auto -5%;height:60%;z-index:2;opacity:0.12;
+      background-image:
+        radial-gradient(closest-side, rgba(255,255,255,0.06) 0%, transparent 60%),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240"><path fill="%23ffffff" d="M0 120 C150 40 300 200 450 120 C600 40 750 200 900 120 C1050 40 1200 200 1200 200 L1200 240 L0 240 Z"/></svg>');
+      background-repeat:repeat-x;
+      background-position:0 0;
+      animation: waveMove 18s linear infinite;
+      mix-blend-mode:overlay;
+      pointer-events:none;
     }
-    .brand img {
-      width: 90px;
-      height: auto;
-      border-radius: 8px;
-    }
-    .brand-text {
-      font-weight: 800;
-      font-size: 1.2rem;
+    @keyframes waveMove { from{background-position:0 0} to{background-position:1200px 0} }
+
+    /* large translucent ear SVG as watermark */
+    .ear-mark{
+      position:absolute;right:-6%;top:6%;width:56%;height:88%;z-index:2;opacity:0.10;
+      pointer-events:none;
+      background-repeat:no-repeat;background-position:center center;background-size:contain;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g fill="%23ffffff"><path d="M256 16C132.288 16 32 116.288 32 240c0 125.184 96.896 227.488 218.08 239.168 5.856.672 10.56-3.392 10.56-9.344v-42.496c-89.376 14.048-107.36-43.072-107.36-43.072-7.232-18.368-17.664-23.264-17.664-23.264-14.464-9.888 1.088-9.68 1.088-9.68 16.000 1.12 24.448 16.448 24.448 16.448 13.056 22.368 34.272 15.936 42.624 12.192 1.344-9.504 5.568-15.936 10.112-19.584-71.36-8.128-146.368-35.744-146.368-159.04 0-35.136 12.448-63.84 32.832-86.4-3.296-8.032-14.208-40.544 3.136-84.544 0 0 26.752-8.576 87.68 33.056 50.784-14.16 105.184-14.16 156.032 0 60.896-41.632 87.68-33.056 87.68-33.056 17.344 44 6.464 76.512 3.168 84.544 20.416 22.56 32.832 51.264 32.832 86.4 0 123.52-75.168 150.72-146.688 158.72 5.76 4.992 10.848 14.832 10.848 29.984v44.48c0 5.984 4.768 10.272 10.624 9.344C383.104 467.488 480 365.184 480 240 480 116.288 379.712 16 256 16z"/></g></svg>');
     }
 
-    .nav-links {
-      display: flex;
-      gap: 18px;
-      font-weight: 600;
+    /* hero content */
+    .kicker{font-weight:800;color:rgba(255,255,255,0.95);font-size:0.92rem;margin-bottom:8px;letter-spacing:0.6px}
+    .hero h1{font-family:'Playfair Display',serif;font-size:2.6rem;color:white;margin:0 0 12px;line-height:1.02}
+    .hero p.lead{color:rgba(255,255,255,0.92);margin:0 0 20px;font-size:1.02rem;max-width:52ch}
+
+    .hero-ctas{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+
+    .cta-hero{
+      display:inline-flex;align-items:center;gap:12px;padding:14px 26px;border-radius:999px;font-weight:900;border:0;cursor:pointer;
+      color:white;background:linear-gradient(90deg,var(--accent-2),var(--accent-3));
+      box-shadow: 0 18px 40px rgba(43,138,246,0.20);
+      transform: translateZ(0);
+      transition: transform .28s cubic-bezier(.2,.9,.3,1), box-shadow .28s;
+    }
+    .cta-hero:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 28px 70px rgba(43,138,246,0.28)}
+
+    /* subtle micro-button with glass for secondary actions */
+    .btn-glass{background:rgba(255,255,255,0.12);backdrop-filter: blur(6px);padding:10px 14px;border-radius:999px;color:white;border:1px solid rgba(255,255,255,0.06);font-weight:700}
+
+    /* hero right illustration (photo placeholder) */
+    .hero-figure{
+      display:flex;align-items:center;justify-content:center;padding:10px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      box-shadow:var(--shadow-md);
+      backdrop-filter: blur(2px);
+    }
+    .hero-figure img{width:100%;max-width:380px;border-radius:12px;object-fit:cover;box-shadow:0 8px 30px rgba(0,0,0,0.12)}
+
+    /* ===== SERVICES ===== */
+    .services{
+      margin-top:28px;padding:34px 6% 64px;background:linear-gradient(180deg,rgba(255,255,255,0.45),transparent);
+      position:relative;z-index:8;
+    }
+    .services-header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .services-header h2{font-size:1.6rem;margin:0;font-weight:800}
+    .grid-services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+
+    .service-card{
+      background:var(--card);border-radius:12px;padding:18px;box-shadow:var(--shadow-md);
+      display:flex;gap:14px;align-items:flex-start;transition:transform .22s, box-shadow .22s;
+      border:1px solid rgba(10,20,30,0.02);
+    }
+    .service-card:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(10,20,40,0.08)}
+    .service-thumb{width:84px;height:84px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,#eef7ff,#f2fff9);display:flex;align-items:center;justify-content:center}
+    .service-thumb img{width:64px;height:64px;object-fit:cover}
+    .service h3{margin:0;font-size:1.02rem;font-weight:800}
+    .service p{margin:8px 0 0;color:var(--muted);font-size:0.95rem;line-height:1.38}
+
+    /* CTA banner reembolsable */
+    .reembolso{
+      margin-top:18px;background:linear-gradient(90deg, rgba(43,138,246,0.06), rgba(0,198,215,0.04));padding:14px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid rgba(43,138,246,0.04)
     }
 
-    .cta {
-      background: linear-gradient(90deg, var(--azul2), var(--turquesa));
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.3s;
+    /* ===== CONTACT & FOOTER ===== */
+    #contacto{padding:36px 6% 64px}
+    .contact-grid{display:flex;gap:18px;align-items:stretch;flex-wrap:wrap}
+    .card-contact{background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow-md);flex:1;min-width:240px}
+
+    footer{
+      margin-top:32px;padding:28px 6%;background:linear-gradient(180deg,var(--accent-1),#06233b);color:white;border-radius:12px 12px 0 0
+    }
+    .footer-grid{display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between}
+
+    /* ===== FLOAT WHATSAPP ===== */
+    .whatsapp{
+      position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#00d084,#00bfa5);
+      color:white;box-shadow:0 12px 30px rgba(0,0,0,0.18);z-index:1400;border:0;
     }
 
-    .cta:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(0,198,255,0.5);
+    /* ===== RESPONSIVE ===== */
+    @media (max-width:1100px){
+      .hero-inner{grid-template-columns:1fr 360px}
+      .grid-services{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:820px){
+      nav.primary{display:none}
+      .hamburger{display:block}
+      .hero-inner{grid-template-columns:1fr;gap:18px;padding:0 18px}
+      .hero h1{font-size:1.8rem}
+      .hero p.lead{font-size:0.96rem}
+      .hero-figure{order:2}
+      .ear-mark{display:none}
+      .grid-services{grid-template-columns:1fr}
+    }
+    @media (max-width:420px){
+      .brand img{width:76px}
+      .hero{padding:40px 0 36px}
+      .cta-hero{padding:12px 18px;font-size:0.95rem}
+      .service-thumb{width:68px;height:68px}
     }
 
-    .hamburger {
-      display: none;
-      font-size: 1.6rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    /* ---------------- HERO ---------------- */
-    .hero {
-      position: relative;
-      background: linear-gradient(135deg, var(--azul1), var(--azul2), var(--turquesa));
-      color: white;
-      padding: 100px 5% 80px;
-      overflow: hidden;
-    }
-
-    /* efecto de ondas de fondo */
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: -100px;
-      left: 0;
-      width: 100%;
-      height: 140%;
-      background: url('https://www.svgrepo.com/show/493015/sound-waves.svg') center/contain no-repeat;
-      opacity: 0.12;
-      animation: floatWaves 10s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatWaves {
-      from { transform: translateY(0); }
-      to { transform: translateY(20px); }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 2.4rem;
-      margin-bottom: 10px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .hero p {
-      font-size: 1.05rem;
-      margin-bottom: 30px;
-      color: rgba(255,255,255,0.9);
-    }
-
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      border: none;
-      cursor: pointer;
-      border-radius: 40px;
-      padding: 14px 28px;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: 0.3s;
-    }
-
-    .btn-whatsapp {
-      background: #25d366;
-      color: white;
-    }
-    .btn-whatsapp:hover {transform: scale(1.07); box-shadow: 0 0 14px rgba(37,211,102,0.6);}
-
-    .btn-llamar {
-      background: white;
-      color: var(--azul2);
-    }
-    .btn-llamar:hover {transform: scale(1.07);}
-
-    .btn-agenda {
-      background: linear-gradient(90deg, var(--turquesa), var(--azul2));
-      color: white;
-      box-shadow: 0 0 20px rgba(0,198,255,0.4);
-    }
-    .btn-agenda:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 30px rgba(0,198,255,0.6);
-    }
-
-    /* ---------------- SECCIONES ---------------- */
-    .section {
-      padding: 80px 5%;
-      text-align: center;
-    }
-
-    .section h2 {
-      font-size: 1.8rem;
-      font-weight: 800;
-      margin-bottom: 20px;
-    }
-
-    /* ---------------- FOOTER ---------------- */
-    footer {
-      background: var(--azul1);
-      color: white;
-      text-align: center;
-      padding: 30px 5%;
-    }
-
-    footer p {
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    /* ---------------- RESPONSIVE ---------------- */
-    @media (max-width: 880px) {
-      .nav-links {display: none;}
-      .hamburger {display: block; color: var(--azul1);}
-      .hero h1 {font-size: 1.8rem;}
-      .hero p {font-size: 0.95rem;}
-    }
-
-    /* menú móvil */
-    .mobile-menu {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 80%;
-      max-width: 300px;
-      height: 100vh;
-      background: white;
-      box-shadow: -6px 0 25px rgba(0,0,0,0.1);
-      transition: 0.3s;
-      padding: 40px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      z-index: 1500;
-    }
-
-    .mobile-menu.open {
-      right: 0;
-    }
-
-    .mobile-menu a {
-      font-weight: 700;
-      color: var(--azul1);
-      font-size: 1.1rem;
-    }
-
-    .mobile-menu .close {
-      align-self: flex-end;
-      background: none;
-      border: none;
-      font-size: 1.6rem;
-      cursor: pointer;
-    }
-
+    /* accessibility focus */
+    a:focus,button:focus,input:focus{outline:3px solid rgba(43,138,246,0.16);outline-offset:2px;border-radius:10px}
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
+  <!-- TOP BAR -->
+  <div class="topbar">Reembolsable con ISAPRES • Valor diferencial FONASA — Reserva y solicita boleta</div>
+
+  <!-- HEADER -->
   <header>
-    <div class="nav">
-      <div class="brand">
-        <img src="logo-otica.png" alt="Ótica Logo">
-        <span class="brand-text">ÓTICA</span>
+    <div class="container nav" role="navigation" aria-label="Navegación principal">
+      <div class="brand" aria-hidden="false">
+        <a href="#inicio" aria-label="Ir al inicio">
+          <img src="logo-otica.png" alt="Logo ÓTICA">
+        </a>
+        <div class="title">ÓTICA</div>
       </div>
 
-      <nav class="nav-links">
+      <nav class="primary" aria-label="Enlaces principales">
         <a href="#inicio">Inicio</a>
         <a href="#servicios">Servicios</a>
         <a href="#contacto">Contacto</a>
       </nav>
 
-      <button class="cta">Agenda tu hora</button>
-      <button class="hamburger" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+      <div class="actions" role="group" aria-label="Acciones principales">
+        <button class="btn btn-ghost" title="Llamar" onclick="location.href='tel:+569XXXXXXXX'"><i class="fa-solid fa-phone"></i> Llamar</button>
+        <button class="btn btn-primary" id="mainAgenda"><i class="fa-solid fa-calendar-check"></i> Agenda tu hora</button>
+        <button class="hamburger" id="openMenu" aria-label="Abrir menú móvil" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+      </div>
     </div>
   </header>
 
-  <!-- MENÚ MÓVIL -->
-  <div class="mobile-menu" id="mobileMenu">
-    <button class="close" id="closeMenu"><i class="fa-solid fa-xmark"></i></button>
-    <a href="#inicio">Inicio</a>
-    <a href="#servicios">Servicios</a>
-    <a href="#contacto">Contacto</a>
-    <button class="cta">Agenda tu hora</button>
-  </div>
-
   <!-- HERO -->
-  <section class="hero" id="inicio">
-    <div class="hero-content">
-      <h1>Tu Audiología Premium en la comodidad de tu hogar</h1>
-      <p>Limpieza de oídos, video otoscopia y evaluación audiológica con equipo profesional y certificado. Servicio rápido, seguro y reembolsable.</p>
+  <section class="hero" id="inicio" aria-labelledby="heroTitle">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="waves" aria-hidden="true"></div>
+    <div class="ear-mark" aria-hidden="true"></div>
 
-      <div class="hero-buttons">
-        <a href="https://wa.me/XXXXXXXXXXX" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Whatsapp</a>
-        <a href="tel:+569XXXXXXXX" class="btn btn-llamar"><i class="fa-solid fa-phone"></i> Llámanos</a>
-        <a href="#contacto" class="btn btn-agenda"><i class="fa-solid fa-calendar-check"></i> Agenda tu hora</a>
+    <div class="hero-inner container">
+      <div style="z-index:6;text-align:center">
+        <div class="kicker">Atención profesional a domicilio</div>
+        <h1 id="heroTitle">Tu Audiología Premium en la comodidad de tu hogar</h1>
+        <p class="lead">Limpieza de oídos, video otoscopia, evaluación audiométrica y asesoría en audífonos con personal certificado. Servicio rápido, seguro y reembolsable.</p>
+
+        <div class="hero-ctas" role="group" aria-label="Acciones hero">
+          <a href="https://wa.me/XXXXXXXXXXX" class="cta-hero" aria-label="Abrir Whatsapp">
+            <i class="fa-brands fa-whatsapp" style="font-size:18px"></i> Whatsapp
+          </a>
+
+          <button class="btn-glass" onclick="location.href='tel:+569XXXXXXXX'"><i class="fa-solid fa-phone"></i> Llamar</button>
+
+          <a href="#contacto" class="cta-hero" id="heroAgenda"><i class="fa-solid fa-calendar-check"></i> Agenda tu hora</a>
+        </div>
+
+        <div style="margin-top:18px">
+          <div class="reembolso" role="status" aria-live="polite">
+            <div>
+              <strong>Reembolsable con ISAPRES</strong>
+              <div style="font-weight:700;color:var(--muted)">Valor diferencial con FONASA — Consulta requisitos</div>
+            </div>
+            <div><a href="#contacto" class="btn-glass">Ver contacto</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-figure" aria-hidden="false">
+        <!-- Reemplaza esta imagen por tu foto profesional -->
+        <img src="oido-hero.png" alt="Profesional realizando limpieza de oídos" loading="lazy">
       </div>
     </div>
   </section>
 
-  <!-- SERVICIOS -->
-  <section class="section" id="servicios">
-    <h2>Servicios Profesionales</h2>
-    <p>Ofrecemos limpieza de oídos, evaluación auditiva, video otoscopia y asesoría en audífonos.</p>
+  <!-- SERVICES -->
+  <section class="services" id="servicios" aria-labelledby="servTitle">
+    <div class="container">
+      <div class="services-header">
+        <h2 id="servTitle">Nuestros Servicios de Audiología</h2>
+        <div style="color:var(--muted);font-weight:700">Profesionales certificados · Atención a domicilio</div>
+      </div>
+
+      <div class="grid-services" aria-live="polite" aria-label="Lista de servicios">
+        <!-- 1 -->
+        <article class="service-card" role="article" aria-labelledby="s1">
+          <div class="service-thumb"><img src="limpieza-domicilio.png" alt="Limpieza a domicilio"></div>
+          <div class="service">
+            <h3 id="s1">Limpieza de Oídos a Domicilio</h3>
+            <p>Eliminación segura de tapones por aspiración o lavado, realizada por personal capacitado con técnica estéril y entrega de informe.</p>
+          </div>
+        </article>
+
+        <!-- 2 -->
+        <article class="service-card" role="article" aria-labelledby="s2">
+          <div class="service-thumb"><img src="video-otoscopia.png" alt="Video otoscopia"></div>
+          <div class="service">
+            <h3 id="s2">Video Otoscopia y Entrega de Informe</h3>
+            <p>Registro en video de la exploración otológica, con imágenes e informe para reembolso y seguimiento clínico.</p>
+          </div>
+        </article>
+
+        <!-- 3 -->
+        <article class="service-card" role="article" aria-labelledby="s3">
+          <div class="service-thumb"><img src="audifonos.png" alt="Audífonos"></div>
+          <div class="service">
+            <h3 id="s3">Indicación y Venta de Audífonos</h3>
+            <p>Asesoría técnica, prescripción y ajuste de audífonos de última generación según perfil audiométrico.</p>
+          </div>
+        </article>
+
+        <!-- 4 -->
+        <article class="service-card" role="article" aria-labelledby="s4">
+          <div class="service-thumb"><img src="educacion-auditiva.png" alt="Educación auditiva"></div>
+          <div class="service">
+            <h3 id="s4">Educación y Prevención Auditiva</h3>
+            <p>Charlas, recomendaciones y entrega de protectores auditivos para prevención y cuidado auditivo a largo plazo.</p>
+          </div>
+        </article>
+
+        <!-- 5 -->
+        <article class="service-card" role="article" aria-labelledby="s5">
+          <div class="service-thumb"><img src="audiometria.png" alt="Evaluación audiométrica"></div>
+          <div class="service">
+            <h3 id="s5">Evaluación Audiométrica</h3>
+            <p>Pruebas audiométricas completas con informe, ideal para reembolso y para orientar la indicación de audífonos.</p>
+          </div>
+        </article>
+
+        <!-- 6 -->
+        <article class="service-card" role="article" aria-labelledby="s6">
+          <div class="service-thumb"><img src="teleconsulta.png" alt="Teleconsulta"></div>
+          <div class="service">
+            <h3 id="s6">Teleconsulta y Seguimiento</h3>
+            <p>Atención remota para seguimiento post-tratamiento, asesoría y resolución de dudas sin salir de tu casa.</p>
+          </div>
+        </article>
+      </div>
+    </div>
   </section>
 
-  <!-- CONTACTO -->
-  <section class="section" id="contacto">
-    <h2>Contáctanos</h2>
-    <p>Teléfono: +56 9 XXXXXXXX<br>Email: info@otica.cl</p>
+  <!-- CONTACT -->
+  <section id="contacto" aria-labelledby="contactTitle" style="padding:28px 0 64px">
+    <div class="container">
+      <h2 id="contactTitle" style="margin-bottom:12px">Contacto</h2>
+      <div class="contact-grid">
+        <div class="card-contact">
+          <strong>Atención a Domicilio — Región Metropolitana</strong>
+          <p style="color:var(--muted);margin-top:8px">Tel: <a href="tel:+569XXXXXXXX">+56 9 XXXXXXXX</a><br>Email: <a href="mailto:info@otica.cl">info@otica.cl</a></p>
+        </div>
+        <div class="card-contact">
+          <strong>Horario</strong>
+          <p style="color:var(--muted);margin-top:8px">Lunes a Domingo: 09:00 - 20:00 (con reserva)</p>
+        </div>
+        <div class="card-contact">
+          <strong>Redes</strong>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <a href="#" aria-label="Instagram" style="width:40px;height:40px;background:white;border-radius:8px;display:inline-flex;align-items:center;justify-content:center"><i class="fab fa-instagram" style="color:#d6336c"></i></a>
+            <a href="#" aria-label="Facebook" style="width:40px;height:40px;background:white;border-radius:8px;display:inline-flex;align-items:center;justify-content:center"><i class="fab fa-facebook-f" style="color:#1565d8"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <p>© <span id="year"></span> ÓTICA. Todos los derechos reservados.</p>
+  <footer role="contentinfo">
+    <div class="container footer-grid">
+      <div>
+        <h3 style="margin:0 0 8px 0">ÓTICA</h3>
+        <div style="color:rgba(255,255,255,0.9)">Limpieza de oídos · Evaluaciones · Venta de audífonos</div>
+      </div>
+
+      <div>
+        <strong>Dirección</strong>
+        <div style="color:rgba(255,255,255,0.9);margin-top:6px">Atención a domicilio — Región Metropolitana</div>
+      </div>
+
+      <div>
+        <strong>Contacto</strong>
+        <div style="color:rgba(255,255,255,0.9);margin-top:6px">info@otica.cl<br>+56 9 XXXXXXXX</div>
+      </div>
+
+      <div>
+        <strong>Síguenos</strong>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <a href="#" style="width:40px;height:40px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center"><i class="fab fa-facebook-f" style="color:#1565d8"></i></a>
+          <a href="#" style="width:40px;height:40px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center"><i class="fab fa-instagram" style="color:#d6336c"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:18px;color:rgba(255,255,255,0.75)">© <span id="yr"></span> ÓTICA. Todos los derechos reservados.</div>
   </footer>
 
+  <!-- FLOAT WHATSAPP -->
+  <a class="whatsapp" href="https://wa.me/XXXXXXXXXXX" target="_blank" rel="noopener noreferrer" aria-label="Whatsapp">
+    <i class="fa-brands fa-whatsapp" style="font-size:20px"></i>
+  </a>
+
+  <!-- MOBILE MENU (overlay) -->
+  <div id="mobilePanel" style="position:fixed;top:0;right:-100%;width:82%;max-width:360px;height:100vh;background:white;z-index:1600;box-shadow:-12px 0 40px rgba(4,10,20,0.12);transition:right .28s;padding:22px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="logo-otica.png" alt="logo" style="width:74px;border-radius:8px">
+        <div style="font-weight:800">ÓTICA</div>
+      </div>
+      <button id="closeMobile" aria-label="Cerrar menú" style="background:none;border:0;font-size:20px;cursor:pointer"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <nav style="margin-top:18px;display:flex;flex-direction:column;gap:12px;font-weight:700">
+      <a href="#inicio" onclick="closeMobile()">Inicio</a>
+      <a href="#servicios" onclick="closeMobile()">Servicios</a>
+      <a href="#contacto" onclick="closeMobile()">Contacto</a>
+      <a href="tel:+569XXXXXXXX" style="margin-top:10px" onclick="closeMobile()" class="btn btn-ghost">Llamar</a>
+      <a href="#contacto" class="btn btn-primary" style="margin-top:10px" onclick="closeMobile()">Agenda tu hora</a>
+    </nav>
+
+    <div style="margin-top:auto;color:var(--muted);font-size:0.95rem">
+      <div style="font-weight:700;margin-bottom:6px">Horario</div>
+      Lunes a Domingo 09:00 - 20:00
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const closeMenu = document.getElementById('closeMenu');
-    menuBtn.addEventListener('click', ()=> mobileMenu.classList.add('open'));
-    closeMenu.addEventListener('click', ()=> mobileMenu.classList.remove('open'));
+    // Year
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Mobile panel controls
+    const openMenu = document.getElementById('openMenu');
+    const mobilePanel = document.getElementById('mobilePanel');
+    const closeMobileBtn = document.getElementById('closeMobile');
+
+    openMenu?.addEventListener('click', () => {
+      mobilePanel.style.right = '0';
+      openMenu.setAttribute('aria-expanded','true');
+      mobilePanel.setAttribute('aria-hidden','false');
+      // focus first link inside panel
+      setTimeout(()=> mobilePanel.querySelector('nav a')?.focus(), 160);
+    });
+
+    function closeMobile(){
+      mobilePanel.style.right = '-100%';
+      openMenu?.setAttribute('aria-expanded','false');
+      mobilePanel.setAttribute('aria-hidden','true');
+      openMenu?.focus();
+    }
+    closeMobileBtn?.addEventListener('click', closeMobile);
+
+    // close on ESC
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closeMobile();
+    });
+
+    // smooth scroll for anchors and close mobile if open
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const href = this.getAttribute('href');
+        if(href && href.length>1 && href.startsWith('#')){
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+          // close mobile if open
+          if(mobilePanel.style.right === '0') closeMobile();
+        }
+      })
+    });
+
+    // main agenda CTA logic (replace with real URL if you have)
+    document.getElementById('mainAgenda').addEventListener('click', ()=>{ location.href='#contacto' });
+    document.getElementById('heroAgenda').addEventListener('click', ()=>{ /* smooth anchor handled above */ });
+
+    // Accessibility: prevent body scroll when mobile menu open
+    const observer = new MutationObserver(() => {
+      const open = mobilePanel.style.right === '0';
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    observer.observe(mobilePanel, {attributes:true, attributeFilter:['style']});
   </script>
 </body>
 </html>
