@@ -20,6 +20,7 @@
             --white: #FFFFFF; 
             --dark-text: #222222; 
             --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.2);
+            --header-bg: #FFFFFF; 
         }
 
         body {
@@ -27,7 +28,7 @@
             margin: 0;
             line-height: 1.6;
             color: var(--dark-text);
-            overflow-x: hidden; 
+            overflow-x: hidden; /* CLAVE: Previene el scroll horizontal no deseado */
             background-color: var(--light-bg);
         }
 
@@ -39,7 +40,7 @@
 
         /* --- HEADER Y NAVEGACIÓN --- */
         header {
-            background-color: var(--white);
+            background-color: var(--header-bg);
             padding: 15px 0;
             box-shadow: var(--shadow-strong); 
             position: sticky;
@@ -50,9 +51,10 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            flex-wrap: nowrap; 
+            flex-wrap: wrap; /* Permite el flujo en móvil */
         }
         
+        /* Logo (Tamaño PC) */
         .logo-area { display: flex; align-items: center; }
         .logo-area img { 
             height: 120px; 
@@ -87,38 +89,39 @@
             border-bottom: 2px solid var(--secondary-accent);
         }
 
-        /* Botón de Agenda */
+        /* Botón de Agenda (Animado) */
         .btn-agenda-main {
             background-color: var(--secondary-accent); color: var(--white);
             padding: 12px 25px; border-radius: 5px; font-weight: 700;
             box-shadow: 0 4px 0 var(--primary-light); 
             display: flex; align-items: center; gap: 8px;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            animation: pulse-zoom 2s infinite ease-in-out; /* EFECTO ZOOM */
         }
         .btn-agenda-main:hover {
             background-color: var(--primary-light); 
-            transform: translateY(2px);
+            transform: translateY(2px) scale(1.05); /* Ligeramente más grande al pasar el cursor */
             box-shadow: 0 2px 0 var(--primary-light); 
+            animation: none; /* Detenemos la animación al pasar el cursor */
+        }
+        @keyframes pulse-zoom {
+            0% { transform: scale(1); box-shadow: 0 4px 0 var(--primary-light); }
+            50% { transform: scale(1.02); box-shadow: 0 6px 10px rgba(33, 150, 243, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 4px 0 var(--primary-light); }
         }
         
         /* --- SECTION HERO --- */
         .hero-section {
             position: relative;
-            height: 90vh; 
-            display: flex;
-            align-items: center;
-            padding: 0 5%;
+            height: 90vh; display: flex; align-items: center; padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); 
-            overflow: hidden;
-            color: var(--white);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); overflow: hidden; color: var(--white);
         }
 
         .hero-content { z-index: 20; max-width: 60%; }
         .hero-content p:first-child { 
-            font-size: 1.2rem; color: var(--green-action); 
-            font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: 1.2rem; color: var(--green-action); font-weight: 700; 
+            margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;
         }
         .hero-content h1 {
             font-family: 'Playfair Display', serif; font-size: 4.8rem; 
@@ -129,7 +132,6 @@
             font-size: 1.5rem; margin-bottom: 50px; font-weight: 300; 
             color: rgba(255, 255, 255, 0.9);
         }
-
         .hero-buttons { display: flex; gap: 20px; }
         .btn-hero { 
             padding: 15px 30px; border-radius: 30px; font-weight: 700; 
@@ -146,22 +148,16 @@
             height: 100%; width: 50%; max-width: 650px; z-index: 10;
             opacity: 0.95;
         }
-        .hero-floating-image img {
-            height: 100%; width: 100%; object-fit: contain; 
-            object-position: right bottom; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
-        }
 
-        /* --- NUEVA SECCIÓN DE SERVICIOS (PARA ROMPER EL BLANCO) --- */
+        /* --- SECCIÓN DE SERVICIOS --- */
         .services-section {
-            background-color: var(--white); /* Fondo blanco */
+            background-color: var(--white); 
             padding: 80px 0;
             text-align: center;
         }
         .services-section h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            color: var(--primary-dark);
-            margin-bottom: 50px;
+            font-family: 'Playfair Display', serif; font-size: 3rem;
+            color: var(--primary-dark); margin-bottom: 50px;
         }
         .service-cards-grid {
             display: grid;
@@ -169,74 +165,43 @@
             gap: 30px;
         }
         .service-card {
-            background-color: var(--light-bg);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 5px solid var(--secondary-accent); /* Acento de color */
+            background-color: var(--light-bg); border-radius: 10px; padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--secondary-accent);
         }
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-strong);
-        }
-        .service-card i {
-            font-size: 3rem;
-            color: var(--secondary-accent);
-            margin-bottom: 15px;
-        }
-        .service-card h3 {
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-        }
-        .service-card p {
-            font-size: 1rem;
-            color: var(--dark-gray);
-        }
+        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-strong); }
+        .service-card i { font-size: 3rem; color: var(--secondary-accent); margin-bottom: 15px; }
+        .service-card h3 { font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
 
 
-        /* --- FOOTER --- */
+        /* --- FOOTER (ES AZUL PROFUNDO) --- */
         footer {
             background-color: var(--primary-dark); /* Color Azul Profundo */
             color: var(--white);
             padding: 30px 0 15px; 
         }
         .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center; 
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 20px;
         }
         .footer-info {
-            display: flex;
-            gap: 30px;
-            font-size: 0.9rem;
+            display: flex; gap: 30px; font-size: 0.9rem;
         }
         .footer-info span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; gap: 8px;
             color: rgba(255, 255, 255, 0.8);
         }
         .footer-info span i {
-            color: var(--secondary-accent); 
-            font-size: 1.1rem;
+            color: var(--secondary-accent); font-size: 1.1rem;
         }
         .footer-bottom-text {
-            text-align: center;
-            font-size: 0.8rem;
+            text-align: center; font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.5);
         }
-
-        /* --- WHATSAPP FLOTANTE --- */
         .whatsapp-float {
-            position: fixed;
-            width: 60px; height: 60px; bottom: 30px; right: 30px;
-            background-color: #25d366; color: #FFF; border-radius: 50px;
-            text-align: center; font-size: 30px; z-index: 1001;
+            position: fixed; width: 60px; height: 60px; bottom: 30px; right: 30px;
+            background-color: #25d366; color: #FFF; border-radius: 50px; z-index: 1001;
             display: flex; align-items: center; justify-content: center;
             transition: transform 0.3s ease;
         }
@@ -246,43 +211,55 @@
         /* ========================================= */
         @media (max-width: 992px) {
             
+            /* HEADER MÓVIL: Arreglo de Barras */
             header { padding: 10px 0; }
             .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
             
-            /* LOGO MÓVIL: Visibilidad máxima */
+            /* LOGO MÓVIL: AUMENTADO PARA PRIORIDAD */
             .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
-            .logo-area img { height: 70px; max-height: 70px; } 
+            .logo-area img { 
+                height: 75px; /* Altura máxima visible y legible */
+                max-height: 75px;
+            } 
             
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
             
-            /* Botones y Links en Fila, pero Ajustados */
-            .nav-links { gap: 10px; flex-wrap: wrap; justify-content: center; order: 2; width: 100%; }
-            .nav-link { padding: 5px 10px; font-size: 0.85rem; }
-            .btn-agenda-main { width: 100%; justify-content: center; padding: 10px 20px; order: 1; }
+            /* Botones y Links en Fila, Ajustados (Arreglo de desbordamiento) */
+            .social-icons { width: 100%; justify-content: center; order: 3; }
+            .nav-links { 
+                gap: 5px; /* Reducimos el espacio */
+                flex-wrap: wrap; 
+                justify-content: center;
+                order: 2;
+                width: 100%;
+                padding: 5px 0; /* Aseguramos que no haya padding excesivo */
+            }
+            .nav-link { padding: 5px 8px; font-size: 0.8rem; }
+            
+            /* BOTÓN DE AGENDA 100% ANCHO */
+            .btn-agenda-main { 
+                width: 100%; 
+                justify-content: center; 
+                padding: 10px 20px; 
+                order: 1; 
+                animation: pulse-zoom 2s infinite ease-in-out; /* Mantenemos el pulso */
+            }
             
             /* HERO SECTION MÓVIL */
-            .hero-section { height: auto; min-height: 80vh; flex-direction: column; text-align: center; padding: 40px 5%; }
-            .hero-content { max-width: 100%; padding: 0; order: 2; }
             .hero-content h1 { font-size: 2.8rem; line-height: 1.2; }
+            .hero-content p:first-child { font-size: 1rem; }
             .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
             .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
-            .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
-            
-            /* IMAGEN HERO MÓVIL */
-            .hero-floating-image { position: relative; width: 90%; height: 40vh; margin-bottom: 30px; order: 1; opacity: 1; }
             
             /* FOOTER MÓVIL */
-            footer { padding: 20px 10px; }
-            .footer-content { flex-direction: column; gap: 15px; text-align: center; }
             .footer-info { flex-direction: column; gap: 10px; }
             .footer-info span { justify-content: center; }
-            .social-icons { width: 100%; justify-content: center; margin-top: 15px; }
         }
 
         @media (max-width: 576px) {
             .hero-content h1 { font-size: 2.2rem; }
             .hero-content p:nth-of-type(2) { font-size: 1rem; }
-            .logo-area img { height: 60px; }
+            .logo-area img { height: 65px; } /* Ajuste fino para pantallas pequeñas */
         }
     </style>
 </head>
