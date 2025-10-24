@@ -21,7 +21,7 @@
             --dark-text: #222222; 
             --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.2);
             --header-bg: #FFFFFF; 
-            --light-bg: #F9F9F9; /* Un blanco roto muy sutil para el cuerpo */
+            --light-bg: #F9F9F9; 
         }
 
         body {
@@ -31,15 +31,12 @@
             color: var(--dark-text);
             overflow-x: hidden;
             background-color: var(--light-bg);
-            
             /* ESTILO DE FONDO SOFISTICADO (REEMPLAZAR URL CON TU IMAGEN DE OÍDO) */
             background-image: url('oido-bordado-sutil.png'); 
             background-repeat: repeat; 
             background-size: 250px; 
-            background-blend-mode: luminosity; /* Mezcla de colores para sutileza */
-            opacity: 0.95; /* Controla la intensidad del fondo (más cerca de 1 es más sutil) */
+            opacity: 0.95; 
         }
-        /* Ajuste de opacidad para el fondo, ya que aplicarlo directamente al body puede afectar los hijos */
         body::before {
             content: "";
             position: fixed;
@@ -47,10 +44,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('oido-bordado-sutil.png'); /* REEMPLAZAR */
+            background-image: url('oido-bordado-sutil.png'); 
             background-repeat: repeat;
             background-size: 250px;
-            opacity: 0.05; /* OPACIDAD MUY BAJA para el efecto "bordado sutil" */
+            opacity: 0.05; 
             z-index: -1;
             pointer-events: none;
         }
@@ -70,9 +67,9 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* NUEVA BANDA SUPERIOR (IMITA LA FRAJA DE COLOR) */
+        /* BANDA SUPERIOR (REEMBOLSOS) */
         .top-bar {
-            background-color: var(--secondary-accent);
+            background-color: var(--secondary-accent); 
             color: var(--white);
             padding: 5px 0;
             font-size: 0.9rem;
@@ -81,10 +78,41 @@
 
         header { background-color: var(--header-bg); padding: 15px 0; }
         .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; }
-        .logo-area img { height: 120px; max-height: 120px; width: auto; object-fit: contain; } 
-        .nav-right { display: flex; align-items: center; gap: 25px; }
+        
+        /* Logo (Tamaño PC) */
+        .logo-area img { 
+            height: 120px; 
+            max-height: 120px;
+            width: auto;
+            object-fit: contain;
+        } 
+        
+        /* CONTENEDOR DERECHO: Íconos, Menú y Botón - CORRECCIÓN ESTRUCTURAL */
+        .nav-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; /* Reduje el gap un poco para que quepa */
+        }
+        
+        /* Iconos Sociales: Se mantienen */
+        .social-icons { display: flex; gap: 10px; }
+        .social-icon { 
+            width: 38px; height: 38px; border-radius: 50px; 
+            display: flex; align-items: center; justify-content: center;
+            color: var(--white); font-size: 1.2rem; transition: transform 0.3s;
+        }
+        .social-icon.facebook { background-color: #3b5998; }
+        .social-icon.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+        .social-icon.tiktok { background-color: #000000; }
 
-        /* Botones, Links y Animación (Se mantiene del anterior) */
+        /* Links de Navegación */
+        .nav-links { display: flex; gap: 18px; }
+        .nav-link { 
+            color: var(--dark-text); padding: 10px 0; text-decoration: none; 
+            font-weight: 600; border-bottom: 2px solid transparent;
+            transition: border-color 0.3s, color 0.3s;
+        }
+
         /* BOTÓN PRINCIPAL DE AGENDA (HEADER) - ZOOM POTENTE */
         .btn-agenda-main {
             background-color: var(--secondary-accent); 
@@ -104,7 +132,7 @@
             100% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
         }
         
-        /* --- SECTION HERO --- */
+        /* --- SECTION HERO (Estilos se mantienen) --- */
         .hero-section {
             position: relative; height: 90vh; display: flex; align-items: center; padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
@@ -116,84 +144,72 @@
             text-shadow: 2px 2px 10px rgba(0,0,0,0.7); 
         }
 
-        /* --- REDISEÑO DE SECCIÓN DE SERVICIOS (Con imágenes y mejor visual) --- */
-        .services-section {
-            background-color: var(--white); 
-            padding: 80px 0;
-            text-align: center;
+        /* BOTONES HERO - DISEÑO 3D EN CAPTURA */
+        .hero-buttons { display: flex; gap: 20px; }
+        .btn-hero { 
+            padding: 15px 30px; border-radius: 30px; font-weight: 700; 
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
         }
-        .services-section h2 {
-            font-family: 'Playfair Display', serif; font-size: 3rem;
-            color: var(--primary-dark); margin-bottom: 50px;
-        }
+        .btn-hero.whatsapp { background-color: var(--green-whatsapp); color: var(--white); border: none; box-shadow: 0 0 10px rgba(93, 207, 82, 0.8); }
+        .btn-hero.call { background-color: transparent; color: var(--white); border: 2px solid var(--white); box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+        .btn-hero.agenda { background-color: var(--blue-light-float); color: var(--primary-dark); border: none; box-shadow: 0 0 10px rgba(217, 237, 247, 0.8); }
+
+
+        /* --- SECCIÓN DE SERVICIOS --- */
+        .services-section { background-color: var(--white); padding: 80px 0; text-align: center; }
+
+        /* --- FOOTER (AZUL PROFUNDO) --- */
+        footer { background-color: var(--primary-dark); color: var(--white); padding: 30px 0 15px; }
         
-        /* CUADRÍCULA PROFESIONAL CON IMAGEN */
-        .service-cards-grid {
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 30px;
-        }
-        .service-card {
-            background-color: var(--light-bg); 
-            border-radius: 10px; 
-            overflow: hidden; 
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-align: left; 
-        }
-        .service-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); }
-
-        .service-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover; 
-            display: block;
-            border-bottom: 5px solid var(--secondary-accent); /* Acento de color bajo la imagen */
-        }
-
-        .service-content {
-            padding: 25px;
-        }
-
-        .service-content h3 { 
-            font-weight: 700; 
-            color: var(--primary-dark); 
-            margin-bottom: 10px; 
-            font-size: 1.4rem;
-        }
-        
-        /* --- MEDIA QUERIES (ADAPTACIÓN MÓVIL FINAL) --- */
+        /* ========================================= */
+        /* --- MEDIA QUERIES (OPTIMIZACIÓN MÓVIL) --- */
+        /* ========================================= */
         @media (max-width: 992px) {
             
-            /* HEADER MÓVIL */
-            .top-bar { display: none; } /* Ocultamos la franja de color en móvil */
+            /* HEADER MÓVIL: Arreglo de Desbordamiento */
+            .sticky-header-wrap { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+            .top-bar { display: none; } 
+
             header { padding: 10px 0; }
             .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
+            
+            /* LOGO MÓVIL: Visibilidad máxima */
             .logo-area { width: 100%; justify-content: center; margin-bottom: 15px; }
             .logo-area img { height: 75px; max-height: 75px; } 
+            
+            /* REESTRUCTURACIÓN DE ELEMENTOS DERECHOS EN MÓVIL (CORRECCIÓN FINAL) */
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
-            .btn-agenda-main { width: 100%; justify-content: center; padding: 12px 20px; order: 1; }
+
+            /* BOTÓN DE AGENDA: 100% Ancho y se ubica primero (orden 1) */
+            .btn-agenda-main { width: 100%; justify-content: center; padding: 12px 20px; order: 1; margin-bottom: 5px; }
+
+            /* MENÚ DE ENLACES: FIX DEL DESBORDAMIENTO (Se ajusta al 100%) */
             .nav-links { 
-                width: 100%; justify-content: space-evenly; gap: 0; flex-wrap: nowrap; padding: 10px 0; order: 2;
+                width: 100%; 
+                justify-content: space-evenly; 
+                gap: 0; 
+                flex-wrap: nowrap; /* CRÍTICO: Evita saltos y desbordamiento */
+                padding: 10px 0;
+                order: 2;
                 background-color: var(--header-bg); 
             }
             .nav-link { padding: 5px 0; font-size: 0.9rem; flex: 1 1 auto; text-align: center; }
+
+            /* ICONOS SOCIALES: Se ubican al final */
             .social-icons { width: 100%; justify-content: center; order: 3; margin-top: 10px; }
 
-            /* HERO SECTION MÓVIL */
+            /* HERO SECTION MÓVIL: Fix de Desbordamiento de Títulos */
+            .hero-content { max-width: 100%; padding: 0; order: 2; text-align: center; }
             .hero-content h1 { font-size: 2.5rem; line-height: 1.2; }
             .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
             .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
-
-            /* SECCIÓN DE SERVICIOS MÓVIL */
-            .service-cards-grid {
-                grid-template-columns: 1fr; /* Columna única en móvil para mejor visual */
-                gap: 20px;
-            }
         }
 
         @media (max-width: 576px) {
             .hero-content h1 { font-size: 2.0rem; }
+            .logo-area img { height: 65px; }
+            .nav-link { font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -211,10 +227,12 @@
                 </div>
                 <div class="nav-right">
                     
-                    <button class="btn-agenda-main">
-                        <i class="fas fa-calendar-check"></i> AGENDA TU HORA ACÁ
-                    </button>
-                    
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon tiktok" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    </div>
+
                     <nav class="nav-links">
                         <a href="#home" class="nav-link">Inicio</a>
                         <a href="#servicios" class="nav-link">Servicios</a>
@@ -222,11 +240,9 @@
                         <a href="#contacto" class="nav-link">Contacto</a>
                     </nav>
                     
-                    <div class="social-icons">
-                        <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon tiktok" target="_blank"><i class="fab fa-tiktok"></i></a>
-                    </div>
+                    <button class="btn-agenda-main">
+                        <i class="fas fa-calendar-check"></i> AGENDA TU HORA ACÁ
+                    </button>
                     
                 </div>
             </div>
@@ -263,28 +279,32 @@
             <div class="service-cards-grid">
                 
                 <div class="service-card">
-                    <img src="limpieza-domicilio.png" alt="Limpieza de oído con otoscopio" class="service-image"/> <div class="service-content">
+                    <img src="limpieza-domicilio.png" alt="Limpieza de oído con otoscopio" class="service-image"/>
+                    <div class="service-content">
                         <h3><i class="fas fa-pump-soap"></i> Limpieza de Oídos a Domicilio</h3>
                         <p>Eliminación segura y profesional de tapones de cerumen mediante técnicas avanzadas (aspiración o lavado), realizada por Tecnólogos Médicos en la comodidad de tu casa u oficina. ¡Recupera la audición al instante!</p>
                     </div>
                 </div>
 
                 <div class="service-card">
-                    <img src="video-otoscopia.png" alt="Pantalla de Video Otoscopia" class="service-image"/> <div class="service-content">
+                    <img src="video-otoscopia.png" alt="Pantalla de Video Otoscopia" class="service-image"/>
+                    <div class="service-content">
                         <h3><i class="fas fa-camera-retro"></i> Video Otoscopia y Entrega de Informe</h3>
                         <p>Revisión del conducto auditivo con tecnología de video de alta definición (Video Otoscopia) para diagnosticar con precisión y entrega de informe detallado de la condición de tus oídos.</p>
                     </div>
                 </div>
 
                 <div class="service-card">
-                    <img src="indicacion-audifonos.png" alt="Audífonos de última generación" class="service-image"/> <div class="service-content">
+                    <img src="indicacion-audifonos.png" alt="Audífonos de última generación" class="service-image"/>
+                    <div class="service-content">
                         <h3><i class="fas fa-headset"></i> Indicación y Venta de Audífonos</h3>
                         <p>Servicio especializado en la indicación, ajuste y venta de audífonos de última generación. **Requerimos informe audiométrico previo.** Ofrecemos asesoría profesional para la mejor solución auditiva.</p>
                     </div>
                 </div>
                 
                 <div class="service-card">
-                    <img src="educacion-auditiva.png" alt="Profesional dando una charla" class="service-image"/> <div class="service-content">
+                    <img src="educacion-auditiva.png" alt="Profesional dando una charla" class="service-image"/>
+                    <div class="service-content">
                         <h3><i class="fas fa-chalkboard-teacher"></i> Educación y Asesoría Auditiva</h3>
                         <p>Orientación personalizada sobre el cuidado de la salud auditiva, prevención de lesiones, uso correcto de protectores auditivos, y manejo de dispositivos de asistencia para garantizar un bienestar a largo plazo.</p>
                     </div>
