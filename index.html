@@ -42,7 +42,8 @@
         /* --- HEADER --- */
         header {
             background-color: var(--white);
-            padding: 15px 0;
+            /* AUMENTAMOS EL PADDING PARA DARLE ESPACIO AL LOGO GRANDE */
+            padding: 20px 0; 
             box-shadow: var(--shadow-subtle); 
             position: sticky;
             top: 0;
@@ -53,17 +54,13 @@
         /* Logo e info (izquierda) */
         .logo-area { display: flex; align-items: center; gap: 15px; }
         
-        /* CORRECCIÓN CLAVE: Aumentar el tamaño del logo */
+        /* CORRECCIÓN CLAVE: AUMENTAMOS LA ALTURA DEL LOGO A 120PX */
         .logo-area img { 
-            height: 90px; /* Aumentado a 90px (era 60px) */
-            max-height: 90px;
+            height: 120px; 
+            max-height: 120px;
             width: auto;
             object-fit: contain;
         } 
-        /* CORRECCIÓN CLAVE: Aumentar el padding del header para darle espacio al logo */
-        header {
-            padding: 10px 0; /* Menos padding vertical para que no se vea tan vacío */
-        }
         /* Fin corrección logo */
         
         .logo-text h1 {
@@ -121,7 +118,7 @@
             text-decoration: none;
             font-weight: 700;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4); /* Sombra verde */
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4); 
             display: flex; align-items: center; gap: 8px;
         }
         .btn-agenda-main:hover {
@@ -322,8 +319,11 @@
 
         /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (Aseguramos que no se salga) --- */
         @media (max-width: 992px) {
+            header {
+                padding: 10px 0; /* Reducimos el padding en móvil */
+            }
             .logo-area img { 
-                height: 55px; /* Reducimos un poco el tamaño en móvil para que quepa */
+                height: 50px; /* Reducimos el tamaño en móvil para que quepa */
             } 
             /* El resto del media query móvil se mantiene */
             .navbar { flex-direction: column; gap: 15px; }
