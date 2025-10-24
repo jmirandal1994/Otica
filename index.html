@@ -15,87 +15,60 @@
         /* === A. Variables y Reset === */
         /* ========================================= */
         :root {
-            --primary-dark: #0F2038; /* Azul Profundo (Fondo Footer/Hero) */
+            --primary-dark: #0F2038; /* Azul Profundo */
             --primary-light: #1A4D6F; /* Azul Intermedio */
             --secondary-accent: #2196F3; /* Azul Vivo (Botones/Interacciones) */
             --green-whatsapp: #5DCF52; /* Verde WhatsApp */
             --blue-light-float: #D9EDF7; /* Azul Claro Flotante */
             --white: #FFFFFF; 
             --dark-text: #222222; 
-            --light-bg: #F4F7F9; /* Fondo muy claro para secciones */
+            --light-bg: #F4F7F9; 
             --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.15);
             --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.08);
             --header-bg: #FFFFFF; 
+            --social-bg-alpha: rgba(255, 255, 255, 0.15); /* Fondo semitransparente para iconos */
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
-
+        *, *::before, *::after { box-sizing: border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            line-height: 1.6;
-            color: var(--dark-text);
-            overflow-x: hidden; 
-            background-color: var(--light-bg);
-            scroll-behavior: smooth; /* Desplazamiento suave */
+            margin: 0; line-height: 1.6; color: var(--dark-text);
+            overflow-x: hidden; background-color: var(--light-bg);
+            scroll-behavior: smooth;
         }
-
         a { text-decoration: none; color: inherit; }
-        a:hover { text-decoration: none; }
-
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .container { width: 95%; max-width: 1200px; margin: 0 auto; }
 
         /* ========================================= */
         /* === B. Header y Navegación === */
         /* ========================================= */
         header {
-            background-color: var(--header-bg);
-            padding: 15px 0;
-            box-shadow: var(--shadow-strong); 
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background-color: var(--header-bg); padding: 15px 0;
+            box-shadow: var(--shadow-strong); position: sticky;
+            top: 0; z-index: 1000;
         }
         .navbar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            flex-wrap: nowrap; 
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; 
+            position: relative; /* CRÍTICO para posicionamiento del botón de agenda en móvil */
         }
-        
         .logo-area img { 
-            height: 120px; 
-            max-height: 120px;
-            width: auto;
-            object-fit: contain;
-            transition: transform 0.3s ease;
+            height: 120px; max-height: 120px; width: auto; object-fit: contain; transition: transform 0.3s ease;
         } 
-        .logo-area a:hover img {
-            transform: scale(1.02);
-        }
-        
+        .logo-area a:hover img { transform: scale(1.02); }
         .nav-right { display: flex; align-items: center; gap: 25px; }
 
         /* Links de Navegación (PC) */
         .nav-links { display: flex; gap: 20px; }
         .nav-link { 
             color: var(--dark-text); padding: 10px 0; font-weight: 600; 
-            border-bottom: 3px solid transparent; /* Aumento de grosor para premium */
-            transition: border-color 0.3s, color 0.3s, transform 0.3s;
+            border-bottom: 3px solid transparent; transition: border-color 0.3s, color 0.3s, transform 0.3s;
         }
         .nav-link:hover { 
-            color: var(--secondary-accent); 
-            border-bottom-color: var(--secondary-accent); 
+            color: var(--secondary-accent); border-bottom-color: var(--secondary-accent); 
             transform: translateY(-2px);
         }
 
-        /* Botón de Agenda (PC) */
+        /* --- BOTÓN PRINCIPAL DE AGENDA (HEADER) --- */
         .btn-agenda-main {
             background-color: var(--secondary-accent); 
             color: var(--white);
@@ -108,23 +81,53 @@
             box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); 
             display: flex; align-items: center; gap: 8px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            line-height: 1;
+            
+            /* RESTAURADO EL EFECTO DE ZOOM Y PULSO */
             animation: pulse-zoom-smooth 2s infinite ease-in-out; 
-            line-height: 1; /* Fix para alineación */
+        }
+        .btn-agenda-main:hover {
+            transform: scale(1.06); 
+            animation: none; 
+        }
+        @keyframes pulse-zoom-smooth {
+            0% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(33, 150, 243, 0.9); }
+            100% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
         }
 
         /* Menú Hamburguesa (OCULTO en PC) */
         .burger-menu {
-            display: none;
-            cursor: pointer;
-            font-size: 1.8rem;
-            color: var(--primary-dark);
-            border: none;
-            background: none;
-            z-index: 1001; /* Asegura que esté por encima de todo */
+            display: none; cursor: pointer; font-size: 1.8rem;
+            color: var(--primary-dark); border: none; background: none; z-index: 1001;
+            padding: 5px; /* Para mejorar el área de clic en móvil */
         }
         
+        /* --- ESTILO DE ICONOS SOCIALES PREMIUM (NEUMORFISMO/ACRISTALADO) --- */
+        .social-icons { display: flex; gap: 10px; }
+        .social-icon { 
+            width: 38px; height: 38px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: var(--white);
+            background-color: var(--social-bg-alpha); 
+            backdrop-filter: blur(5px); /* Efecto de acristalamiento */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        /* Colores de Hover Sutiles */
+        .social-icon.facebook:hover { background-color: #3b5998; transform: translateY(-3px) scale(1.1); box-shadow: 0 5px 15px rgba(59, 89, 152, 0.6); }
+        .social-icon.instagram:hover { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); transform: translateY(-3px) scale(1.1); box-shadow: 0 5px 15px rgba(220, 39, 67, 0.6); }
+        .social-icon.tiktok:hover { background-color: #000000; transform: translateY(-3px) scale(1.1); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6); }
+        /* Los iconos sociales en el nav-links (móvil) deben verse bien también */
+        .nav-links .social-icons .social-icon { 
+            background-color: var(--primary-dark); 
+            border: none;
+            box-shadow: none;
+        }
+
         /* ========================================= */
-        /* === C. Sección Hero === */
+        /* === C. Sección Hero (Sin Cambios Mayores) === */
         /* ========================================= */
         .hero-section {
             position: relative; height: 90vh; display: flex; align-items: center; padding: 0 5%;
@@ -132,215 +135,100 @@
             box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); overflow: hidden; color: var(--white);
         }
         .hero-content { z-index: 20; max-width: 60%; }
-        .hero-content p:first-of-type { font-weight: 600; letter-spacing: 2px; color: var(--blue-light-float); margin-bottom: 10px; }
-        .hero-content h1 {
-            font-family: 'Playfair Display', serif; font-size: 4.8rem; font-weight: 900; margin-bottom: 25px; line-height: 1.1;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.7); 
-        }
-        .hero-content p:nth-of-type(2) { 
-            font-size: 1.5rem; margin-bottom: 50px; font-weight: 300; color: rgba(255, 255, 255, 0.9);
-        }
-
+        .hero-content h1 { font-family: 'Playfair Display', serif; font-size: 4.8rem; font-weight: 900; margin-bottom: 25px; line-height: 1.1; text-shadow: 2px 2px 10px rgba(0,0,0,0.7); }
+        .hero-content p:nth-of-type(2) { font-size: 1.5rem; margin-bottom: 50px; font-weight: 300; color: rgba(255, 255, 255, 0.9); }
         .hero-buttons { display: flex; gap: 20px; }
-        .btn-hero { 
-            padding: 15px 30px; border-radius: 30px; font-weight: 700; 
-            transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
-        }
+        .btn-hero { padding: 15px 30px; border-radius: 30px; font-weight: 700; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
         .btn-hero:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
 
-        .btn-hero.whatsapp {
-            background-color: var(--green-whatsapp); color: var(--white); border: none;
-        }
-        .btn-hero.call {
-            background-color: transparent; color: var(--white); 
-            border: 2px solid var(--white); 
-        }
-        .btn-hero.agenda {
-            background-color: var(--blue-light-float); color: var(--primary-dark); border: none; 
-        }
-        
-        /* Imagen flotante del Hero (Estilo para que se vea bien) */
         .hero-floating-image {
             position: absolute; right: 0; bottom: 0;
             width: 45%; max-width: 700px;
             z-index: 10;
         }
-        .hero-floating-image img {
-            width: 100%; height: auto;
-            object-fit: contain;
-        }
-
+        .hero-floating-image img { width: 100%; height: auto; object-fit: contain; }
 
         /* ========================================= */
         /* === D. Sección Servicios (Cards) === */
         /* ========================================= */
         .services-section { background-color: var(--white); padding: 80px 0; text-align: center; }
-        .services-section h2 { 
-            font-family: 'Playfair Display', serif; font-size: 2.8rem; 
-            font-weight: 700; margin-bottom: 50px; color: var(--primary-dark);
-        }
+        .services-section h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; margin-bottom: 50px; color: var(--primary-dark); }
         .service-cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
         .service-card {
-            background-color: var(--white);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-subtle);
-            text-align: center;
+            background-color: var(--white); padding: 30px; border-radius: 12px;
+            box-shadow: var(--shadow-subtle); text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-top: 5px solid var(--secondary-accent); /* Borde de acento */
+            border-top: 5px solid var(--secondary-accent);
         }
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-        .service-card i {
-            font-size: 3rem;
-            color: var(--secondary-accent);
-            margin-bottom: 20px;
-            display: block;
-        }
-        .service-card h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 0;
-            color: var(--primary-dark);
-        }
-        .service-card p {
-            font-weight: 400;
-            color: #555;
-        }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); }
+        .service-card i { font-size: 3rem; color: var(--secondary-accent); margin-bottom: 20px; display: block; }
 
         /* ========================================= */
-        /* === E. Footer y Flotantes === */
-        /* ========================================= */
-        footer { 
-            background-color: var(--primary-dark); 
-            color: var(--white); 
-            padding: 30px 0 15px; 
-            font-size: 0.95rem;
-        }
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap; /* Para móvil */
-            gap: 15px;
-        }
-        .footer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .footer-info span i {
-            margin-right: 8px;
-            color: var(--secondary-accent);
-        }
-        .footer-bottom-text {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
-        }
-        
-        .whatsapp-float {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: var(--green-whatsapp);
-            color: var(--white);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            box-shadow: 0 5px 15px rgba(93, 207, 82, 0.5);
-            z-index: 100;
-            transition: transform 0.3s;
-        }
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-        }
-
-
-        /* ========================================= */
-        /* === F. MEDIA QUERIES (Optimización Móvil Avanzada) === */
+        /* === F. MEDIA QUERIES (Optimización Móvil con FIX) === */
         /* ========================================= */
         @media (max-width: 992px) {
             
-            /* HEADER MÓVIL: Reestructuración para el menú de hamburguesa */
+            /* HEADER MÓVIL: Reestructuración */
             header { padding: 10px 0; }
             .navbar { justify-content: space-between; padding: 0 10px; }
             
-            /* LOGO MÓVIL: Ajuste de tamaño */
-            .logo-area img { 
-                height: 70px; 
-                max-height: 70px;
-            } 
+            .logo-area img { height: 70px; max-height: 70px; } 
             
-            .nav-right { 
-                /* Ocultamos el contenedor principal de links y sociales */
-                display: contents; 
-            }
+            .nav-right { display: contents; } /* Contiene los elementos de menú */
+            .burger-menu { display: block; } /* Mostrar el botón de hamburguesa */
 
-            /* MOSTRAR BOTÓN HAMBURGUESA */
-            .burger-menu {
-                display: block; /* Se muestra el botón de hamburguesa */
-            }
-
-            /* BOTÓN DE AGENDA (Móvil) */
+            /* --- FIX CRÍTICO: BOTÓN DE AGENDA EN MÓVIL --- */
             .btn-agenda-main { 
                 position: absolute;
-                top: 10px;
-                right: 60px;
+                top: 50%; /* Centrado vertical */
+                transform: translateY(-50%); /* Ajuste fino */
+                right: 60px; /* Separación del menú de hamburguesa */
                 padding: 8px 15px; 
-                font-size: 0.85rem;
+                font-size: 0.8rem;
                 z-index: 1001;
-                animation: none; /* Desactivar animación en móvil */
+                animation: none; 
+                width: auto; /* Dejar que el contenido defina el ancho */
+                min-width: 120px;
             }
+            /* Si el botón principal no cabe, lo ocultamos y usamos el de la barra de navegación */
+            @media (max-width: 480px) {
+                 .btn-agenda-main {
+                    display: none;
+                 }
+                 .burger-menu {
+                    margin-left: auto; /* Asegura que la hamburguesa esté a la derecha */
+                 }
+            }
+
 
             /* MENÚ DESPLEGABLE (OCULTO POR DEFECTO) */
             .nav-links { 
-                position: absolute; 
-                top: 90px; /* Debajo del header */
-                left: 0;
-                width: 100%;
-                flex-direction: column;
-                background-color: var(--header-bg);
-                box-shadow: var(--shadow-strong);
-                padding: 15px 0;
-                display: none; /* CRÍTICO: Oculto por defecto */
-                transition: max-height 0.5s ease-in-out, opacity 0.3s ease;
-                max-height: 0;
-                overflow: hidden;
-                opacity: 0;
+                position: absolute; top: 90px; left: 0; width: 100%;
+                flex-direction: column; background-color: var(--header-bg);
+                box-shadow: var(--shadow-strong); padding: 15px 0;
+                display: none; max-height: 0; overflow: hidden; opacity: 0;
             }
             .nav-links.active {
-                display: flex;
-                max-height: 500px; /* Suficiente para el menú */
-                opacity: 1;
+                display: flex; max-height: 500px; opacity: 1;
             }
             .nav-link { 
-                padding: 15px 20px; 
-                text-align: center; 
-                border-bottom: 1px solid var(--light-bg);
-                width: 100%;
+                padding: 15px 20px; text-align: center; 
+                border-bottom: 1px solid var(--light-bg); width: 100%;
             }
 
-            /* ICONOS SOCIALES EN MENÚ DESPLEGABLE */
+            /* ICONOS SOCIALES EN MENÚ DESPLEGABLE (Mejora estética en la lista) */
             .social-icons { 
-                justify-content: center; 
-                padding: 15px 0 5px;
+                justify-content: center; padding: 15px 0 5px;
             }
-            .social-icons a { margin: 0 10px; }
+            .social-icons .social-icon { 
+                /* Adaptación del estilo premium a fondo blanco del menú */
+                background-color: var(--primary-dark); 
+                color: var(--white);
+            }
 
 
             /* HERO SECTION MÓVIL */
@@ -348,27 +236,14 @@
             .hero-content { max-width: 100%; order: 1; margin-bottom: 30px; }
             .hero-content h1 { font-size: 2.5rem; line-height: 1.2; } 
             .hero-content p:nth-of-type(2) { font-size: 1.1rem; margin-bottom: 30px; }
-
-            .hero-floating-image {
-                position: relative; right: auto; bottom: auto;
-                width: 80%; max-width: 400px; /* Reducir el tamaño de la imagen */
-                margin: 0 auto;
-                order: 2;
-            }
-
+            .hero-floating-image { position: relative; right: auto; bottom: auto; width: 80%; max-width: 400px; margin: 0 auto; order: 2; }
             .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
             .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
             
-            /* FOOTER MÓVIL */
-            .footer-content { flex-direction: column; text-align: center; }
-            .footer-info { align-items: center; }
-            .social-icons { margin-top: 10px; }
         }
 
         @media (max-width: 576px) {
             .hero-content h1 { font-size: 2.0rem; }
-            .services-section h2 { font-size: 2rem; }
-            .btn-agenda-main { right: 10px; top: 10px; }
         }
     </style>
 </head>
@@ -396,12 +271,25 @@
                 <a href="#servicios" class="nav-link">Servicios</a>
                 <a href="#convenios" class="nav-link">Convenios</a>
                 <a href="#contacto" class="nav-link">Contacto</a>
-                <div class="social-icons">
+                <div class="social-icons" style="margin-top: 20px;">
                     <a href="#" class="social-icon facebook" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-icon instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="#" class="social-icon tiktok" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
             </nav>
+            <div class="social-icons social-icons-desktop">
+                <a href="#" class="social-icon facebook" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon tiktok" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            </div>
+            
+            <style>
+                /* Ocultar iconos de escritorio cuando se usa la barra de menú */
+                @media (max-width: 992px) {
+                    .social-icons-desktop { display: none; }
+                }
+            </style>
+            
         </div>
     </div>
 </header>
@@ -460,7 +348,7 @@
     
 </main>
 
-<footer role="contentinfo">
+<footer>
     <div class="container">
         <div class="footer-content">
             <div class="footer-info">
@@ -494,7 +382,7 @@
         agendaButtons.forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
-                // **Nota Importante:** Reemplace la siguiente línea con la URL real de su sistema de reservas (e.g., AgendaPro, Calendly, etc.)
+                // **Nota Importante:** Reemplace la siguiente línea con la URL real de su sistema de reservas 
                 console.log('Redirigiendo a la plataforma de agendamiento...');
                 alert('Redirigiendo a la plataforma de agendamiento profesional. Por favor, reemplace este alert con su URL de reservas.');
                 // window.location.href = 'URL_DE_SU_PLATAFORMA_DE_RESERVAS';
@@ -505,22 +393,21 @@
         burgerMenu.addEventListener('click', () => {
             const isExpanded = burgerMenu.getAttribute('aria-expanded') === 'true' || false;
             
-            // Toggle de la clase 'active' para desplegar/contraer el menú
             navLinks.classList.toggle('active');
             
             // Alternar el icono de hamburguesa a una 'X' y viceversa
             burgerMenu.querySelector('i').classList.toggle('fa-bars');
             burgerMenu.querySelector('i').classList.toggle('fa-times');
             
-            // Actualizar el estado de accesibilidad
             burgerMenu.setAttribute('aria-expanded', !isExpanded);
         });
         
         // 3. Cerrar el menú después de hacer clic en un enlace (en móvil)
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
-                if (navLinks.classList.contains('active')) {
-                    burgerMenu.click(); // Simula un clic en la hamburguesa para cerrar
+                // Asegura que el menú solo se cierre si está activo y en modo móvil
+                if (window.innerWidth <= 992 && navLinks.classList.contains('active')) {
+                    burgerMenu.click(); 
                 }
             });
         });
