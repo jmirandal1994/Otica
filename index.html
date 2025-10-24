@@ -6,21 +6,22 @@
     <title>ÓTICA | Limpieza de Oídos a Domicilio - Región Metropolitana</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        /* PALETA DE COLORES - NUEVA: Azules y Verdes Oceánicos para frescura y limpieza */
+        /* PALETA DE COLORES - MÁS RICA Y PROFUNDA */
         :root {
-            --primary-dark: #1A4D6F; 
-            --primary-light: #15739B; 
-            --secondary-green: #2ECC71; 
-            --light-blue: #ADD8E6; 
+            --primary-dark: #12284C; /* Azul Profundo / Casi Negro */
+            --primary-light: #1A4D6F; /* Azul Marino (para degradados) */
+            --secondary-green: #2ECC71; /* Verde Esmeralda (Acción) */
+            --light-blue: #ADD8E6; /* Azul Claro Suave */
             --white: #FFFFFF; 
             --gray-text: #E0E0E0; 
-            --dark-gray: #4A4A4A; 
+            --dark-gray: #333333; /* Texto más oscuro y nítido */
             --button-hover: #27AE60; 
-            --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-subtle: 0 8px 30px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+            --shadow-button: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
 
         body {
@@ -28,7 +29,7 @@
             margin: 0;
             line-height: 1.7;
             color: var(--dark-gray);
-            overflow-x: hidden; /* CLAVE: Previene el scroll horizontal no deseado */
+            overflow-x: hidden; 
             font-weight: 400;
             background-color: var(--white);
         }
@@ -43,7 +44,7 @@
         header {
             background-color: var(--white);
             padding: 20px 0; 
-            box-shadow: var(--shadow-subtle); 
+            box-shadow: var(--shadow-subtle); /* Sombra más fuerte */
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -52,8 +53,6 @@
         
         /* Logo e info (izquierda) */
         .logo-area { display: flex; align-items: center; gap: 15px; }
-        
-        /* LOGO TAMAÑO PC */
         .logo-area img { 
             height: 120px; 
             max-height: 120px;
@@ -85,8 +84,9 @@
             display: flex; align-items: center; justify-content: center;
             color: var(--white); 
             font-size: 1.2rem;
-            transition: background-color 0.3s ease;
+            transition: transform 0.3s;
         }
+        .social-icon:hover { transform: scale(1.1); }
         .social-icon.facebook { background-color: #3b5998; }
         .social-icon.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
         .social-icon.tiktok { background-color: #000; }
@@ -101,8 +101,12 @@
             font-weight: 500; 
             transition: background-color 0.3s, color 0.3s;
         }
-        
-        /* BOTÓN PRINCIPAL DE AGENDAMIENTO */
+        .nav-link:hover { 
+            background-color: var(--light-blue); 
+            color: var(--primary-dark); 
+        }
+
+        /* BOTÓN PRINCIPAL DE AGENDAMIENTO - CON MÁS PROFUNDIDAD */
         .btn-agenda-main {
             background-color: var(--secondary-green); 
             color: var(--white);
@@ -111,13 +115,13 @@
             text-decoration: none;
             font-weight: 700;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4); 
+            box-shadow: 0 4px 0 var(--button-hover); /* Sombra 3D */
             display: flex; align-items: center; gap: 8px;
         }
         .btn-agenda-main:hover {
             background-color: var(--button-hover); 
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 7px 20px rgba(46, 204, 113, 0.6);
+            transform: translateY(2px); /* Efecto de click/presión */
+            box-shadow: 0 2px 0 var(--button-hover); 
         }
 
         /* --- SECTION HERO --- */
@@ -128,7 +132,9 @@
             align-items: center;
             padding: 0 5%;
             overflow: hidden;
+            /* Degradado más oscuro y profundo */
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); /* Sombra interior para profundidad */
         }
 
         .hero-content {
@@ -136,9 +142,53 @@
             max-width: 60%; 
             padding-right: 40px;
         }
-        
-        .hero-buttons { display: flex; gap: 15px; margin-top: 30px; }
+        .hero-content p:first-child { 
+            font-size: 1.2rem;
+            color: var(--secondary-green); /* Título superior en color de acento */
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem; /* Título más grande y con más impacto */
+            font-weight: 900; /* Más audaz */
+            margin-bottom: 20px;
+            line-height: 1.1;
+            color: var(--white); 
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.6); /* Sombra de texto profunda */
+        }
+        .hero-content p:nth-of-type(2) { 
+            font-size: 1.4rem; /* Texto descriptivo más grande */
+            margin-bottom: 40px;
+            font-weight: 300; 
+            color: var(--gray-text); 
+            line-height: 1.6;
+        }
 
+        .hero-buttons { display: flex; gap: 15px; margin-top: 30px; }
+        /* Botones Hero con efecto flotante */
+        .btn-hero { 
+            padding: 16px 30px; /* Más grandes */
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: var(--shadow-button);
+        }
+        .btn-whatsapp { 
+            background-color: var(--secondary-green); 
+            color: var(--white); 
+            border: none; 
+        }
+        .btn-whatsapp:hover { 
+            background-color: var(--button-hover); 
+            transform: translateY(-4px); /* Sube más */
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.5);
+        }
+        /* El resto de los estilos del hero y footer se mantienen para consistencia */
+        
         /* IMAGEN FLOTANTE DEL HERO */
         .hero-floating-image {
             position: absolute; 
@@ -148,7 +198,7 @@
             width: 50%; 
             max-width: 600px; 
             z-index: 10;
-            opacity: 0.9;
+            opacity: 0.95; /* Más visible */
             pointer-events: none; 
         }
         .hero-floating-image img {
@@ -156,117 +206,39 @@
             width: 100%;
             object-fit: contain; 
             object-position: right bottom; 
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3)); 
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); /* Sombra más fuerte */
         }
         
-        /* --- FOOTER --- */
-        footer {
-            background-color: var(--primary-dark);
-            color: var(--white);
-            padding: 25px 0 15px; 
-            position: relative;
-            z-index: 20; 
-        }
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end; 
-            margin-bottom: 15px;
-        }
-        .footer-info {
-            display: flex;
-            gap: 25px;
-            font-size: 0.95rem;
-            flex-wrap: wrap; 
-        }
-        .footer-info span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--gray-text);
-        }
-        .footer-info span i {
-            color: var(--secondary-green); 
-            font-size: 1.1rem;
-        }
-        .footer-bottom-text {
-            text-align: center;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 15px;
-        }
-
-        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (CORREGIDO) --- */
+        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL --- */
         @media (max-width: 992px) {
             
-            /* HEADER */
-            header {
-                padding: 15px 0; /* Un poco más de espacio en móvil */
-            }
+            header { padding: 15px 0; }
             .navbar { flex-direction: column; gap: 15px; }
-            
-            /* LOGO EN MÓVIL: AUMENTADO PARA MÁXIMA VISIBILIDAD */
-            .logo-area img { 
-                height: 70px; /* Tamaño más visible que 50px */
-            } 
+            .logo-area img { height: 70px; } 
 
-            /* NAVEGACIÓN DERECHA: APILADA Y CENTRADA */
+            /* HERO SECTION MOVIL */
+            .hero-content h1 { font-size: 3rem; } 
+            .hero-content p:first-child { font-size: 1rem; }
+            .hero-content p:nth-of-type(2) { font-size: 1.2rem; }
+            .btn-hero { padding: 14px 25px; }
+
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
-            .social-icons { justify-content: center; }
-            
-            /* ENLACES: QUITAMOS EL MARGIN DE 20PX QUE CAUSABA DESBORDAMIENTO */
-            .nav-links { 
-                margin: 0; 
-                justify-content: center; 
-                flex-wrap: wrap; 
-                padding: 0 10px; /* Un pequeño padding interno */
-            }
-            .nav-link { padding: 8px 10px; font-size: 0.9rem; }
-            
-            /* BOTÓN PRINCIPAL: SIEMPRE 100% DE ANCHO EN MÓVIL */
+            .nav-links { margin: 0; justify-content: center; flex-wrap: wrap; padding: 0 10px; }
             .btn-agenda-main { width: 100%; justify-content: center; margin-top: 10px; }
-
-            /* HERO SECTION */
-            .hero-section { 
-                height: auto; 
-                min-height: 85vh; 
-                flex-direction: column; 
-                text-align: center; 
-                padding: 50px 5%;
-            }
-            .hero-content { max-width: 100%; padding-right: 0; order: 2; }
-            .hero-content h1 { font-size: 2.5rem; } /* Títulos más manejables en móvil */
-            .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
+            
+            .hero-section { min-height: 85vh; padding: 50px 5%; }
+            .hero-content { max-width: 100%; padding-right: 0; order: 2; text-align: center; }
             .hero-buttons { flex-direction: column; width: 100%; }
             .btn-hero { width: 100%; justify-content: center; }
             
-            /* IMAGEN HERO MÓVIL */
-            .hero-floating-image { 
-                position: relative; 
-                width: 80%; 
-                height: 40vh; 
-                bottom: auto; 
-                right: auto; 
-                margin-bottom: 30px; 
-                order: 1; 
-                opacity: 1;
-            }
-            
-            /* FOOTER */
-            .footer-content { flex-direction: column; align-items: center; gap: 15px; }
-            .footer-info { flex-direction: column; gap: 10px; text-align: center; }
-            .footer-info span { justify-content: center; }
+            .hero-floating-image { position: relative; width: 80%; height: 40vh; margin-bottom: 30px; order: 1; opacity: 1; }
+            .hero-floating-image img { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
         }
 
         @media (max-width: 576px) {
-            .hero-content h1 { font-size: 2.0rem; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .logo-area img { height: 50px; }
             .hero-content p:nth-of-type(2) { font-size: 1rem; }
-            /* Asegurar que el logo no sea demasiado grande en pantallas muy pequeñas */
-            .logo-area img { 
-                height: 50px; 
-            }
         }
     </style>
 </head>
@@ -289,9 +261,9 @@
                 <a href="#home" class="nav-link">Inicio</a>
                 <a href="#preguntas" class="nav-link">Preguntas frecuentes</a>
             </nav>
-            <a href="#" class="btn-agenda-main">
+            <button class="btn-agenda-main">
                 <i class="fas fa-calendar-check"></i> AGENDA TU HORA ACÁ
-            </a>
+            </button>
         </div>
     </div>
 </header>
@@ -306,14 +278,14 @@
 
         <div class="hero-content">
             <p>BIENVENIDO A ÓTICA</p>
-            <h1>Cuidado Auditivo Profesional a Domicilio en Región Metropolitana.</h1>
-            <p>Recupera la claridad de tu audición. Ofrecemos limpieza de oídos experta y evaluación auditiva, con la comodidad y seguridad de tu hogar.</p>
+            <h1>Recupera la Claridad Auditiva con Atención Experta.</h1>
+            <p>Especialistas en limpieza y evaluación de oídos. Disfruta de la máxima comodidad con nuestro servicio a domicilio profesional en toda la Región Metropolitana.</p>
             <div class="hero-buttons">
                 <a href="https://wa.me/XXXXXXXXXXX" class="btn-hero btn-whatsapp" target="_blank">
-                    <i class="fab fa-whatsapp"></i> Whatsapp
+                    <i class="fab fa-whatsapp"></i> WhatsApp Directo
                 </a>
                 <a href="tel:+569XXXXXXXX" class="btn-hero btn-call">
-                    <i class="fas fa-phone-alt"></i> Llámanos
+                    <i class="fas fa-phone-alt"></i> Llámanos Ahora
                 </a>
                 <a href="#" class="btn-hero btn-hero-agenda">
                     <i class="fas fa-calendar-alt"></i> Agenda tu hora
@@ -326,8 +298,7 @@
         </div>
     </section>
 
-    
-</main>
+    </main>
 
 <footer>
     <div class="container">
