@@ -12,11 +12,11 @@
     <style>
         /* PALETA DE COLORES - AZUL PROFUNDO Y ACENTO VIVO */
         :root {
-            --primary-dark: #0F2038; /* Azul Noche (Fondo, Texto principal, Footer) */
-            --primary-light: #1A4D6F; /* Azul Marino */
-            --secondary-accent: #2196F3; /* Azul Eléctrico (Acento visual) */
-            --green-whatsapp: #5DCF52; /* Verde WhatsApp más vibrante (del ejemplo) */
-            --blue-light-float: #D9EDF7; /* Azul muy claro para botón flotante */
+            --primary-dark: #0F2038; 
+            --primary-light: #1A4D6F; 
+            --secondary-accent: #2196F3; /* Azul Eléctrico (Acento visual - Botón Principal) */
+            --green-whatsapp: #5DCF52; 
+            --blue-light-float: #D9EDF7; 
             --white: #FFFFFF; 
             --dark-text: #222222; 
             --shadow-strong: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -28,7 +28,7 @@
             margin: 0;
             line-height: 1.6;
             color: var(--dark-text);
-            overflow-x: hidden; 
+            overflow-x: hidden; /* CLAVE: Previene el scroll horizontal no deseado */
             background-color: var(--light-bg);
         }
 
@@ -47,9 +47,22 @@
             top: 0;
             z-index: 1000;
         }
-        .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; }
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap; /* CLAVE para el responsive */
+        }
+        
+        /* Logo (Tamaño PC) */
         .logo-area { display: flex; align-items: center; }
-        .logo-area img { height: 120px; max-height: 120px; width: auto; object-fit: contain; } 
+        .logo-area img { 
+            height: 120px; 
+            max-height: 120px;
+            width: auto;
+            object-fit: contain;
+        } 
+        
         .nav-right { display: flex; align-items: center; gap: 25px; }
 
         /* Iconos Sociales y Links */
@@ -57,7 +70,8 @@
         .social-icon { 
             width: 38px; height: 38px; border-radius: 50px; 
             display: flex; align-items: center; justify-content: center;
-            color: var(--white); font-size: 1.2rem; transition: transform 0.3s;
+            color: var(--white); font-size: 1.2rem;
+            transition: transform 0.3s;
         }
         .social-icon.facebook { background-color: #3b5998; }
         .social-icon.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
@@ -71,58 +85,62 @@
         }
         .nav-link:hover { color: var(--secondary-accent); border-bottom: 2px solid var(--secondary-accent); }
 
-        /* BOTÓN PRINCIPAL DE AGENDA (HEADER) - AÚN MEJOR */
+        /* BOTÓN PRINCIPAL DE AGENDA (HEADER) - ZOOM SIN RELIEVE */
         .btn-agenda-main {
             background-color: var(--secondary-accent); 
             color: var(--white);
             padding: 12px 25px; 
-            border-radius: 50px; /* Forma de píldora / óvalo */
-            font-weight: 900; /* Texto más audaz */
+            border-radius: 50px; 
+            font-weight: 900; 
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 0 5px rgba(33, 150, 243, 0.8), 0 0 20px rgba(33, 150, 243, 0.4); /* Brillo externo */
+            box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Sombra suave, sin relieve 3D */
             display: flex; align-items: center; gap: 8px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             
-            /* Animación de Pulso/Brillo */
-            animation: glow-pulse 2.5s infinite ease-in-out; 
+            /* Animación de Pulso/Zoom Suave */
+            animation: pulse-zoom-smooth 2.5s infinite ease-in-out; 
         }
         .btn-agenda-main:hover {
             transform: scale(1.05); /* Ligeramente más grande al pasar el cursor */
             animation: none; /* Detenemos la animación al pasar el cursor */
         }
-        @keyframes glow-pulse {
-            0% { box-shadow: 0 0 5px rgba(33, 150, 243, 0.8), 0 0 20px rgba(33, 150, 243, 0.4); }
-            50% { box-shadow: 0 0 15px rgba(33, 150, 243, 1), 0 0 35px rgba(33, 150, 243, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(33, 150, 243, 0.8), 0 0 20px rgba(33, 150, 243, 0.4); }
+        @keyframes pulse-zoom-smooth {
+            0% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
+            50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(33, 150, 243, 0.9); }
+            100% { transform: scale(1); box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
         }
         
-        /* --- SECTION HERO --- */
+        /* --- SECTION HERO (Resto de estilos se mantiene) --- */
         .hero-section {
             position: relative; height: 90vh; display: flex; align-items: center; padding: 0 5%;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
             box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); overflow: hidden; color: var(--white);
         }
         .hero-content { z-index: 20; max-width: 60%; }
-        .hero-content p:first-child { font-size: 1.2rem; color: var(--green-action); font-weight: 700; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase; }
+        .hero-content p:first-child { 
+            font-size: 1.2rem; color: var(--green-whatsapp); font-weight: 700; 
+            margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;
+        }
         .hero-content h1 {
             font-family: 'Playfair Display', serif; font-size: 4.8rem; font-weight: 900; margin-bottom: 25px; line-height: 1.1;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.7); 
         }
-        .hero-content p:nth-of-type(2) { font-size: 1.5rem; margin-bottom: 50px; font-weight: 300; color: rgba(255, 255, 255, 0.9); }
+        .hero-content p:nth-of-type(2) { 
+            font-size: 1.5rem; margin-bottom: 50px; font-weight: 300; color: rgba(255, 255, 255, 0.9);
+        }
 
-        /* BOTONES HERO - NUEVO DISEÑO FLOTANTE/3D */
+        /* BOTONES HERO - DISEÑO 3D EN CAPTURA */
         .hero-buttons { display: flex; gap: 20px; }
         .btn-hero { 
             padding: 15px 30px; border-radius: 30px; font-weight: 700; 
             transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Sombra base sutil */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
         }
         
         .btn-hero.whatsapp {
             background-color: var(--green-whatsapp); 
-            color: var(--white); 
-            border: none;
-            box-shadow: 0 0 10px rgba(93, 207, 82, 0.8); /* Brillo verde */
+            color: var(--white); border: none;
+            box-shadow: 0 0 10px rgba(93, 207, 82, 0.8);
         }
         .btn-hero.whatsapp:hover { background-color: #4CAF50; transform: translateY(-3px); }
 
@@ -130,27 +148,19 @@
             background-color: transparent; 
             color: var(--white); 
             border: 2px solid var(--white); /* Borde blanco flotante */
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Brillo blanco */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         .btn-hero.call:hover { background-color: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
 
         .btn-hero.agenda {
-            background-color: var(--blue-light-float); /* Azul claro */
-            color: var(--primary-dark); 
-            border: none; 
-            box-shadow: 0 0 10px rgba(217, 237, 247, 0.8); /* Brillo azul claro */
+            background-color: var(--blue-light-float); 
+            color: var(--primary-dark); border: none; 
+            box-shadow: 0 0 10px rgba(217, 237, 247, 0.8);
         }
         .btn-hero.agenda:hover { background-color: var(--white); transform: translateY(-3px); }
 
 
-        /* IMAGEN FLOTANTE DEL HERO */
-        .hero-floating-image {
-            position: absolute; right: 0; bottom: -50px; 
-            height: 100%; width: 50%; max-width: 650px; z-index: 10;
-            opacity: 0.95;
-        }
-
-        /* --- SECCIÓN DE SERVICIOS (AZUL Y BLANCO) --- */
+        /* --- SECCIÓN DE SERVICIOS (PARA ROMPER MONOTONÍA) --- */
         .services-section {
             background-color: var(--white); 
             padding: 80px 0;
@@ -185,21 +195,35 @@
         /* ========================================= */
         @media (max-width: 992px) {
             
-            /* HEADER MÓVIL: Fix de Desbordamiento */
+            /* HEADER MÓVIL: Arreglo de Desbordamiento */
             header { padding: 10px 0; }
             .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
             
             /* LOGO MÓVIL: Visibilidad máxima */
             .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
-            .logo-area img { height: 75px; max-height: 75px; } 
+            .logo-area img { 
+                height: 75px; 
+                max-height: 75px;
+            } 
             
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
+            
+            /* Fix de Desbordamiento: Los elementos se ajustan al 100% en columna */
             .social-icons { width: 100%; justify-content: center; order: 3; }
-            .nav-links { gap: 5px; flex-wrap: wrap; justify-content: center; order: 2; width: 100%; padding: 5px 0; }
+            .nav-links { 
+                gap: 5px; flex-wrap: wrap; justify-content: center;
+                order: 2; width: 100%; padding: 5px 0;
+            }
             .nav-link { padding: 5px 8px; font-size: 0.8rem; }
             
-            /* BOTÓN DE AGENDA 100% ANCHO (Mantenemos el pulso) */
-            .btn-agenda-main { width: 100%; justify-content: center; padding: 10px 20px; order: 1; animation: glow-pulse 2.5s infinite ease-in-out; }
+            /* BOTÓN DE AGENDA 100% ANCHO */
+            .btn-agenda-main { 
+                width: 100%; 
+                justify-content: center; 
+                padding: 10px 20px; 
+                order: 1; 
+                animation: pulse-zoom-smooth 2.5s infinite ease-in-out; /* Animación activa */
+            }
             
             /* HERO SECTION MÓVIL */
             .hero-content h1 { font-size: 2.8rem; line-height: 1.2; }
