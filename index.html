@@ -78,15 +78,18 @@
     .btn-primary{
       background: linear-gradient(90deg,var(--accent-3),var(--accent-2));
       color:white;box-shadow: 0 10px 30px rgba(43,138,246,0.16);
-      /* Añadido: Transición para el efecto hover/zoom */
+      /* INICIO DE CORRECCIÓN: Agregar transición para hover/zoom */
       transition: transform .28s cubic-bezier(.2,.9,.3,1), box-shadow .28s, background .28s;
+      /* FIN DE CORRECCIÓN */
     }
-    /* Efecto Hover/Zoom para .btn-primary */
+    
+    /* INICIO DE CORRECCIÓN: Efecto Hover/Zoom para .btn-primary (Header) */
     .btn-primary:hover {
-      transform: translateY(-4px) scale(1.03); /* Ligeramente más pronunciado */
-      box-shadow: 0 28px 70px rgba(43,138,246,0.35); /* Sombra más grande */
+      transform: translateY(-4px) scale(1.03); 
+      box-shadow: 0 28px 70px rgba(43,138,246,0.35); 
     }
-
+    /* FIN DE CORRECCIÓN */
+    
     .btn-ghost{background:transparent;border:1px solid rgba(10,20,40,0.06);color:var(--text);padding:8px 12px;border-radius:10px;font-weight:700}
 
     .hamburger{display:none;background:var(--card);border-radius:10px;padding:8px;border:0;box-shadow:var(--shadow-md);cursor:pointer}
@@ -142,27 +145,30 @@
 
     .hero-ctas{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
 
-    /* Animación sutil de "respiro" para el botón principal (Agenda tu hora) */
+    /* INICIO DE CORRECCIÓN: Animación sutil de "respiro"/Zoom cíclico para el botón principal */
     @keyframes pulseZoom {
       0% { transform: scale(1); box-shadow: 0 18px 40px rgba(43,138,246,0.20); }
       50% { transform: scale(1.02); box-shadow: 0 22px 50px rgba(43,138,246,0.25); }
       100% { transform: scale(1); box-shadow: 0 18px 40px rgba(43,138,246,0.20); }
     }
+    /* FIN DE CORRECCIÓN */
 
     .cta-hero{
       display:inline-flex;align-items:center;gap:12px;padding:14px 26px;border-radius:999px;font-weight:900;border:0;cursor:pointer;
       color:white;background:linear-gradient(90deg,var(--accent-2),var(--accent-3));
       box-shadow: 0 18px 40px rgba(43,138,246,0.20);
       transform: translateZ(0);
-      /* Transición y Animación de Zoom/Pulse */
+      /* INICIO DE CORRECCIÓN: Aplicar animación cíclica y transición mejorada */
       transition: transform .28s cubic-bezier(.2,.9,.3,1), box-shadow .28s, background .28s;
       animation: pulseZoom 4s infinite ease-in-out; 
+      /* FIN DE CORRECCIÓN */
     }
-    /* Efecto Hover/Zoom para .cta-hero (sobrescribe la escala de la animación mientras se interactúa) */
+    /* INICIO DE CORRECCIÓN: Efecto Hover/Zoom para .cta-hero (más pronunciado) */
     .cta-hero:hover{
-      transform:translateY(-6px) scale(1.03); /* Ligeramente más pronunciado */
+      transform:translateY(-6px) scale(1.03); 
       box-shadow:0 28px 70px rgba(43,138,246,0.28);
     }
+    /* FIN DE CORRECCIÓN */
 
     /* subtle micro-button with glass for secondary actions */
     .btn-glass{background:rgba(255,255,255,0.12);backdrop-filter: blur(6px);padding:10px 14px;border-radius:999px;color:white;border:1px solid rgba(255,255,255,0.06);font-weight:700}
@@ -384,7 +390,7 @@
           <div style="display:flex;gap:10px;margin-top:8px">
             <a href="#" aria-label="Instagram" target="_blank" rel="noopener noreferrer" style="width:40px;height:40px;background:white;border-radius:8px;display:inline-flex;align-items:center;justify-content:center"><i class="fab fa-instagram" style="color:#d6336c"></i></a>
             <a href="#" aria-label="Facebook" target="_blank" rel="noopener noreferrer" style="width:40px;height:40px;background:white;border-radius:8px;display:inline-flex;align-items:center;justify-content:center"><i class="fab fa-facebook-f" style="color:#1565d8"></i></a>
-          </div>
+            </div>
         </div>
       </div>
     </div>
@@ -412,7 +418,7 @@
         <div style="display:flex;gap:8px;margin-top:6px">
           <a href="#" target="_blank" rel="noopener noreferrer" style="width:40px;height:40px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center"><i class="fab fa-facebook-f" style="color:#1565d8"></i></a>
           <a href="#" target="_blank" rel="noopener noreferrer" style="width:40px;height:40px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center"><i class="fab fa-instagram" style="color:#d6336c"></i></a>
-        </div>
+          </div>
       </div>
     </div>
 
