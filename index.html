@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÓTICA | Audición y Lavado de Oídos a Domicilio - Región Metropolitana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        /* PALETA DE COLORES - ADAPTADA: Usaremos un azul limpio para el logo de OÍDOS, manteniendo la sofisticación */
+        :root {
+            --primary: #2C3A47; /* Gris Azulado Oscuro (Texto principal/Fondo oscuro) */
+            --accent: #007BFF; /* Azul Brillante/Claro (Nuevo color de ACENTO, relacionado con limpieza/salud) */
+            --bg: #F9F7F1; /* Blanco Roto Cálido (Base) */
+            --bg-light: #FFFFFF; /* Blanco Puro */
+            --muted: #A3A3A3; /* Gris Suave */
+            --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --bright-accent: #FFC107; /* Amarillo/Dorado Brillante para usar en fondos oscuros */
+            --secondary-dark: #1E88E5; /* Azul Secundario para botones y hover */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            color: var(--primary);
+            overflow-x: hidden;
+            font-weight: 300;
+            background-color: var(--bg);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--bg-light);
+            padding: 18px 0;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.08); 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        
+        /* LOGO */
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-area img { height: 60px; } /* Usaremos el logo que diseñamos */
+        .logo-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin: 0;
+            line-height: 1;
+        }
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1;
+            font-weight: 400;
+        }
+
+        /* Botones y Hover */
+        .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 700; transition: all 0.2s; display: inline-block; }
+        
+        /* BOTÓN DE AGENDAMIENTO: Más llamativo y con un color fuerte (como solicitaste) */
+        .btn-agenda { 
+            background-color: var(--accent); 
+            color: white; 
+            border: 2px solid var(--accent); 
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
+            font-weight: 900; 
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4); /* Sombra para destacarlo */
+        }
+        .btn-agenda:hover { 
+            transform: translateY(-3px) scale(1.03); 
+            background-color: var(--secondary-dark); 
+            border-color: var(--secondary-dark); 
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6); 
+        }
+        .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
+        .btn-panel:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
+
+        /* --- SECTION HERO --- */
+        .hero {
+            position: relative;
+            height: 85vh; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            padding: 0 5%;
+            margin-bottom: 80px; 
+            overflow: hidden; 
+            
+            /* FONDO AZUL/VERDE SOFISTICADO (Adaptación del morado de la plantilla) */
+            background: linear-gradient(135deg, #1A4D6F 0%, #15739B 100%);
+            box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2); 
+        }
+        .hero-content {
+            z-index: 20; 
+            max-width: 60%; 
+            padding-right: 40px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem; 
+            margin-bottom: 15px;
+            line-height: 1;
+            color: white; 
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5); 
+        }
+        .hero p {
+            font-size: 1.3rem; 
+            margin-bottom: 50px;
+            font-weight: 400; 
+            color: rgba(255, 255, 255, 0.9); 
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5); 
+        }
+        .hero-content p:nth-child(1) {
+             color: var(--bright-accent) !important; 
+             text-shadow: none;
+             font-weight: 700 !important;
+        }
+
+        /* Contenedor de la Imagen: Ahora es de AUDICIÓN */
+        .hero-image {
+            position: absolute; 
+            right: 5%; 
+            bottom: 0%; 
+            height: 95%;
+            width: 40%; 
+            max-width: 450px; 
+            z-index: 10;
+        }
+        .hero-image img {
+            height: 100%; 
+            width: 100%;
+            object-fit: contain; 
+            object-position: right bottom; 
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)) brightness(1.1); 
+        }
+
+        /* --- SECCIONES GENERALES --- */
+        .section { 
+            padding: 100px 0; 
+            background-color: var(--bg-light); 
+            margin-bottom: 60px; 
+            box-shadow: var(--shadow-subtle);
+        }
+        .section:nth-child(even) { background-color: var(--bg); box-shadow: none; }
+        
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem; 
+            color: var(--accent); 
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        /* Sección de Reembolso */
+        .reimbursement-info {
+            background-color: var(--bg-light);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+        .reimbursement-info h3 {
+             color: var(--primary);
+             font-size: 1.5rem;
+             margin-top: 0;
+        }
+        
+        /* Sección Sobre Mí/Enfoque */
+        .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
+        .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
+        .about-text h2 { 
+            text-align: left; 
+            margin-bottom: 25px; 
+            color:var(--accent); 
+            font-size: 2.2rem; 
+        }
+
+        /* --- CARRUSEL DE LOGOS (ISAPRES/FONASA) --- */
+        .slider-container {
+            width: 100%;
+            overflow: hidden;
+            padding: 30px 0; 
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            background-color: var(--bg-light);
+        }
+        .slider-track {
+            display: flex; 
+            width: fit-content; 
+            animation: scroll-logos 30s linear infinite; 
+        }
+        .slider-logo {
+            height: 70px; 
+            width: auto;
+            margin: 0 40px;
+            vertical-align: middle;
+            filter: opacity(85%); 
+            transition: filter 0.3s;
+        }
+        @keyframes scroll-logos {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50.1%); } 
+        }
+
+        /* --- FOOTER --- */
+        footer { background-color: var(--primary); padding: 30px 0; }
+        footer p { color: #f5f5f5; font-size: 0.9rem; text-align: center; }
+        
+        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (Mantenemos la lógica de la plantilla) --- */
+        @media (max-width: 992px) {
+            
+            .navbar { flex-direction: column; gap: 15px; }
+            .nav-buttons { display: flex; justify-content: center; width: 100%; gap: 10px;}
+            .btn-agenda, .btn-panel { flex-grow: 1; text-align: center; margin-left: 0; }
+            .logo-area { margin-bottom: 10px; }
+            .logo-area img { height: 40px; } 
+            .logo-text h1 { font-size: 1.5rem; }
+            
+            .hero { 
+                height: auto; 
+                min-height: 80vh; 
+                flex-direction: column; 
+                justify-content: center; 
+                align-items: center; 
+                text-align: center; 
+                padding: 40px 5%;
+                background-position: center center; 
+                box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); 
+            }
+            .hero-content { max-width: 100%; padding-right: 0; order: 2; }
+            .hero h1 { font-size: 3rem; line-height: 1.1; text-align: center; }
+            .hero p { font-size: 1.2rem; }
+            
+            /* IMAGEN DE AUDICIÓN: Adaptada para móvil */
+            .hero-image { position: relative; height: 35vh; margin-top: 0; margin-bottom: 20px; width: 80%; max-width: 350px; right: auto; transform: translateX(0) translateY(0); order: 1; }
+            .hero-image img { filter: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); border-radius: 8px; object-position: center; } 
+            
+            .about-content { flex-direction: column; }
+            .about-image { order: 1; margin-bottom: 20px; }
+            .about-text { order: 2; text-align: center; }
+            .about-text h2 { text-align: center; }
+            
+            .slider-logo { height: 40px; margin: 0 20px; }
+            .reimbursement-info { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container navbar">
+        <div class="logo-area">
+            <a href="index.html" class="logo-text-only-icon">
+                <img src="logo-otica.png" alt="Logo Ótica" style="height: 60px;"/> 
+            </a>
+            <div class="logo-text">
+                <h1>ÓTICA</h1>
+                <p>Audición & Oídos</p>
+            </div>
+        </div>
+        <div class="nav-buttons">
+            <a href="#servicios" class="btn btn-panel">Servicios</a>
+            <a href="#reembolso" class="btn btn-panel">Convenios</a>
+            <a href="#" class="btn btn-agenda btn-main-action" style="display:flex; align-items:center; gap: 8px;">
+                <i class="fas fa-calendar-check"></i> AGENDA TU HORA A DOMICILIO
+            </a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <p>TU SALUD AUDITIVA, NUESTRA PRIORIDAD</p>
+            <h1>Limpieza de Oídos y Evaluación Auditiva en la Comodidad de tu Hogar.</h1>
+            <p>Ofrecemos atención profesional de Fonoaudiologia especialista, con seguridad y la calidez que mereces. Cubrimos toda la Región Metropolitana.</p>
+             <a href="#" class="btn btn-agenda btn-main-action btn-lg" style="font-size: 1.2rem; padding: 15px 30px;">
+                <i class="fas fa-home"></i> AGENDA A DOMICILIO HOY
+            </a>
+        </div>
+        
+        <div class="hero-image" id="hero-image-container">
+            <img src="oído-limpio-hero.png" alt="Servicio de Limpieza de Oídos a Domicilio">
+        </div>
+    </section>
+
+    <section class="section reimbursement-section" id="reembolso">
+        <div class="container">
+            <h2 style="margin-bottom: 20px;">Reembolsable y Convenios</h2>
+            
+            <div class="reimbursement-info">
+                <h3>¡Ahorra en tu Atención!</h3>
+                <p style="font-weight: 400; color: var(--primary); font-size: 1.1rem;">
+                    Nuestros servicios son **reembolsables mediante la mayoría de las ISAPRES** y ofrecemos **valor diferencial para atenciones FONASA**. Te entregamos el comprobante para que gestiones tu reembolso fácilmente.
+                </p>
+            </div>
+
+            <div class="slider-container">
+                <div class="slider-track">
+                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo">
+                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo">
+                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo">
+                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo">
+                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo">
+                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo">
+                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo">
+                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo">
+                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo">
+                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section about-section" id="servicios">
+        <div class="container about-content" style="flex-direction: row-reverse; gap: 40px;">
+            <div class="about-image" style="flex-basis: 40%;">
+                <img src="lavado-oidos-profesional.jpg" alt="Tecnólogo Médico realizando limpieza de oídos">
+            </div>
+            <div class="about-text" style="flex-basis: 60%;">
+                <h2 style="text-align: left; margin-bottom: 25px; color:var(--accent); font-size: 2.2rem;">Nuestros Servicios Principales</h2>
+                <p>Nos especializamos en el cuidado integral de tu audición. Entendemos que los problemas de oído pueden ser molestos y limitar tu día a día, por eso llevamos el servicio de calidad directamente a tu casa.</p>
+                
+                <h3 style="font-weight: 700; color: var(--primary); margin-top: 30px;">Limpieza de Oídos (Extracción de Tapón de Cerumen)</h3>
+                <p>Utilizamos métodos seguros como el lavado con jeringa o aspiración, siempre realizado por un Fonoaudiologo/a calificado. Rápido, indoloro y efectivo para recuperar tu audición.</p>
+                
+                <h3 style="font-weight: 700; color: var(--primary); margin-top: 30px;">Evaluación Auditiva Básica a Domicilio</h3>
+                <p>Ideal para personas que no pueden desplazarse. Realizamos pruebas básicas para detectar posibles problemas auditivos y entregamos recomendaciones claras para los siguientes pasos.</p>
+                
+                <a href="#" class="btn btn-agenda btn-main-action" style="margin-top: 35px;"><i class="fas fa-calendar-alt"></i> Ver Precios y Agendar</a>
+            </div>
+        </div>
+    </section>
+    
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2025 ÓTICA. Todos los derechos reservados. | Servicio de Audición y Limpieza de Oídos.</p>
+    </div>
+</footer>
+
+
+<script>
+    // --- LÓGICA DE REDIRECCIÓN Y EFECTOS ---
+    
+    // Función de redirección para el agendamiento (Imita el flujo de Psicofit)
+    function redirectToBooking(event) {
+        event.preventDefault(); 
+        
+        // Simular la redirección a la página de selección de servicio/agendamiento
+        // En tu caso, quizás quieres ir directo a un formulario o a la sección de servicios.
+        // Aquí simularemos el flujo de la plantilla original (va a una sección de agendamiento)
+        // Como no tenemos esa sección en este index, simplemente redirigiremos a un hipotético
+        // calendario.
+        
+        // **NOTA IMPORTANTE:** Para funcionar como la plantilla de Psicofit, necesitarías
+        // una página con los tipos de servicio (ej: Limpieza Fonasa, Limpieza Isapre).
+        
+        // Por ahora, redirigiremos al inicio de la sección de servicios:
+        const targetSection = document.getElementById('servicios');
+        if (targetSection) {
+             targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Si necesitas emular el flujo de Psicofit, el enlace debería ser:
+        // window.location.href = 'calendario-reserva.html?service_id=1&service_name=Limpieza%20Oídos%20(Isapre)';
+
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // Asignar la función a todos los botones de acción principal
+        document.querySelectorAll('.btn-main-action').forEach(btn => {
+            btn.addEventListener('click', redirectToBooking);
+        });
+    });
+</script>
+</body>
+</html>
