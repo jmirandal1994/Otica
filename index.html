@@ -3,326 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ÓTICA PREMIUM | Audiología de Lujo a Domicilio</title>
+    <title>SANA | Audiología Premium a Domicilio - Calidez y Bienestar</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     
     <style>
         /* ========================================= */
-        /* === 0. Variables y Reset (Premium Palette) === */
+        /* === PALETA DE COLORES: CALIDEZ Y LUJO === */
         /* ========================================= */
         :root {
-            --primary-dark: #0F2038; /* Azul Profundo */
-            --primary-light: #1A4D6F; 
-            --secondary-accent: #2196F3; 
-            --purple-accent: #673AB7; /* Morado de Agenda/Acción */
+            --primary-dark: #3A4F41;       /* Verde Oscuro Terroso (Exclusividad) */
+            --primary-medium: #556B59;     /* Tono Medio de Base */
+            --secondary-accent: #C9A77D;   /* Dorado Suave/Beige Cálido (Lujo/Acento) */
+            --text-dark: #2C3539;          /* Tono de Texto Profundo */
+            --text-light: #F7F5F0;         /* Blanco Roto Cálido */
+            --background-light: #F7F5F0;   /* Fondo Principal Cálido (Papel de arroz) */
+            --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.1);
             --green-whatsapp: #5DCF52; 
-            --white: #FFFFFF; 
-            --dark-text: #222222; 
-            --light-bg: #F4F7F9; 
-            --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
-        *, *::before, *::after { box-sizing: border-box; }
         body {
-            font-family: 'Montserrat', sans-serif; margin: 0; line-height: 1.6; color: var(--dark-text);
-            overflow-x: hidden; background-color: var(--light-bg); scroll-behavior: smooth;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            line-height: 1.7; /* Línea de altura aumentada para legibilidad premium */
+            color: var(--text-dark);
+            background-color: var(--background-light);
+            overflow-x: hidden;
         }
-        a { text-decoration: none; color: inherit; }
-        .container { width: 95%; max-width: 1200px; margin: 0 auto; }
-        .u-flex-center { display: flex; align-items: center; } /* Utilidad de Flexbox */
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
         /* ========================================= */
-        /* === 1. Estructura del Header (Base) === */
+        /* --- TIPOGRAFÍA Y ESTILOS GLOBALES --- */
+        /* ========================================= */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-dark);
+            line-height: 1.2;
+        }
+        h1 { font-size: 3rem; font-weight: 700; }
+        h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 25px; }
+
+        a { text-decoration: none; color: var(--secondary-accent); transition: color 0.3s; }
+        a:hover { color: var(--primary-medium); }
+
+        /* Botón de Énfasis (El que Agenda) */
+        .btn-premium {
+            background-color: var(--secondary-accent); 
+            color: var(--text-dark); /* Color oscuro para contraste de lujo */
+            padding: 12px 25px; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: var(--shadow-soft); 
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-premium:hover {
+            background-color: var(--primary-dark); 
+            color: var(--text-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========================================= */
+        /* --- HEADER Y NAVEGACIÓN (Sticky y Elegante) --- */
         /* ========================================= */
         header {
-            background-color: var(--white);
-            box-shadow: var(--shadow-strong); 
-            position: sticky; top: 0; z-index: 1000;
+            background-color: var(--background-light); 
+            padding: 15px 0;
+            box-shadow: var(--shadow-soft); 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: nowrap; 
         }
         
-        /* Contenedores para alternar entre PC y Móvil */
-        .header-desktop { display: flex; padding: 15px 0; }
-        .header-mobile-bar { display: none; } /* Oculto por defecto (Mobile First) */
-
-        /* Estilos de Logo */
         .logo-area img { 
-            height: 120px; max-height: 120px; width: auto; object-fit: contain; transition: transform 0.3s ease;
-            margin-right: 30px; /* Espaciado con la navegación en PC */
+            height: 80px; /* Reducción de logo para un look más refinado */
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
         } 
         
-        /* Navegación y Links (PC) */
-        .nav-links-desktop { 
-            display: flex; gap: 25px; 
-            flex-grow: 1; /* Permite que el menú ocupe el espacio */
-            align-items: center;
-        }
+        .nav-right { display: flex; align-items: center; gap: 30px; }
+
+        .nav-links { display: flex; gap: 25px; }
         .nav-link { 
-            color: var(--dark-text); padding: 10px 0; font-weight: 600; 
-            border-bottom: 3px solid transparent; transition: border-color 0.3s, color 0.3s, transform 0.3s;
+            color: var(--text-dark); padding: 10px 0; font-weight: 500; 
+            border-bottom: 2px solid transparent;
         }
-        .nav-link:hover { 
-            color: var(--secondary-accent); border-bottom-color: var(--secondary-accent); 
-            transform: translateY(-2px);
+        .nav-link:hover { color: var(--secondary-accent); border-bottom: 2px solid var(--secondary-accent); }
+
+        /* Iconos Sociales Pequeños y Discretos */
+        .social-icons-header .social-icon {
+            width: 30px; height: 30px; border-radius: 50%;
+            background-color: var(--primary-dark);
+            font-size: 1rem;
+            opacity: 0.8;
+            transition: opacity 0.3s, background-color 0.3s;
+        }
+        .social-icons-header .social-icon:hover { opacity: 1; background-color: var(--secondary-accent); }
+
+        /* ========================================= */
+        /* --- SECTION HERO (Sensación Aromatizada) --- */
+        /* ========================================= */
+        .hero-section {
+            position: relative; 
+            min-height: 80vh; 
+            display: flex; 
+            align-items: center; 
+            padding: 80px 5% 40px; 
+            background: var(--background-light); 
+            color: var(--text-dark);
+        }
+        
+        .hero-content { z-index: 20; max-width: 50%; }
+        
+        .hero-content p:first-of-type { /* Subtítulo de bienvenida */
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--secondary-accent); 
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .hero-content h1 {
+            font-size: 4.2rem; 
+            margin-bottom: 20px; 
+        }
+        
+        .hero-content p:last-of-type { 
+            font-size: 1.2rem; 
+            margin-bottom: 40px; 
+            font-weight: 300; 
         }
 
-        /* --- BOTÓN DE AGENDA (Estilo Principal) --- */
-        .btn-agenda-main {
-            background-color: var(--purple-accent); 
-            color: var(--white); padding: 12px 25px; border-radius: 50px; font-weight: 900; 
-            border: none; cursor: pointer; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            display: flex; align-items: center; gap: 8px; line-height: 1;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: pulse-zoom-smooth 2s infinite ease-in-out; 
-            white-space: nowrap; /* Evita que el texto salte de línea */
+        /* Imagen Flotante (Representando Textura y Calidez) */
+        .hero-floating-image {
+            position: absolute;
+            top: 0; right: 0;
+            width: 55%; 
+            height: 100%;
+            overflow: hidden;
+            z-index: 10;
         }
-        .btn-agenda-main:hover { transform: scale(1.06); animation: none; }
-        @keyframes pulse-zoom-smooth {
-            0% { transform: scale(1); box-shadow: 0 0 5px rgba(103, 58, 183, 0.5); }
-            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(103, 58, 183, 0.9); }
-            100% { transform: scale(1); box-shadow: 0 0 5px rgba(103, 58, 183, 0.5); }
+        .hero-floating-image img {
+            width: 100%; 
+            height: 100%;
+            object-fit: cover; /* Asegura que la imagen cubra el área */
+            object-position: center;
         }
 
-        /* --- ICONOS SOCIALES (Estilo Neón Oscuro) --- */
-        .social-icons-header { margin-left: 25px; } /* Separación de la navegación */
-        .social-icon { 
-            width: 40px; height: 40px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem; transition: all 0.4s ease-in-out;
-            color: var(--white); background-color: var(--primary-dark); 
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); border: 2px solid transparent;
+        /* Botones del Hero */
+        .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; }
+        .btn-hero { 
+            padding: 15px 30px; border-radius: 30px; font-weight: 600; 
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
         }
-        .social-icon:hover { transform: translateY(-2px) scale(1.05); }
-        .social-icon.facebook:hover { color: #3b5998; border-color: #3b5998; box-shadow: 0 0 15px rgba(59, 89, 152, 0.8), 0 0 5px rgba(59, 89, 152, 0.5) inset; background-color: var(--white); }
-        .social-icon.instagram:hover { color: #e1306c; border-color: #e1306c; box-shadow: 0 0 15px rgba(225, 48, 108, 0.8), 0 0 5px rgba(225, 48, 108, 0.5) inset; background-color: var(--white); }
-        .social-icon.tiktok:hover { color: #000000; border-color: #000000; box-shadow: 0 0 15px rgba(0, 0, 0, 0.8), 0 0 5px rgba(0, 0, 0, 0.5) inset; background-color: var(--white); }
+        .btn-hero.whatsapp {
+            background-color: var(--green-whatsapp); color: var(--text-light); border: none;
+        }
+        .btn-hero.call {
+            background-color: transparent; color: var(--primary-dark); 
+            border: 2px solid var(--primary-dark); 
+        }
+        .btn-hero:hover { transform: translateY(-3px); box-shadow: var(--shadow-soft); }
 
 
         /* ========================================= */
-        /* === 2. MEDIA QUERIES (Mobile Logic) === */
+        /* --- SECCIÓN DE SERVICIOS (Minimalista) --- */
+        /* ========================================= */
+        .services-section { background-color: var(--text-light); padding: 80px 0; text-align: center; }
+        .service-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .service-card {
+            background-color: var(--background-light); 
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s;
+            border-top: 3px solid var(--secondary-accent); /* Acento de lujo */
+        }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+        .service-card i {
+            font-size: 2.5rem;
+            color: var(--secondary-accent);
+            margin-bottom: 20px;
+        }
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+        .service-card p {
+            font-size: 1rem;
+            color: var(--primary-medium);
+        }
+
+        /* ========================================= */
+        /* --- FOOTER (Verde Oscuro Profundo) --- */
+        /* ========================================= */
+        footer { 
+            background-color: var(--primary-dark); 
+            color: var(--text-light); 
+            padding: 40px 0 20px; 
+            font-size: 0.9rem;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 15px;
+        }
+        .footer-info span {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .footer-info i {
+            margin-right: 10px;
+            color: var(--secondary-accent); /* Iconos con acento de lujo */
+        }
+        .social-icons-footer { display: flex; gap: 15px; }
+        .social-icons-footer .social-icon {
+            background-color: var(--secondary-accent);
+            color: var(--primary-dark);
+            width: 35px; height: 35px;
+            font-size: 1.1rem;
+            opacity: 1;
+            transition: transform 0.3s;
+        }
+        .social-icons-footer .social-icon:hover { transform: scale(1.1); }
+        .footer-bottom-text { text-align: center; opacity: 0.7; }
+
+        /* Botón Flotante de Whatsapp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--green-whatsapp);
+            color: var(--text-light);
+            border-radius: 50%;
+            width: 55px; height: 55px;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            transition: transform 0.3s;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        .whatsapp-float i { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+
+        /* ========================================= */
+        /* --- MEDIA QUERIES (ADAPTACIÓN MÓVIL PERFECTA) --- */
         /* ========================================= */
         @media (max-width: 992px) {
-            
-            /* --- REVERSIÓN DEL HEADER --- */
-            .header-desktop { display: none; } /* Ocultar el Header de PC */
-            .header-mobile-bar { display: block; padding: 0; } /* Mostrar el Contenedor Móvil */
+            /* GENERAL MÓVIL */
+            h1 { font-size: 3rem; }
+            h2 { font-size: 1.8rem; }
+            .nav-right { flex-direction: column; width: 100%; gap: 15px; }
 
-            /* A. BARRA SUPERIOR (Hamburguesa + Logo + Sociales) */
-            .top-bar-mobile {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px 10px;
-                background-color: var(--white);
+            /* HEADER MÓVIL: Centrado y Apilamiento */
+            .navbar { flex-direction: column; gap: 10px; padding: 0 10px; }
+            .logo-area { width: 100%; justify-content: center; margin-bottom: 10px; }
+            .logo-area img { height: 65px; max-height: 65px; } 
+
+            /* Botón Principal (Agenda) */
+            .btn-agenda-main { width: 100%; order: 1; padding: 10px 20px; }
+            
+            /* Menú de Enlaces (Horizontal y Compacto) */
+            .nav-links { 
+                width: 100%; 
+                justify-content: space-evenly; 
+                gap: 0; 
+                flex-wrap: nowrap; 
+                padding: 10px 0;
+                order: 2;
+                border-top: 1px solid rgba(0, 0, 0, 0.05); /* Separador suave */
             }
-            .top-bar-mobile .logo-area {
-                flex-grow: 1; /* Centraliza el logo */
+            .nav-link { padding: 5px 0; font-size: 0.9rem; flex: 1 1 auto; text-align: center; }
+
+            /* Iconos Sociales (Al final del Header) */
+            .social-icons-header { width: 100%; justify-content: center; order: 3; margin-top: 5px; }
+
+
+            /* HERO SECTION MÓVIL: Contenido Centrado sobre la Imagen */
+            .hero-section {
+                flex-direction: column;
+                min-height: 95vh;
+                padding: 40px 5%;
+                justify-content: center;
                 text-align: center;
             }
-            .top-bar-mobile .logo-area img {
-                height: 55px; /* Tamaño de logo compacto */
-                max-height: 55px;
-                margin: 0;
+            .hero-floating-image {
+                position: absolute;
+                width: 100%; 
+                height: 100%;
+                opacity: 0.2; /* Reduce la opacidad para que el texto sea legible */
             }
-            .burger-menu {
-                display: block;
-                font-size: 1.5rem;
-                padding: 5px;
-                color: var(--primary-dark);
-                cursor: pointer;
-                border: none;
-                background: none;
-                z-index: 10;
+            .hero-content { max-width: 100%; order: 2; }
+            .hero-content h1 { font-size: 2.8rem; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); } /* Sombra para legibilidad */
+            .hero-content p:last-of-type { font-size: 1.1rem; }
+            .hero-buttons { 
+                flex-direction: column; 
+                width: 100%; 
+                gap: 15px; 
             }
-            .social-icons-top-mobile {
-                display: flex; gap: 5px;
-                margin: 0;
-            }
-            .social-icons-top-mobile .social-icon {
-                width: 35px; height: 35px;
-                font-size: 1rem;
-                background-color: var(--primary-dark);
-                box-shadow: none; border: none;
-            }
-            
-            /* B. BARRA DE AGENDA DEDICADA (Morada, Ancho Total, Centrada) */
-            .agenda-bar-mobile-dedicated {
-                display: block;
-                padding: 10px 0;
-                background-color: var(--white); /* El fondo debe ser blanco bajo el logo */
-            }
-            .agenda-bar-mobile-dedicated .btn-agenda-main {
-                width: 90%; 
-                margin: 0 auto; 
-                justify-content: center;
-                /* Eliminamos el pulse/zoom en móvil para mantener la estabilidad del layout */
-                animation: none;
-                transform: scale(1);
-                border-radius: 8px; 
-                padding: 15px 30px;
-                font-size: 1rem;
-            }
+            .btn-hero { width: 100%; }
 
-            /* C. MENÚ DESPLEGABLE */
-            .nav-links-mobile { 
-                position: absolute; top: 130px; left: 0; width: 100%;
-                flex-direction: column; background-color: var(--primary-dark); 
-                box-shadow: var(--shadow-strong); padding: 15px 0;
-                display: none; max-height: 0; overflow: hidden; opacity: 0;
-                transition: max-height 0.5s ease-in-out, opacity 0.3s ease;
-            }
-            .nav-links-mobile.active {
-                display: flex; max-height: 500px; opacity: 1;
-            }
-            .nav-links-mobile .nav-link { 
-                padding: 15px 20px; text-align: center; 
-                color: var(--white);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-            
-            /* D. HERO SECTION MÓVIL (Ajustes de tipografía) */
-            .hero-content h1 { font-size: 2.5rem; line-height: 1.2; } 
-            .hero-content { max-width: 100%; text-align: center; }
-            .hero-buttons { flex-direction: column; width: 100%; gap: 15px; }
-            .btn-hero { width: 100%; justify-content: center; padding: 12px 20px; }
+            /* FOOTER MÓVIL */
+            .footer-content { flex-direction: column; gap: 20px; align-items: center; text-align: center; }
+            .footer-info span { text-align: center; }
         }
-        
+
         @media (max-width: 576px) {
-             .hero-content h1 { font-size: 2.0rem; }
+            h1 { font-size: 2.5rem; }
+            .logo-area img { height: 55px; }
+            .nav-link { font-size: 0.8rem; }
         }
-        
-        /* Contenido de Hero y Servicios (Se mantiene la estructura anterior) */
-        .hero-section {
-            position: relative; height: 90vh; display: flex; align-items: center; padding: 0 5%;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); overflow: hidden; color: var(--white);
-        }
-        .hero-content { z-index: 20; max-width: 60%; }
-        .hero-content p:first-of-type { font-weight: 600; letter-spacing: 2px; color: var(--blue-light-float); margin-bottom: 10px; }
-        .hero-content p:nth-of-type(2) { font-size: 1.5rem; margin-bottom: 50px; font-weight: 300; color: rgba(255, 255, 255, 0.9); }
-        .hero-floating-image { position: absolute; right: 0; bottom: 0; width: 45%; max-width: 700px; z-index: 10; }
-        .hero-floating-image img { width: 100%; height: auto; object-fit: contain; }
-        
-        .services-section { background-color: var(--white); padding: 80px 0; text-align: center; }
-        .services-section h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; margin-bottom: 50px; color: var(--primary-dark); }
-        .service-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .service-card { border-top: 5px solid var(--secondary-accent); padding: 30px; border-radius: 12px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .service-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); }
-
     </style>
 </head>
 <body>
 
 <header>
-    
-    <div class="header-mobile-bar">
-        
-        <div class="top-bar-mobile">
-            <button class="burger-menu" id="burgerMenu" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú de navegación">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="logo-area">
-                <a href="index.html" aria-label="Volver a la página de inicio de Ótica">
-                    <img src="logo-otica.png" alt="Logo Ótica | Audiología Premium"/> 
-                </a>
-            </div>
-            <div class="social-icons-top-mobile u-flex-center">
-                <a href="#" class="social-icon facebook" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon tiktok" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-            </div>
-        </div>
-        
-        <div class="agenda-bar-mobile-dedicated">
-            <button class="btn-agenda-main" role="button" aria-label="Agenda tu hora con un clic">
-                <i class="fas fa-calendar-check"></i> AGENDA TU HORA ACÁ
-            </button>
-        </div>
-        
-        <nav class="nav-links-mobile" id="mainNav">
-            <a href="#home" class="nav-link">Inicio</a>
-            <a href="#servicios" class="nav-link">Servicios</a>
-            <a href="#convenios" class="nav-link">Convenios</a>
-            <a href="#contacto" class="nav-link">Contacto</a>
-        </nav>
-    </div>
-
-
-    <div class="container header-desktop u-flex-center">
+    <div class="container navbar">
         <div class="logo-area">
-            <a href="index.html" aria-label="Volver a la página de inicio de Ótica">
-                <img src="logo-otica.png" alt="Logo Ótica | Audiología Premium"/> 
+            <a href="index.html">
+                <img src="logo-sana-premium.png" alt="Logo SANA"/> 
             </a>
         </div>
-        
-        <nav class="nav-links-desktop">
-            <a href="#home" class="nav-link">Inicio</a>
-            <a href="#servicios" class="nav-link">Servicios</a>
-            <a href="#convenios" class="nav-link">Convenios</a>
-            <a href="#contacto" class="nav-link">Contacto</a>
+        <div class="nav-right">
             
-            <button class="btn-agenda-main" role="button" aria-label="Agenda tu hora con un clic">
-                <i class="fas fa-calendar-check"></i> AGENDA TU HORA
+            <button class="btn-premium btn-agenda-main">
+                <i class="fas fa-calendar-check"></i> AGENDA TU MOMENTO SANA
             </button>
             
-            <div class="social-icons-header u-flex-center">
-                <a href="#" class="social-icon facebook" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon tiktok" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <nav class="nav-links">
+                <a href="#home" class="nav-link">Inicio</a>
+                <a href="#servicios" class="nav-link">Rituales</a>
+                <a href="#experiencia" class="nav-link">La Experiencia</a>
+                <a href="#contacto" class="nav-link">Contacto</a>
+            </nav>
+            
+            <div class="social-icons social-icons-header">
+                <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
             </div>
-        </nav>
+            
+        </div>
     </div>
-    
 </header>
 
 <main>
-    <section class="hero-section" id="home" role="banner">
+    <section class="hero-section" id="home">
+        
+        <div class="hero-floating-image">
+             <img src="textura-suave-calidez.jpg" alt="Detalle de textura suave y cálida que evoca un aroma herbal."/>
+        </div>
         
         <div class="hero-content">
-            <p>BIENVENIDO A ÓTICA</p>
-            <h1>Tu Audiología Premium a Domicilio.</h1>
-            <p>Recupera la claridad de tu audición al instante. Servicio profesional de limpieza y evaluación de oídos en la comodidad y seguridad de tu hogar.</p>
+            <p>Bienvenido a SANA - El Arte de Escuchar</p>
+            <h1>Bienestar Auditivo. Exclusividad a Domicilio.</h1>
+            <p>Un ritual de purificación para tus oídos, realizado con el máximo cuidado por especialistas. Redescubre el silencio y la claridad sin salir de la comodidad de tu espacio.</p>
             <div class="hero-buttons">
-                <a href="https://wa.me/XXXXXXXXXXX" class="btn-hero whatsapp" target="_blank" role="button" aria-label="Chatea con nosotros por WhatsApp">
-                    <i class="fab fa-whatsapp"></i> Chat WhatsApp
+                <a href="#" class="btn-premium btn-hero agenda">
+                    <i class="fas fa-hand-holding-heart"></i> Reserva tu Ritual
                 </a>
-                <a href="tel:+569XXXXXXXX" class="btn-hero call" role="button" aria-label="Llámanos ahora por teléfono">
-                    <i class="fas fa-phone-alt"></i> Llámanos
-                </a>
-                <a href="#" class="btn-hero agenda" role="button" aria-label="Agenda una hora con nosotros">
-                    <i class="fas fa-calendar-alt"></i> Agenda tu hora
+                <a href="https://wa.me/XXXXXXXXXXX" class="btn-hero whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Contacto Rápido
                 </a>
             </div>
         </div>
         
-        <div class="hero-floating-image">
-            <img src="oído-limpio-hero-profesional.png" alt="Profesional de la salud realizando limpieza de oído con equipo especializado">
-        </div>
     </section>
     
-    <section class="services-section" id="servicios" role="region" aria-labelledby="servicios-titulo">
+    <section class="services-section" id="servicios">
         <div class="container">
-            <h2 id="servicios-titulo">Nuestros Servicios de Audición Expertos</h2>
+            <h2>Nuestros Rituales de Cuidado Auditivo</h2>
             <div class="service-cards-grid">
                 
-                <div class="service-card" role="article" aria-label="Servicio de Limpieza de Oídos a Domicilio">
-                    <i class="fas fa-pump-soap" aria-hidden="true"></i>
-                    <h3>Limpieza de Oídos a Domicilio</h3>
-                    <p>Eliminación segura y profesional de tapones de cerumen mediante técnicas de aspiración o lavado. Realizado por Tecnólogo Médico. ¡Recupera tu audición hoy!</p>
+                <div class="service-card">
+                    <i class="fas fa-feather-alt"></i> 
+                    <h3>Ritual de Purificación de Oído</h3>
+                    <p>Limpieza de cerumen mediante aspiración micro-otoscópica o irrigación suave. Un procedimiento sin dolor, realizado con insumos de alta gama para tu total tranquilidad.</p>
                 </div>
 
-                <div class="service-card" role="article" aria-label="Servicio de Evaluación Auditiva">
-                    <i class="fas fa-headset" aria-hidden="true"></i>
-                    <h3>Evaluación Auditiva (Screening)</h3>
-                    <p>Realizamos pruebas auditivas básicas a domicilio con equipos calibrados para identificar posibles pérdidas o problemas, entregando un informe detallado y el mejor plan de acción.</p>
+                <div class="service-card">
+                    <i class="fas fa-spa"></i>
+                    <h3>Experiencia de Bienestar Sensorial</h3>
+                    <p>Complementamos el servicio con una breve relajación guiada y el uso de aceites esenciales seleccionados para una sensación de calma y limpieza profunda. *Solo si aplica al servicio.*</p>
                 </div>
                 
-                <div class="service-card" role="article" aria-label="Servicio de Comodidad y Seguridad Total">
-                    <i class="fas fa-home" aria-hidden="true"></i>
-                    <h3>Comodidad y Seguridad Total</h3>
-                    <p>Atención realizada por **Tecnólogos Médicos especialistas** y certificados, garantizando un procedimiento estéril, efectivo y de alta calidad en la privacidad de tu casa u oficina.</p>
+                <div class="service-card">
+                    <i class="fas fa-award"></i>
+                    <h3>Nuestra Promesa de Exclusividad</h3>
+                    <p>Tecnólogos Médicos altamente calificados. Servicio 100% estéril, puntual y discreto, llevando la clínica audiológica a tu hogar u oficina en la Región Metropolitana.</p>
                 </div>
                 
             </div>
@@ -335,21 +431,20 @@
     <div class="container">
         <div class="footer-content">
             <div class="footer-info">
-                <span><i class="fas fa-map-marker-alt"></i> Atención a Domicilio: Región Metropolitana de Santiago.</span>
-                <span><i class="fas fa-calendar-alt"></i> Reembolsable con ISAPRES. Valor diferencial FONASA.</span>
-                <span><i class="fas fa-envelope"></i> info@otica.cl</span>
+                <span><i class="fas fa-map-marker-alt"></i> Servicio Exclusivo a Domicilio: Región Metropolitana.</span>
+                <span><i class="fas fa-hand-holding-usd"></i> Reembolsable: ISAPRES y Convenios. Consulta por FONASA.</span>
+                <span><i class="fas fa-envelope"></i> reservas@sana-audiologia.cl</span>
             </div>
             <div class="social-icons social-icons-footer">
-                <a href="#" class="social-icon facebook" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon tiktok" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
         <p class="footer-bottom-text">
-            &copy; 2024 ÓTICA. Todos los derechos reservados. | Diseño y Desarrollo de Soluciones Auditivas Premium.
+            &copy; 2024 SANA. Todos los derechos reservados. | Creando Claridad y Bienestar Auditivo.
         </p>
     </div>
-    <a href="https://wa.me/XXXXXXXXXXX" class="whatsapp-float" target="_blank" aria-label="Chatear con Ótica por WhatsApp">
+    <a href="https://wa.me/XXXXXXXXXXX" class="whatsapp-float" target="_blank" title="Contáctanos por WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 </footer>
@@ -357,44 +452,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Seleccionamos todos los botones de agenda (PC, Móvil, Hero)
-        const agendaButtons = document.querySelectorAll('.btn-agenda-main, .btn-hero.agenda');
-        const burgerMenu = document.getElementById('burgerMenu');
-        const navLinks = document.getElementById('mainNav'); // Menú desplegable móvil
-
-        // 1. Manejo de Agendamiento (Aplica a todos los botones de agenda)
-        agendaButtons.forEach(button => {
+        // Lógica de agendamiento profesional. Se mantiene el script de ejemplo.
+        document.querySelectorAll('.btn-agenda-main, .btn-hero.agenda').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
-                console.log('Redirigiendo a la plataforma de agendamiento...');
-                alert('Redirigiendo a la plataforma de agendamiento profesional. Por favor, reemplace este alert con su URL de reservas.');
-                // window.location.href = 'URL_DE_SU_PLATAFORMA_DE_RESERVAS';
+                alert('Redirigiendo a nuestra plataforma de reservas exclusivas. Por favor, reemplace este alert con la URL real de agendamiento (e.g., Calendly, otro sistema).');
+                // En un entorno real, reemplazar con: window.location.href = "URL_DE_RESERVAS_AQUI";
             });
         });
-
-        // 2. Manejo de Menú de Hamburguesa (Móvil)
-        burgerMenu.addEventListener('click', () => {
-            const isExpanded = burgerMenu.getAttribute('aria-expanded') === 'true' || false;
-            
-            navLinks.classList.toggle('active');
-            
-            // Alternar el icono de hamburguesa a una 'X' y viceversa
-            burgerMenu.querySelector('i').classList.toggle('fa-bars');
-            burgerMenu.querySelector('i').classList.toggle('fa-times');
-            
-            burgerMenu.setAttribute('aria-expanded', !isExpanded);
-        });
-        
-        // 3. Cerrar el menú después de hacer clic en un enlace (en móvil)
-        document.querySelectorAll('#mainNav .nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                // Solo cerramos si estamos en vista móvil y el menú está activo
-                if (window.innerWidth <= 992 && navLinks.classList.contains('active')) {
-                    burgerMenu.click(); 
-                }
-            });
-        });
-
     });
 </script>
 </body>
