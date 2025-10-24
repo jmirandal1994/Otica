@@ -12,14 +12,14 @@
     <style>
         /* PALETA DE COLORES - NUEVA: Azules y Verdes Oceánicos para frescura y limpieza */
         :root {
-            --primary-dark: #1A4D6F; /* Azul Marino Oscuro (para textos principales, footer, fondo hero) */
-            --primary-light: #15739B; /* Azul Oceánico (para degradados, acentos) */
-            --secondary-green: #2ECC71; /* Verde Esmeralda (para botones de acción, WhatsApp) */
-            --light-blue: #ADD8E6; /* Azul Claro Suave (para botones secundarios) */
-            --white: #FFFFFF; /* Blanco Puro */
-            --gray-text: #E0E0E0; /* Gris muy claro para texto en fondos oscuros */
-            --dark-gray: #4A4A4A; /* Gris oscuro para texto en fondos claros */
-            --button-hover: #27AE60; /* Verde más oscuro para hover de botones */
+            --primary-dark: #1A4D6F; 
+            --primary-light: #15739B; 
+            --secondary-green: #2ECC71; 
+            --light-blue: #ADD8E6; 
+            --white: #FFFFFF; 
+            --gray-text: #E0E0E0; 
+            --dark-gray: #4A4A4A; 
+            --button-hover: #27AE60; 
             --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -28,7 +28,7 @@
             margin: 0;
             line-height: 1.7;
             color: var(--dark-gray);
-            overflow-x: hidden;
+            overflow-x: hidden; /* CLAVE: Previene el scroll horizontal no deseado */
             font-weight: 400;
             background-color: var(--white);
         }
@@ -42,7 +42,6 @@
         /* --- HEADER --- */
         header {
             background-color: var(--white);
-            /* AUMENTAMOS EL PADDING PARA DARLE ESPACIO AL LOGO GRANDE */
             padding: 20px 0; 
             box-shadow: var(--shadow-subtle); 
             position: sticky;
@@ -54,14 +53,13 @@
         /* Logo e info (izquierda) */
         .logo-area { display: flex; align-items: center; gap: 15px; }
         
-        /* CORRECCIÓN CLAVE: AUMENTAMOS LA ALTURA DEL LOGO A 120PX */
+        /* LOGO TAMAÑO PC */
         .logo-area img { 
             height: 120px; 
             max-height: 120px;
             width: auto;
             object-fit: contain;
         } 
-        /* Fin corrección logo */
         
         .logo-text h1 {
             font-family: 'Playfair Display', serif;
@@ -92,7 +90,6 @@
         .social-icon.facebook { background-color: #3b5998; }
         .social-icon.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
         .social-icon.tiktok { background-color: #000; }
-        .social-icon:hover { opacity: 0.8; }
 
         .nav-links { display: flex; gap: 15px; margin: 0 20px; }
         .nav-link { 
@@ -104,11 +101,7 @@
             font-weight: 500; 
             transition: background-color 0.3s, color 0.3s;
         }
-        .nav-link:hover { 
-            background-color: var(--light-blue); 
-            color: var(--primary-dark); 
-        }
-
+        
         /* BOTÓN PRINCIPAL DE AGENDAMIENTO */
         .btn-agenda-main {
             background-color: var(--secondary-green); 
@@ -143,71 +136,8 @@
             max-width: 60%; 
             padding-right: 40px;
         }
-        .hero-content p:first-child { 
-            font-size: 1.1rem;
-            color: var(--light-blue); 
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .hero-content h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4rem; 
-            margin-bottom: 20px;
-            line-height: 1.1;
-            color: var(--white); 
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.4); 
-        }
-        .hero-content p:nth-of-type(2) { 
-            font-size: 1.25rem; 
-            margin-bottom: 40px;
-            font-weight: 300; 
-            color: var(--gray-text); 
-            line-height: 1.6;
-        }
-
+        
         .hero-buttons { display: flex; gap: 15px; margin-top: 30px; }
-        .btn-hero { 
-            padding: 14px 28px; 
-            border-radius: 30px; 
-            text-decoration: none; 
-            font-weight: 600; 
-            transition: all 0.3s ease;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .btn-whatsapp { 
-            background-color: var(--secondary-green); 
-            color: var(--white); 
-            border: 2px solid var(--secondary-green); 
-            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
-        }
-        .btn-whatsapp:hover { 
-            background-color: var(--button-hover); 
-            border-color: var(--button-hover); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.5);
-        }
-        .btn-call { 
-            background-color: transparent; 
-            color: var(--white); 
-            border: 2px solid var(--white); 
-        }
-        .btn-call:hover { 
-            background-color: rgba(255, 255, 255, 0.2); 
-            transform: translateY(-2px);
-        }
-        .btn-hero-agenda {
-            background-color: var(--light-blue); 
-            color: var(--primary-dark);
-            border: 2px solid var(--light-blue);
-            box-shadow: 0 4px 10px rgba(173, 216, 230, 0.5);
-        }
-        .btn-hero-agenda:hover {
-            background-color: var(--white);
-            border-color: var(--white);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(173, 216, 230, 0.7);
-        }
-
 
         /* IMAGEN FLOTANTE DEL HERO */
         .hero-floating-image {
@@ -229,55 +159,6 @@
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3)); 
         }
         
-        /* Círculos decorativos del hero */
-        .hero-decorative-circles {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            overflow: hidden;
-            z-index: 5;
-            opacity: 0.3;
-        }
-        .circle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: moveCircles 15s infinite ease-in-out alternate;
-        }
-        .circle:nth-child(1) { width: 150px; height: 150px; top: 10%; left: 5%; animation-delay: 0s; }
-        .circle:nth-child(2) { width: 250px; height: 250px; top: 60%; left: 30%; animation-delay: 5s; }
-        .circle:nth-child(3) { width: 100px; height: 100px; top: 40%; left: 20%; animation-delay: 10s; }
-        
-        @keyframes moveCircles {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(20px, 30px) scale(1.05); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
-
-        /* --- WHATSAPP FLOTANTE --- */
-        .whatsapp-float {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 30px;
-            right: 30px;
-            background-color: #25d366;
-            color: #FFF;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 30px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-        .whatsapp-float:hover {
-            transform: scale(1.05);
-            background-color: #128C7E;
-        }
-
         /* --- FOOTER --- */
         footer {
             background-color: var(--primary-dark);
@@ -317,22 +198,37 @@
             margin-top: 15px;
         }
 
-        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (Aseguramos que no se salga) --- */
+        /* --- MEDIA QUERIES PARA ADAPTACIÓN A MÓVIL (CORREGIDO) --- */
         @media (max-width: 992px) {
+            
+            /* HEADER */
             header {
-                padding: 10px 0; /* Reducimos el padding en móvil */
+                padding: 15px 0; /* Un poco más de espacio en móvil */
             }
-            .logo-area img { 
-                height: 50px; /* Reducimos el tamaño en móvil para que quepa */
-            } 
-            /* El resto del media query móvil se mantiene */
             .navbar { flex-direction: column; gap: 15px; }
+            
+            /* LOGO EN MÓVIL: AUMENTADO PARA MÁXIMA VISIBILIDAD */
+            .logo-area img { 
+                height: 70px; /* Tamaño más visible que 50px */
+            } 
+
+            /* NAVEGACIÓN DERECHA: APILADA Y CENTRADA */
             .nav-right { flex-direction: column; width: 100%; gap: 10px; }
             .social-icons { justify-content: center; }
-            .nav-links { margin: 0; justify-content: center; flex-wrap: wrap; }
-            .nav-link { padding: 8px 15px; font-size: 0.9rem; }
+            
+            /* ENLACES: QUITAMOS EL MARGIN DE 20PX QUE CAUSABA DESBORDAMIENTO */
+            .nav-links { 
+                margin: 0; 
+                justify-content: center; 
+                flex-wrap: wrap; 
+                padding: 0 10px; /* Un pequeño padding interno */
+            }
+            .nav-link { padding: 8px 10px; font-size: 0.9rem; }
+            
+            /* BOTÓN PRINCIPAL: SIEMPRE 100% DE ANCHO EN MÓVIL */
             .btn-agenda-main { width: 100%; justify-content: center; margin-top: 10px; }
 
+            /* HERO SECTION */
             .hero-section { 
                 height: auto; 
                 min-height: 85vh; 
@@ -341,38 +237,36 @@
                 padding: 50px 5%;
             }
             .hero-content { max-width: 100%; padding-right: 0; order: 2; }
-            .hero-content h1 { font-size: 2.8rem; }
+            .hero-content h1 { font-size: 2.5rem; } /* Títulos más manejables en móvil */
             .hero-content p:nth-of-type(2) { font-size: 1.1rem; }
             .hero-buttons { flex-direction: column; width: 100%; }
             .btn-hero { width: 100%; justify-content: center; }
             
+            /* IMAGEN HERO MÓVIL */
             .hero-floating-image { 
                 position: relative; 
                 width: 80%; 
                 height: 40vh; 
-                max-width: 400px; 
                 bottom: auto; 
                 right: auto; 
                 margin-bottom: 30px; 
                 order: 1; 
                 opacity: 1;
             }
-            .hero-floating-image img { 
-                object-position: center bottom; 
-                filter: none; 
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-                border-radius: 8px;
-            }
-            .hero-decorative-circles { display: none; } 
-
+            
+            /* FOOTER */
             .footer-content { flex-direction: column; align-items: center; gap: 15px; }
             .footer-info { flex-direction: column; gap: 10px; text-align: center; }
             .footer-info span { justify-content: center; }
         }
 
         @media (max-width: 576px) {
-            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content h1 { font-size: 2.0rem; }
             .hero-content p:nth-of-type(2) { font-size: 1rem; }
+            /* Asegurar que el logo no sea demasiado grande en pantallas muy pequeñas */
+            .logo-area img { 
+                height: 50px; 
+            }
         }
     </style>
 </head>
