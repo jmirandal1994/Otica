@@ -1,1141 +1,749 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Panel de Control | ÓTICA</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-  <style>
-    /* ---------- Estilos (preservados + mejoras) ---------- */
-    :root{
-      --primary:#0f4c81; /* Azul Profundo de ÓTICA */
-      --accent:#2b8af6; /* Brillo Azul de ÓTICA */
-      --bg:#f8f9fa;
-      --muted:#6c757d;
-      --success: #1e7e34; /* Verde para citas/confirmación */
-      --danger: #d9534f; /* Rojo para pendiente/alerta */
-    }
-    *{box-sizing:border-box}
-    body{
-      font-family:'Montserrat',sans-serif;
-      background:var(--bg);
-      color:#495057;
-      margin:0;
-      display:flex;
-      min-height:100vh;
-    }
-
-    /* Sidebar */
-    .sidebar{
-      width:280px;
-      background:#fff;
-      padding:30px;
-      box-shadow:2px 0 10px rgba(0,0,0,0.05);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-    }
-    .profile-pic{width:150px;height:150px;border-radius:50%;background:#e9ecef;margin-bottom:20px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-    .profile-pic img{width:100%;height:100%;object-fit:cover}
-    .sidebar h4{font-family:'Playfair Display',serif;color:var(--primary);margin-bottom:14px}
-    .sidebar .small-muted{color:var(--muted);font-size:0.95rem;margin-bottom:18px}
-
-    .sidebar-menu{list-style:none;padding:0;width:100%}
-    .sidebar-menu li{margin-bottom:10px}
-    .sidebar-menu button{
-      background:transparent;border:none;width:100%;text-align:left;padding:12px 16px;border-radius:8px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:12px
-    }
-    .sidebar-menu button.active,.sidebar-menu button:hover{background:var(--accent);color:#fff}
-    .sidebar-menu button i{color:var(--primary)}
-    .sidebar-menu button.active i{color:#fff}
-
-    /* Main - Ajustado para la columna lateral */
-    .main-content{
-        flex: 1;
-        padding: 40px;
-        display: flex; /* CLAVE para dividir en columnas */
-        gap: 30px; /* Espacio entre las columnas */
-    }
-    
-    /* Nueva estructura de contenido */
-    .agenda-area {
-        flex: 2.5; /* Ocupa más espacio para el calendario */
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sidebar-reservas {
-        flex: 1; /* Ocupa 1/4 del espacio */
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        min-width: 250px; /* Ancho mínimo reducido */
-        max-height: calc(100vh - 80px); 
-        overflow-y: auto;
-    }
-    
-    .reserva-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    .reserva-item {
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .reserva-item:hover {
-        background: #e9ecef;
-    }
-    .reserva-time {
-        font-weight: 700;
-        color: var(--primary);
-        display: block;
-        margin-bottom: 5px;
-    }
-    .reserva-details {
-        font-size: 0.9rem;
-        color: var(--muted);
-    }
-    .reserva-details strong {
-        color: var(--success); /* Color verde para el nombre */
-    }
-    
-    /* Estilos para Evoluciones PENDIENTES (Diseño Profesional) */
-    .pending-item {
-        background: #fffafa;
-        border: 1px solid #ffeded;
-        border-left: 5px solid var(--danger); /* Rojo para indicar urgencia/pendiente */
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: all 0.3s ease-out; 
-    }
-    .pending-item:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    .pending-item.fade-out {
-        opacity: 0;
-        height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        margin: 0;
-        overflow: hidden;
-    }
-    .pending-item button {
-        background: var(--success); /* Verde para 'Registrar' */
-        color: #fff;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        white-space: nowrap;
-        font-weight: 600;
-    }
-    .pending-item-info {
-        max-width: 70%;
-    }
-    .pending-item .reserva-time {
-        color: var(--danger);
-    }
-    
-    /* Estilos para el formulario de Evolución */
-    #evolution-form-container input[type="text"],
-    #evolution-form-container textarea {
-        width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 1rem;
-        box-sizing: border-box;
-    }
-    #evolution-form-container label {
-        display: block;
-        font-weight: 600;
-        color: var(--primary);
-        margin-top: 10px;
-    }
-    
-    /* Estilos para Historial */
-    .patient-card-summary {
-        background: var(--primary);
-        color: #fff;
-        padding: 15px 25px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: transform 0.2s;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .patient-card-summary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-    .patient-card-summary h4 {
-        color: #fff;
-        margin: 0;
-        font-family: 'Montserrat', sans-serif;
-    }
-    .patient-card-summary .fas {
-        font-size: 1.2rem;
-    }
-
-    .evolutions-detail-list {
-        display: none; 
-        padding-top: 15px;
-        border-top: 1px solid #eee;
-        margin-top: 10px;
-    }
-    .evolutions-detail-list.active {
-        display: block; 
-    }
-
-    .history-card {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        text-align: left;
-        border-left: 4px solid var(--primary);
-    }
-    .history-card h5 {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1rem;
-        color: var(--primary);
-        margin: 0 0 5px;
-        font-weight: 700;
-    }
-    .history-card p {
-        font-size: 0.85rem;
-        margin: 3px 0;
-        color: var(--muted);
-    }
-    .history-content {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid #eee;
-        font-style: italic;
-        color: #495057;
-        white-space: pre-wrap; 
-    }
-
-
-    .header-panel{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #e9ecef}
-    .header-panel h2{font-family:'Playfair Display',serif;color:var(--primary);font-size:2.2rem;margin:0}
-    .logout-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700}
-    .logout-btn:hover{background:#0f4c81}
-
-    .tab-content{display:none;background:#fff;padding:36px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-bottom:18px}
-    .tab-content.active{display:block}
-
-    .section-header{text-align:center;margin-bottom:18px}
-    .section-header h3{margin:0;color:var(--primary);font-family:'Playfair Display',serif}
-    .section-header p{color:var(--muted);margin:6px 0 0 0}
-
-    /* Calendario */
-    .week-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
-    .week-label{font-weight:700;color:var(--primary);font-size:1.05rem}
-    .calendar-wrapper{overflow-x: auto;border-radius:12px;border:1px solid #e9ecef;background:#fff;padding:12px} 
-    .calendar-table{border-collapse:collapse;width:100%;min-width:700px} 
-    .calendar-table thead th{position:sticky;top:0;background:#fff;border-bottom:1px solid #e9ecef;padding:10px 8px;text-align:center;font-weight:700;color:var(--primary);cursor:pointer; width: 10%;} 
-    .time-col{width:80px;text-align:left;padding-left:12px;background:#fafafa;position:sticky;left:0;z-index:2;font-weight:700;color:var(--primary);border-right:1px solid #e9ecef} 
-    .calendar-table td{height:56px;padding:6px}
-    .cell{display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;user-select:none;transition:transform .08s ease,box-shadow .12s ease;font-weight:700;height:100%;width:100%}
-    .cell.available{background:#fff;border:1px solid #f1f1f1;color:var(--primary)}
-    /* CLASES DE AGENDAMIENTO */
-    .cell.active{background:var(--accent);color:#fff}
-    .cell.booked{background:var(--success);color:#fff;cursor:not-allowed} 
-    .cell.booked-cell{background:var(--success);color:#fff;cursor:not-allowed}
-    /* FIN CLASES DE AGENDAMIENTO */
-    .info-msg{color:var(--muted);font-weight:600}
-
-    /* Mensaje de error visual */
-    .error-box{background:#fff0f0;border:1px solid #ffd6d6;color:#7a1f1f;padding:12px;border-radius:8px;margin:10px 0}
-    .hint-box{background:#f8fbff;border:1px solid #e2f0ff;color:#1b4f8a;padding:12px;border-radius:8px;margin:10px 0}
-
-    /* Spinner sencillo */
-    .spinner{width:20px;height:20px;border-radius:50%;border:3px solid rgba(0,0,0,0.08);border-top-color:var(--primary);animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* Responsividad (Móvil/Tablet) */
-    @media (max-width:1200px){
-        .main-content {
-            padding: 20px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Reserva | Flgo. Jorge Miranda Lopez</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        /* PALETA DE COLORES - ADAPTADA A ÓTICA */
+        :root {
+            --primary: #0f4c81; /* Azul Profundo de ÓTICA */
+            --accent: #2b8af6; /* Brillo Azul de ÓTICA (Acción) */
+            --bg: #f6f8fb; /* Fondo General (Gris claro de ÓTICA) */
+            --bg-light: #FFFFFF; /* Fondo de Contenedor */
+            --muted: #6b7280; /* Gris de ÓTICA */
+            --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --success: #1e7e34;
         }
-    }
-    
-    @media (max-width:900px){
-      .time-col{width:80px;font-size:.85rem}
-      .calendar-table thead th{font-size:.85rem}
-      .calendar-table td{height:48px}
-      .main-content {
-          flex-direction: column; /* Apila las columnas */
-          gap: 20px;
-      }
-      .sidebar-reservas {
-          min-width: unset;
-          max-height: 400px;
-          /* Ocupa todo el ancho cuando se apila */
-          width: 100%; 
-      }
-    }
-  </style>
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            color: var(--primary);
+            background-color: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+        
+        .header-section {
+            background-color: var(--bg-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem; 
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .header-section h3 {
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        /* Botones Generales */
+        .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; border: none;}
+        .btn-agenda { background-color: var(--accent); color: white; border: 2px solid var(--accent); }
+        .btn-agenda:hover { transform: translateY(-2px); background-color: var(--primary); border-color: var(--primary); }
+        .btn-nav { background: #fff; color: var(--primary); border: 1px solid #e9ecef; padding: 8px 12px; cursor: pointer; font-weight: 700; border-radius: 6px; }
+
+        /* Contenedor Principal */
+        #agendamiento-container {
+            background-color: var(--bg-light); 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 80px;
+        }
+
+        /* Estilos de Calendario */
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 10px; 
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .calendar-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 0;
+        }
+        #current-week-display { 
+            font-size: 1rem; 
+            font-weight: 700;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        /* Grid del Calendario (Responsivo) */
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 10px; 
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 120px); 
+                justify-content: flex-start;
+                padding-bottom: 10px;
+            }
+        }
+
+        .day-column { 
+            display: flex; 
+            flex-direction: column; 
+            border-radius: 8px; 
+            border: 1px solid #E0E0E0; 
+            min-width: 120px; 
+        }
+        .day-header { 
+            text-align: center; 
+            padding: 10px 5px; 
+            font-weight: 700; 
+            background-color: var(--primary); 
+            color: white; 
+            font-size: 0.9rem;
+            border-radius: 8px 8px 0 0;
+        }
+        .day-number { font-size: 1.1rem; font-weight: 900; display: block;}
+        .time-slot-container { padding: 10px; flex-grow: 1; background-color: var(--bg-light); }
+
+        /* Estilos de Slots */
+        .time-slot {
+            padding: 8px 5px;
+            margin: 5px 0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--muted);
+            color: var(--primary);
+            background-color: #f5f5f5;
+            transition: all 0.2s;
+        }
+        .time-slot:hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .time-slot.selected {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 8px rgba(43, 138, 246, 0.4); /* Sombra azul */
+        }
+        .time-slot.booked {
+            background-color: #eee;
+            color: var(--muted);
+            border: 1px solid #ccc;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        .time-slot.past-day {
+            background-color: #f0f0f0;
+        }
+
+        /* --- CORRECCIONES DEL MODAL --- */
+        .modal-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            padding-top: 5vh; 
+            z-index: 2000; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease;
+            overflow-y: auto; 
+        }
+        .modal-overlay.visible { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: var(--bg-light); 
+            border-radius: 10px; 
+            width: 95%; 
+            max-width: 550px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+            transform: translateY(-50px); 
+            transition: transform 0.3s ease;
+            margin-bottom: 5vh; 
+        }
+        .modal-overlay.visible .modal-content { transform: translateY(0); }
+        .modal-header {
+            background: var(--primary); 
+            color: white; 
+            padding: 15px 25px; 
+            border-radius: 10px 10px 0 0;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            position: sticky; 
+            top: 0;
+            z-index: 2001; 
+        }
+        .modal-header h3 { margin: 0; font-family: 'Playfair Display', serif; }
+        .modal-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        /* Estilos de Formulario MEJORADOS */
+        .modal-body { 
+            padding: 25px; 
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 5px; 
+            color: var(--primary); 
+            font-size: 0.95rem;
+        }
+        .form-group input[type="text"], 
+        .form-group input[type="email"], 
+        .form-group input[type="tel"], 
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box; 
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #fcfcfc;
+            appearance: none;
+        }
+        .form-group select {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path fill="%230f4c81" d="M0,0 L5,6 L10,0 Z"/></svg>'); /* Icono de flecha con color de ÓTICA */
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(43, 138, 246, 0.4);
+            outline: none;
+            background-color: var(--bg-light);
+        }
+
+        footer { background-color: var(--primary); padding: 20px 0; margin-top: auto; }
+        footer p { color: #f5f5f5; font-size: 0.9rem; text-align: center; margin: 0;}
+    </style>
 </head>
 <body>
-
-  <div class="sidebar">
-    <div class="profile-pic">
-      <img id="sidebar-avatar" src="francisca-sin-fondo.png" alt="avatar"/>
-    </div>
-    <h4 id="sidebar-name">Cargando...</h4>
-    <div class="sidebar small-muted" id="sidebar-sub">Cargando...</div>
-
-    <ul class="sidebar-menu">
-      <li><button class="menu-btn active" data-tab="agenda-tab"><i class="fas fa-calendar-alt"></i> Agenda y servicios</button></li>
-      <li><button class="menu-btn" data-tab="evoluciones-tab"><i class="fas fa-notes-medical"></i> Evoluciones</button></li>
-      <li><button class="menu-btn" data-tab="atenciones-completadas-tab"><i class="fas fa-history"></i> Historial Clínico</button></li> <li><button class="menu-btn" data-tab="datos-tab"><i class="fas fa-user-circle"></i> Mis datos</button></li>
-      <li><button class="menu-btn" data-tab="perfil-tab"><i class="fas fa-id-card"></i> Mi perfil</button></li>
-      <li><button class="menu-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button></li>
-    </ul>
-  </div>
-
-  <div class="main-content">
-    
-    <div class="agenda-area">
-
-        <div class="header-panel">
-            <h2 id="welcome-message">Cargando perfil</h2>
-            <div id="header-actions"></div>
+<main>
+    <div class="container">
+        <div class="header-section">
+            <h2>Agenda tu Sesión</h2>
+            <h3 id="selected-service-display">Cargando tipo de sesión...</h3>
+            <div style="margin-bottom: 15px;">
+                 <a href="index.html" class="btn btn-nav"><i class="fas fa-chevron-left"></i> Volver a Servicios</a>
+            </div>
+            <p id="loading-status" style="font-weight: 500;"><span class="spinner"></span> Cargando agenda del profesional...</p>
         </div>
 
-        <div id="agenda-tab" class="tab-content active">
-          <div class="section-header">
-            <h3>Gestión de Agenda</h3>
-            <p>Selecciona los días y horarios para generar tu agenda semanal. Haz click sobre un slot disponible (<span style="color:var(--accent);font-weight:700">Azul Brillante</span>) para eliminarlo.</p>
-          </div>
-
-          <div class="section-header">
-            <h3>Mi Agenda Semanal</h3>
-            <div id="agenda-status" class="info-msg"> <span class="spinner"></span> Cargando semana...</div>
-          </div>
-
-          <div class="week-controls">
-            <div style="display:flex;gap:8px;align-items:center">
-              <button id="prev-week" class="logout-btn" style="background:#fff;color:var(--primary);border:1px solid #e9ecef;padding:8px 12px;">
-                <i class="fas fa-chevron-left"></i> Semana anterior
-              </button>
-              <button id="next-week" class="logout-btn" style="background:#fff;color:var(--primary);border:1px solid #e9ecef;padding:8px 12px;">
-                Semana siguiente <i class="fas fa-chevron-right"></i>
-              </button>
-            </div>
-            <div style="display:flex;align-items:center;gap:18px">
-              <div class="week-label" id="week-label">Cargando semana...</div>
-            </div>
-          </div>
-
-          <div id="agenda-error" style="display:none" class="error-box"></div>
-
-          <div class="calendar-wrapper" id="calendar-wrap" style="display:none">
-            <table class="calendar-table" aria-label="Calendario semanal">
-              <thead>
-                <tr id="calendar-head">
-                  <th class="time-col">Hora</th>
-                </tr>
-              </thead>
-              <tbody id="calendar-body"></tbody>
-            </table>
-          </div>
-
-        </div>
-
-        <div id="evoluciones-tab" class="tab-content">
-            <div class="section-header">
-                <h3>Evoluciones Pendientes y Registro</h3>
-                <p>Aquí se listan las citas reservadas. Selecciona una para registrar la evolución.</p>
-            </div>
+        <div id="agendamiento-container">
             
-            <div id="evoluciones-main-view">
-                <h4>Citas Pendientes de Evolución</h4>
-                <div id="pendingAppointmentsList">
-                    <p><span class="spinner"></span> Cargando citas pendientes...</p>
+            <div id="step-3">
+                
+                <div class="calendar-nav mt-3">
+                    <button onclick="changeWeek(-1)" class="btn btn-nav">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <h4 id="current-week-display" style="color:var(--primary); margin:0; flex-grow: 1;"></h4>
+                    <button onclick="changeWeek(1)" class="btn btn-nav">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
+
+                <div id="schedule-container" class="calendar-grid">
+                    </div>
+            </div>
+
+            <div id="step-5" style="display:none; text-align: center;">
+                <h3>¡Reserva Exitosa!</h3>
+                <div class="booking-summary" style="background-color: #f3f7fd; border: 1px solid var(--accent); padding: 30px; border-radius: 8px;">
+                    <p style="color: var(--primary); font-size:1.1rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito.</p>
+                    <p>Te enviaremos los detalles de tu sesión al correo. ¡Gracias por confiar en **ÓTICA**!</p>
+                </div>
+                <a href="index.html" class="btn btn-agenda mt-3" style="margin-top: 20px;">Volver al Inicio</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="modal-confirmacion" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="color: white; font-family: 'Playfair Display', serif;">ÓTICA</h3>
+            <button type="button" class="modal-close-btn" onclick="hideModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="hint-box" style="margin-bottom: 20px;">
+                <p style="margin: 5px 0;">Hora seleccionada: **<span id="modal-date-time"></span>**</p>
+                <p style="margin: 5px 0; font-weight: 600;">**Tipo de Terapia:** <span id="modal-service-name"></span></p>
             </div>
             
-            <div id="evolution-form-container" class="tab-content" style="display: none; padding: 0;">
-                <h4 style="color: var(--primary);">Registrar Evolución</h4>
-                <div class="hint-box" style="margin-bottom: 20px;">
-                    <p><strong>Paciente:</strong> <span id="evol_patient_name"></span> (<span id="evol_patient_rut"></span>)</p>
-                    <p><strong>Hora:</strong> <span id="evol_appointment_time"></span></p>
-                    <p><strong>Motivo Inicial:</strong> <span id="evol_patient_motivo"></span></p>
+            <form id="booking-form" class="mt-3">
+                <div class="form-group">
+                    <label for="paciente_nombre">Nombre Completo (*)</label>
+                    <input type="text" id="paciente_nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="paciente_rut">RUT/DNI (*)</label>
+                    <input type="text" id="paciente_rut" required>
                 </div>
                 
-                <form id="saveEvolutionForm">
-                    <input type="hidden" id="evol_agenda_id">
-                    <input type="hidden" id="evol_patient_rut_hidden">
-                    <input type="hidden" id="evol_patient_nombre_hidden">
-                    
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <label for="diagnostico">Diagnóstico (Opcional)</label>
-                        <input type="text" id="diagnostico" placeholder="Código CIE-10 o descripción breve">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="evol_description">Descripción de la Atención y Evolución</label>
-                        <textarea id="evol_description" rows="10" required placeholder="Diagnóstico, tratamiento realizado, observaciones y plan de seguimiento..."></textarea>
-                    </div>
-                    <button type="submit" class="logout-btn" style="background:var(--success); width: 100%; margin-top: 15px;">Confirmar Atención y Guardar Evolución</button>
-                    <button type="button" id="cancelEvolutionBtn" class="logout-btn" style="background:var(--muted); width: 100%; margin-top: 10px;">Cancelar / Volver</button>
-                </form>
-            </div>
-        </div>
-        <div id="atenciones-completadas-tab" class="tab-content">
-            <div class="section-header">
-                <h3>Historial Clínico y Evoluciones Completadas</h3>
-                <p>Revisa el historial de atenciones. La lista muestra todas las evoluciones del último año.</p>
-            </div>
-            
-            <div style="text-align: center; margin-bottom: 20px;">
-                <input type="text" id="historyFilterInput" placeholder="Filtrar por Nombre, RUT o Fecha (Ej: 2025-10)" style="padding: 10px; width: 80%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px;">
-                <div id="historyStatus" style="margin-top: 10px; color: var(--muted);"></div>
-            </div>
-            
-            <div id="completedEvolutionsList">
-                <p>Cargando historial...</p>
-            </div>
-        </div>
-        <div id="datos-tab" class="tab-content">
-          <h3>Mis Datos</h3>
-          <p>Aquí irá el formulario para editar datos personales.</p>
-        </div>
+                <div class="form-group">
+                    <label for="paciente_fecha_nac">Fecha de Nacimiento (*)</label>
+                    <input type="date" id="paciente_fecha_nac" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paciente_email">Correo Electrónico (*)</label>
+                    <input type="email" id="paciente_email" required>
+                </div>
+                <div class="form-group">
+                    <label for="paciente_celular">Celular (*)</label>
+                    <input type="tel" id="paciente_celular" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paciente_prevision">Previsión / Aseguradora (*)</label>
+                    <select id="paciente_prevision" required>
+                        <option value="">-- Selecciona tu Previsión --</option>
+                        <option value="Fonasa">Fonasa</option>
+                        <option value="Isapre Consalud">Isapre Consalud</option>
+                        <option value="Isapre Banmedica">Isapre Banmedica</option>
+                        <option value="Isapre Colmena">Isapre Colmena</option>
+                        <option value="Isapre Masvida">Isapre Masvida</option>
+                        <option value="Isapre Vidatres">Isapre Vidatres</option>
+                        <option value="Particular">Particular</option>
+                    </select>
+                </div>
 
-        <div id="perfil-tab" class="tab-content">
-          <h3>Mi Perfil</h3>
-          <p>Aquí podrás editar tu biografía y servicios.</p>
-        </div>
+                <div class="form-group">
+                    <label for="comentarios">Motivo de Consulta (Opcional)</label>
+                    <textarea id="comentarios" rows="3"></textarea>
+                </div>
+                
+                <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
 
-    </div> 
-    <div class="sidebar-reservas">
-        <h3>Reservas de la Semana</h3>
-        <p id="reserva-dia-actual" style="font-weight: bold; color: var(--accent);">Selecciona un día en la agenda</p>
-        <div id="reserva-list-container">
-            <div class="hint-box">Haz click en los encabezados de los días (Lun, Mar, etc.) para ver la lista de citas de ese día y sus detalles.</div>
+                <div style="margin-top: 25px; border-top: 1px solid #ddd; padding-top: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">Paso Final: Confirmar Hora y Proceder al Pago</h4>
+                    
+                    <p style="font-size: 1.1rem; font-weight: 700;">Monto a Pagar: <span id="payment-amount-display" style="color: var(--accent);"></span></p>
+                    
+                    <input type='hidden' name='monto' id="webpay-monto" value='' />
+
+                    <div style="display:flex; justify-content: space-between; margin-top: 20px;">
+                        <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar / Volver</button>
+                        
+                        <button type='submit' class="btn btn-agenda" id="confirm-payment-btn" style="display: flex; align-items: center; gap: 8px;">
+                            Confirmar Hora y Pagar <i class="fas fa-credit-card"></i>
+                        </button>
+                        
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    </div>
-  <script>
-  /****************** Supabase setup - CREDENCIALES CORREGIDAS ******************/
-  const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw';
-  const { createClient } = supabase;
-  const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+</div>
+<footer>
+    <p>&copy; 2025 ÓTICA. Todos los derechos reservados.</p>
+</footer>
 
-  /****************** DOM refs ******************/
-  const welcomeMessage = document.getElementById('welcome-message');
-  const sidebarNameEl = document.getElementById('sidebar-name');
-  const sidebarSubEl = document.getElementById('sidebar-sub');
-  const calendarHead = document.getElementById('calendar-head');
-  const calendarBody = document.getElementById('calendar-body');
-  const weekLabel = document.getElementById('week-label');
-  const prevWeekBtn = document.getElementById('prev-week');
-  const nextWeekBtn = document.getElementById('next-week');
-  const agendaStatus = document.getElementById('agenda-status');
-  const agendaErrorBox = document.getElementById('agenda-error');
-  const calendarWrap = document.getElementById('calendar-wrap');
-  const logoutBtn = document.getElementById('logout-btn');
-  const reservaDiaActualEl = document.getElementById('reserva-dia-actual');
-  const reservaListContainerEl = document.getElementById('reserva-list-container');
-  // Refs para Evoluciones
-  const pendingAppointmentsListEl = document.getElementById('pendingAppointmentsList');
-  const evolutionFormContainerEl = document.getElementById('evolution-form-container');
-  const saveEvolutionFormEl = document.getElementById('saveEvolutionForm');
-  const cancelEvolutionBtnEl = document.getElementById('cancelEvolutionBtn');
-  const evolMainViewEl = document.getElementById('evoluciones-main-view');
-  // Refs para Historial
-  const completedEvolutionsListEl = document.getElementById('completedEvolutionsList');
-  const historyFilterInputEl = document.getElementById('historyFilterInput');
-  const historyStatusEl = document.getElementById('historyStatus');
+<script>
+    // CREDENCIALES DE SUPABASE ACTUALIZADAS
+    const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const { createClient } = supabase;
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
-
-  /****************** Estado ******************/
-  let currentProfessionalId = null;
-  // CAMBIO CLAVE: Ajuste a 60 minutos para slots de hora en hora
-  const startHour = 8, endHour = 21, slotIntervalMin = 60; 
-  let timeSlots = [];
-  let startOfWeekDate = getStartOfWeek(new Date());
-  let agendaMap = new Map(); 
-  let currentReservas = []; 
-  let selectedReservaDate = null; 
-  let allCompletedEvolutions = []; // Nueva lista para almacenar el historial completo
-
-  /****************** Utilidades de fecha ******************/
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function toISODate(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
-  function formatDayName(dateStr) {
-      const d = new Date(dateStr + 'T12:00:00'); 
-      return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-  }
-  function getStartOfWeek(date){
-    const d = new Date(date);
-    const day = d.getDay(); 
-    const diff = (day === 0 ? -6 : 1) - day; 
-    d.setDate(d.getDate() + diff);
-    d.setHours(0,0,0,0);
-    return d;
-  }
-  function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
-
-  // Función para calcular la edad (usada en el Panel, no en el formulario de reserva)
-  function calculateAge(dateString) {
-      if (!dateString) return 'N/D';
-      const today = new Date();
-      const birthDate = new Date(dateString);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const monthDiff = today.getMonth() - birthDate.getMonth();
-      
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
-      }
-      return age >= 0 ? `${age} años` : 'N/D';
-  }
-
-  /****************** Generar slots (sincrónico) ******************/
-  function generateTimeSlots(){
-    timeSlots = [];
-    const temp = new Date();
-    temp.setHours(startHour,0,0,0);
-    while (temp.getHours() < endHour || (temp.getHours() === endHour && temp.getMinutes() === 0)) {
-      const t = `${pad(temp.getHours())}:${pad(temp.getMinutes())}`;
-      timeSlots.push(t);
-      // Utiliza la variable slotIntervalMin
-      temp.setMinutes(temp.getMinutes() + slotIntervalMin); 
-    }
-  }
-
-  /****************** LÓGICA DE EVOLUCIONES Y HISTORIAL ******************/
-  
-  // 1. Renderizar la lista de citas pendientes (slots reservados)
-  function renderPendingAppointments() {
-      pendingAppointmentsListEl.innerHTML = '';
-      
-      const todayDateStr = toISODate(new Date());
-      
-      // 🛑 CLAVE: Filtramos por slots reservados (disponible: false) Y que no tengan evolucion_registrada: TRUE
-      const appointments = currentReservas.filter(r => r.disponible === false && r.evolucion_registrada !== true).sort((a, b) => {
-          return (a.fecha + a.hora_inicio).localeCompare(b.fecha + b.hora_inicio);
-      });
-      
-      if (appointments.length === 0) {
-          pendingAppointmentsListEl.innerHTML = '<p>🎉 No hay citas reservadas pendientes de evolución.</p>';
-          return;
-      }
-      
-      const ul = document.createElement('ul');
-      ul.classList.add('reserva-list');
-      
-      appointments.forEach(cita => {
-          const li = document.createElement('li');
-          li.classList.add('pending-item');
-          li.id = `pending-item-${cita.id}`; 
-          
-          const hora = cita.hora_inicio.substring(0, 5);
-          const nombre = cita.paciente_nombre || 'Paciente Desconocido';
-          const isPast = cita.fecha < todayDateStr;
-          const statusColor = isPast ? 'var(--danger)' : 'var(--success)';
-
-          li.innerHTML = `
-              <div class="pending-item-info">
-                  <span class="reserva-time" style="color: ${statusColor};"><i class="fas fa-calendar-day"></i> ${cita.fecha} - ${hora} (${isPast ? 'PASADA' : 'PRÓXIMA'})</span>
-                  <div class="reserva-details">
-                      Paciente: <strong>${nombre}</strong> (RUT: ${cita.paciente_rut || 'N/A'})
-                  </div>
-              </div>
-              <button data-agenda-id="${cita.id}" class="register-evol-btn">Registrar Evolución</button>
-          `;
-          
-          ul.appendChild(li);
-      });
-      
-      pendingAppointmentsListEl.appendChild(ul);
-      
-      document.querySelectorAll('.register-evol-btn').forEach(button => {
-          button.addEventListener('click', (e) => {
-              const agendaId = e.target.dataset.agendaId;
-              const cita = currentReservas.find(r => r.id === agendaId);
-              if (cita) showEvolutionForm(cita);
-          });
-      });
-  }
-
-  // 2. Mostrar el formulario de evolución con datos precargados
-  function showEvolutionForm(cita) {
-      evolMainViewEl.style.display = 'none';
-      evolutionFormContainerEl.style.display = 'block';
-      
-      // Precargar datos del paciente
-      document.getElementById('evol_patient_name').textContent = cita.paciente_nombre || 'N/A';
-      document.getElementById('evol_patient_rut').textContent = cita.paciente_rut || 'N/A';
-      document.getElementById('evol_appointment_time').textContent = `${cita.fecha} a las ${cita.hora_inicio.substring(0, 5)}`;
-      document.getElementById('evol_patient_motivo').textContent = cita.comentarios || 'Sin motivo inicial';
-      
-      // Campos ocultos para el guardado
-      document.getElementById('evol_agenda_id').value = cita.id;
-      document.getElementById('evol_patient_rut_hidden').value = cita.paciente_rut || '';
-      document.getElementById('evol_patient_nombre_hidden').value = cita.paciente_nombre || '';
-      
-      // Limpiar formulario al abrir
-      document.getElementById('evol_description').value = ''; 
-      document.getElementById('diagnostico').value = ''; 
-  }
-
-  // 3. Volver a la lista
-  cancelEvolutionBtnEl.addEventListener('click', () => {
-      evolutionFormContainerEl.style.display = 'none';
-      evolMainViewEl.style.display = 'block';
-  });
-
-  // 4. Guardar la evolución
-  saveEvolutionFormEl.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const agendaId = document.getElementById('evol_agenda_id').value;
-      const pacienteRut = document.getElementById('evol_patient_rut_hidden').value;
-      const pacienteNombre = document.getElementById('evol_patient_nombre_hidden').value;
-      const contenidoEvol = document.getElementById('evol_description').value.trim();
-      const diagnostico = document.getElementById('diagnostico').value.trim(); 
-      
-      const cita = currentReservas.find(r => r.id === agendaId);
-      const fechaAtencion = cita ? cita.fecha : toISODate(new Date());
-
-      if (!contenidoEvol || !pacienteRut || !currentProfessionalId) {
-          alert('Error: Faltan datos esenciales (evolución, RUT o ID de profesional). No se puede guardar.');
-          return;
-      }
-      
-      const pendingItemEl = document.getElementById(`pending-item-${agendaId}`);
-      
-      // 1. Aplicar efecto de desaparición al elemento de la lista (Visual)
-      if (pendingItemEl) {
-          pendingItemEl.classList.add('fade-out');
-      }
-
-      // 2. Guardar la evolución en la tabla `evoluciones`
-      const { data: evolData, error: evolError } = await supabaseClient
-          .from('evoluciones')
-          .insert([{
-              profesional_id: currentProfessionalId, 
-              paciente_rut: pacienteRut,
-              paciente_nombre: pacienteNombre, 
-              fecha_atencion: fechaAtencion, 
-              descripcion_evol: contenidoEvol,
-              diagnostico_cie: diagnostico, 
-              estado: 'Completada',
-          }])
-          .select()
-          .single();
-
-      if (evolError) {
-          console.error('Error al guardar la evolución:', evolError);
-          alert('Ocurrió un error al guardar la evolución. Revisa la consola (F12).');
-          if (pendingItemEl) pendingItemEl.classList.remove('fade-out'); 
-          return;
-      }
-
-      // 3. 🛑 CLAVE: Marcar la cita como evolucionada en la tabla 'agendas'
-      const { error: updateError } = await supabaseClient
-          .from('agendas')
-          .update({ evolucion_registrada: true })
-          .eq('id', agendaId);
-          
-      if (updateError) {
-          console.error('Error al actualizar la agenda como evolucionada:', updateError);
-          alert('Evolución guardada, pero hubo un error al marcar la cita como completada. Recarga la página.');
-      }
-      
-      alert(`Evolución para ${pacienteNombre} guardada con éxito.`);
-      
-      // 4. Recargar el flujo de la UI
-      setTimeout(async () => {
-          evolutionFormContainerEl.style.display = 'none';
-          evolMainViewEl.style.display = 'block';
-          await loadWeekSchedule(); 
-          await loadCompletedEvolutions(); // Recargar el historial
-          renderPendingAppointments();
-      }, 300); 
-  });
-
-  // 5. LÓGICA DE CARGA Y FILTRO DE HISTORIAL COMPLETO
-  async function loadCompletedEvolutions() {
-      historyStatusEl.innerHTML = '<span class="spinner"></span> Cargando historial...';
-      
-      // 1. Traer todas las evoluciones del profesional
-      const { data, error } = await supabaseClient
-          .from('evoluciones')
-          .select('*')
-          .eq('profesional_id', currentProfessionalId)
-          .order('fecha_atencion', { ascending: false });
-
-      if (error) {
-          console.error('Error al cargar historial completo:', error);
-          historyStatusEl.textContent = 'Error al cargar el historial.';
-          allCompletedEvolutions = [];
-          return;
-      }
-
-      allCompletedEvolutions = data || [];
-      renderHistoryCards(allCompletedEvolutions);
-  }
-  
-  // 6. Renderizar las tarjetas de historial y agrupar por paciente
-  function renderHistoryCards(evolutions) {
-      completedEvolutionsListEl.innerHTML = '';
-      
-      if (evolutions.length === 0) {
-          completedEvolutionsListEl.innerHTML = '<p>No se encontraron evoluciones que coincidan con el filtro.</p>';
-          historyStatusEl.textContent = 'Historial cargado: 0 resultados.';
-          return;
-      }
-
-      // Agrupar evoluciones por RUT del paciente
-      const groupedEvolutions = evolutions.reduce((acc, evol) => {
-          const rut = evol.paciente_rut;
-          if (!acc[rut]) {
-              acc[rut] = {
-                  nombre: evol.paciente_nombre,
-                  rut: rut,
-                  citas: []
-              };
-          }
-          acc[rut].citas.push(evol);
-          return acc;
-      }, {});
-
-      historyStatusEl.textContent = `Historial cargado: ${evolutions.length} atenciones. (${Object.keys(groupedEvolutions).length} pacientes)`;
-      
-      Object.values(groupedEvolutions).forEach(patientData => {
-          const patientCard = document.createElement('div');
-          patientCard.classList.add('patient-card-summary');
-          const collapseId = `evol-list-${patientData.rut.replace(/[^a-zA-Z0-9]/g, '')}`; // Crea un ID seguro
-
-          patientCard.innerHTML = `
-              <div>
-                  <h4><i class="fas fa-user-check"></i> ${patientData.nombre || 'Paciente Sin Nombre'}</h4>
-                  <p style="color: #eee; margin: 0;">RUT: ${patientData.rut}</p>
-              </div>
-              <i class="fas fa-chevron-down"></i>
-          `;
-          
-          const historyContainer = document.createElement('div');
-          historyContainer.classList.add('evolutions-detail-list');
-          historyContainer.id = collapseId;
-
-          patientData.citas.forEach(evol => {
-              const card = document.createElement('div');
-              card.classList.add('history-card');
-              card.innerHTML = `
-                  <h5><i class="fas fa-calendar-check"></i> Atención del ${new Date(evol.fecha_atencion).toLocaleDateString('es-ES')}</h5>
-                  <p>Diagnóstico: ${evol.diagnostico_cie || 'N/D'}</p>
-                  <div class="history-content">
-                      ${evol.descripcion_evol}
-                  </div>
-              `;
-              historyContainer.appendChild(card);
-          });
-
-          // Toggle logic (abrir/cerrar historial)
-          patientCard.addEventListener('click', () => {
-              historyContainer.classList.toggle('active');
-              const icon = patientCard.querySelector('.fas');
-              if (historyContainer.classList.contains('active')) {
-                  icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
-              } else {
-                  icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
-              }
-          });
-          
-          completedEvolutionsListEl.appendChild(patientCard);
-          completedEvolutionsListEl.appendChild(historyContainer);
-      });
-  }
-
-  // 7. Evento de filtro dinámico
-  historyFilterInputEl.addEventListener('input', (e) => {
-      const filterTerm = e.target.value.toLowerCase().trim();
-      
-      if (!allCompletedEvolutions.length) {
-          renderHistoryCards([]);
-          return;
-      }
-      
-      const filtered = allCompletedEvolutions.filter(evol => {
-          const nameMatch = (evol.paciente_nombre || '').toLowerCase().includes(filterTerm);
-          const rutMatch = (evol.paciente_rut || '').toLowerCase().includes(filterTerm);
-          const dateMatch = (evol.fecha_atencion || '').includes(filterTerm);
-
-          return nameMatch || rutMatch || dateMatch;
-      });
-      
-      renderHistoryCards(filtered);
-  });
-
-
-  /****************** Render del calendario (Vista Agenda) ******************/
-  async function renderCalendar(){
-    // Limpiar y crear encabezados días
-    calendarHead.querySelectorAll('th:not(.time-col)').forEach(n=>n.remove());
-    const dayNames = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-    for (let i=0;i<7;i++){
-      const d = addDays(startOfWeekDate,i);
-      const th = document.createElement('th');
-      const dateStr = toISODate(d);
-      th.dataset.date = dateStr;
-      
-      // Listener para cargar reservas del día en el panel lateral
-      th.addEventListener('click', () => {
-          selectedReservaDate = dateStr;
-          calendarHead.querySelectorAll('th').forEach(t => t.classList.remove('active-day-head'));
-          th.classList.add('active-day-head');
-          renderReservasSidebar(dateStr);
-      });
-      
-      th.innerHTML = `<div style="font-weight:700">${dayNames[i]}</div><div style="font-size:.85rem;color:var(--muted)">${toISODate(d).substring(5)}</div>`;
-      calendarHead.appendChild(th);
-    }
-
-    // Filas por horario
-    calendarBody.innerHTML = '';
-    for (const time of timeSlots) {
-      const tr = document.createElement('tr');
-      const tdTime = document.createElement('td');
-      tdTime.className = 'time-col';
-      tdTime.textContent = time;
-      tr.appendChild(tdTime);
-
-      for (let i=0;i<7;i++){
-        const d = addDays(startOfWeekDate,i);
-        const dateStr = toISODate(d);
-        const key = `${dateStr}|${time}`;
-
-        const td = document.createElement('td');
-        const cell = document.createElement('div');
-        cell.className = 'cell available';
-        cell.dataset.date = dateStr;
-        cell.dataset.time = time;
-        cell.dataset.key = key;
-        cell.title = `${dateStr} ${time}`;
-        cell.innerHTML = ``; 
-
-        const record = agendaMap.get(key);
-        if (record) {
-          if (record.disponible === false) {
-            // SLOTS RESERVADOS (booked)
-            const nombrePaciente = record.paciente_nombre || 'Paciente Desconocido'; 
-            const rutPaciente = record.paciente_rut || 'Sin RUT';
-            const prevision = record.paciente_prevision || 'N/D';
-            const edad = calculateAge(record.paciente_fecha_nac);
-            
-            cell.className = 'cell booked booked-cell';
-            // Title con todos los datos
-            cell.title = `RESERVADO:\nPaciente: ${nombrePaciente}\nRUT: ${rutPaciente}\nEdad: ${edad}\nPrevisión: ${prevision.toUpperCase()}\nMotivo: ${record.comentarios || 'N/D'}`;
-            cell.innerHTML = `<i class="fas fa-user-tag" style="margin-right:5px"></i> ${time}`;
-            cell.style.backgroundColor = 'var(--success)'; 
-            cell.style.color = '#fff';
-
-          } else {
-            // SLOTS DISPONIBLES (active)
-            cell.className = 'cell active';
-            cell.title = `Disponible - ${dateStr} ${time}`;
-            cell.style.backgroundColor = 'var(--accent)';
-            cell.innerHTML = `<i class="fas fa-check"></i> ${time}`;
-          }
-        } else {
-          // SLOTS NO AGENDADOS (available)
-          cell.className = 'cell available';
-          cell.title = `${dateStr} ${time}`;
-          cell.innerHTML = ``;
-        }
-
-        cell.addEventListener('click', async (ev) => {
-          if (cell.classList.contains('booked-cell')) return; 
-          await toggleCellAvailability(cell);
-        });
-
-        td.appendChild(cell);
-        tr.appendChild(td);
-      }
-
-      calendarBody.appendChild(tr);
-    }
-
-    weekLabel.textContent = `${toISODate(startOfWeekDate)} — ${toISODate(addDays(startOfWeekDate,6))}`;
+    let selectedServiceId = null; 
+    let selectedServiceName = '';
+    let selectedProfessionalId = null;
+    let selectedTimeSlot = null;
+    let currentWeekStart = new Date(); 
     
-    renderReservasSidebar(selectedReservaDate); 
-  }
-  
-  /****************** RENDERIZADO DEL PANEL LATERAL ******************/
-  function renderReservasSidebar(dateStr = null) {
-      let reservasToShow;
-      
-      if (dateStr) {
-          reservasToShow = currentReservas.filter(r => r.fecha === dateStr);
-          reservaDiaActualEl.textContent = `Reservas para el ${formatDayName(dateStr)}`;
-      } else {
-          reservasToShow = currentReservas;
-          reservaDiaActualEl.textContent = 'Reservas de la Semana (Total)';
-      }
+    // Configuración de horario
+    const startHour = 8, endHour = 21, slotIntervalMin = 60; 
+    
+    // Referencias DOM
+    const modalConfirmacionEl = document.getElementById('modal-confirmacion');
+    const modalDateTimeEl = document.getElementById('modal-date-time');
+    const modalServiceNameEl = document.getElementById('modal-service-name');
+    const loadingStatusEl = document.getElementById('loading-status');
+    const selectedServiceDisplayEl = document.getElementById('selected-service-display');
 
-      reservaListContainerEl.innerHTML = '';
-      
-      if (reservasToShow.length === 0) {
-          reservaListContainerEl.innerHTML = `<p>No hay reservas ${dateStr ? 'para este día' : 'en esta semana'}.</p>`;
-          if (!dateStr) {
-              reservaListContainerEl.innerHTML = '<div class="hint-box">Haz click en los encabezados de los días (Lun, Mar, etc.) para ver la lista de citas de ese día y sus detalles.</div>';
-          }
-          return;
-      }
-      
-      const ul = document.createElement('ul');
-      ul.classList.add('reserva-list');
-
-      reservasToShow.forEach(reserva => {
-          const nombrePaciente = reserva.paciente_nombre || 'Desconocido';
-          const rutPaciente = reserva.paciente_rut || 'N/A';
-          const hora = String(reserva.hora_inicio).substring(0, 5);
-          const motivo = reserva.comentarios || 'Sin especificar'; 
-          const prevision = reserva.paciente_prevision ? reserva.paciente_prevision.toUpperCase() : 'N/D';
-          const edad = calculateAge(reserva.paciente_fecha_nac);
-          const fecha = reserva.fecha;
-          
-          const li = document.createElement('li');
-          li.classList.add('reserva-item');
-
-          li.innerHTML = `
-              <span class="reserva-time"><i class="fas fa-clock"></i> ${hora} ${dateStr ? '' : `(${fecha.substring(5)})`}</span>
-              <div class="reserva-details">
-                  Paciente: <strong>${nombrePaciente}</strong> (Edad: ${edad})<br>
-                  RUT: ${rutPaciente}<br>
-                  Previsión: ${prevision}<br>
-                  Motivo: <em>${motivo}</em>
-              </div>
-          `;
-          
-          li.addEventListener('click', () => {
-              alert(`Detalles de la Cita:\n
-              Hora: ${hora}\nDía: ${fecha}\n
-              Paciente: ${nombrePaciente}\nRUT: ${rutPaciente}\n
-              Edad: ${edad}\nPrevisión: ${prevision}\n
-              Motivo de Consulta: ${motivo}`);
-          });
-          
-          ul.appendChild(li);
-      });
-      
-      reservaListContainerEl.appendChild(ul);
-  }
-
-  /****************** Cargar agenda semana desde Supabase ******************/
-  async function loadWeekSchedule(){
-    agendaErrorBox.style.display = 'none';
-    agendaStatus.innerHTML = '<span class="spinner"></span> Cargando semana...';
-    calendarWrap.style.display = 'none';
-    try {
-      if (!currentProfessionalId) throw new Error('professional id undefined');
-
-      const start = toISODate(startOfWeekDate);
-      const end = toISODate(addDays(startOfWeekDate,6));
-
-      // 🛑 SELECT FINAL: Incluye todos los campos de paciente.
-      const { data, error } = await supabaseClient
-        .from('agendas')
-        .select('id, profesional_id, fecha, hora_inicio, disponible, paciente_nombre, paciente_rut, paciente_fecha_nac, paciente_prevision, comentarios, evolucion_registrada') 
-        .eq('profesional_id', currentProfessionalId)
-        .gte('fecha', start)
-        .lte('fecha', end)
-        .order('fecha', {ascending:true});
-
-      if (error) {
-        console.error('Error al traer agendas (Supabase error object):', error);
-        throw error;
-      }
-
-      agendaMap.clear();
-      currentReservas = []; 
-      
-      (data || []).forEach(item => {
-        const horaRaw = item.hora_inicio || item.hora_fin || null;
-        if (!horaRaw) return;
-        
-        const hora = String(horaRaw).substring(0,5); 
-        const key = `${item.fecha}|${hora}`;
-        agendaMap.set(key, item);
-        
-        if (item.disponible === false) {
-             currentReservas.push(item); 
-        }
-      });
-
-      renderCalendar();
-      renderPendingAppointments(); // 🛑 Actualizar la lista de pendientes
-      calendarWrap.style.display = 'block';
-      agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--muted)">Agenda cargada</span>';
-    } catch (err) {
-      console.error('loadWeekSchedule error:', err);
-      agendaErrorBox.style.display = 'block';
-      agendaErrorBox.textContent = 'No se pudo cargar la agenda de la semana. Revisa la consola (F12) para más detalles.';
-      agendaStatus.innerHTML = '<span style="color:#7a1f1f">Error al cargar semana</span>';
+    // --- UTILIDADES ---
+    function getStartOfWeek(date) {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
+        const monday = new Date(date);
+        monday.setDate(diff);
+        monday.setHours(0, 0, 0, 0); 
+        return monday;
     }
-  }
+    function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+    function formatTime(timeString) {
+        const [hours, minutes] = timeString.split(':');
+        return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+    
+    function calculateAge(dobString) {
+        if (!dobString) return null;
+        const today = new Date();
+        const birthDate = new Date(dobString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age >= 0 ? age : null;
+    }
 
-  /****************** Toggle disponibilidad (crear o ELIMINAR) ******************/
-  async function toggleCellAvailability(cell){
-    cell.classList.add('saving'); 
-    const date = cell.dataset.date;
-    const time = cell.dataset.time;
-    const key = cell.dataset.key;
-    try {
-      const existing = agendaMap.get(key);
 
-      if (existing) {
-        if (existing.disponible === true) {
-             // LÓGICA DE ELIMINACIÓN
-            const { error: deleteError } = await supabaseClient
-                .from('agendas')
-                .delete()
-                .eq('id', existing.id);
+    // --- MANEJO DEL MODAL ---
+    function showModal() {
+        const datePart = new Date(selectedTimeSlot.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        modalDateTimeEl.textContent = `${datePart} a las ${selectedTimeSlot.time}`;
+        modalServiceNameEl.textContent = selectedServiceName;
+        
+        modalConfirmacionEl.classList.add('visible');
+        document.body.style.overflow = 'hidden'; 
+        
+        document.getElementById('booking-status-message').textContent = '';
+        
+        // --- LÓGICA DE CÁLCULO DE MONTO Y PREPARACIÓN DE PAGO ---
+        let paymentAmount = 0;
+        let amountDisplay = 'Monto no definido';
 
-            if (deleteError) throw deleteError;
+        if (selectedServiceName.includes('ISAPRE')) {
+            paymentAmount = 20000; // 20.000 CLP
+        } else if (selectedServiceName.includes('FONASA')) {
+            paymentAmount = 15000; // 15.000 CLP
+        }
+        
+        if (paymentAmount > 0) {
+            amountDisplay = paymentAmount.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
+        }
+        
+        // El ID de formulario y el monto siguen usando los valores de Webpay de ejemplo (326331)
+        document.getElementById('webpay-monto').value = paymentAmount;
+        document.getElementById('payment-amount-display').textContent = amountDisplay;
+        
+        // Cargar previsión predeterminada
+        const previsionSelect = document.getElementById('paciente_prevision');
+        if (selectedServiceName.includes('FONASA')) {
+            previsionSelect.value = 'Fonasa';
+        } else if (selectedServiceName.includes('ISAPRE')) {
+            previsionSelect.value = 'Isapre Consalud'; 
         } else {
-             console.warn('Acción bloqueada: Slot reservado.', key);
-             return; 
+             previsionSelect.value = '';
+        }
+        
+        document.getElementById('confirm-payment-btn').disabled = (paymentAmount === 0 || !selectedTimeSlot);
+    }
+
+    function hideModal() {
+        modalConfirmacionEl.classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+    
+    // --- LÓGICA DEL CALENDARIO ---
+    async function loadUniqueProfessional() {
+        const { data: profData, error: profError } = await supabaseClient
+            .from('profesionales')
+            .select('id')
+            .limit(1);
+
+        if (profError || profData.length === 0) {
+            loadingStatusEl.innerHTML = 'Error: No se encontró el profesional. Asegúrate de haber insertado un registro en la tabla "profesionales".';
+            return false;
+        }
+        
+        selectedProfessionalId = profData[0].id;
+        return true;
+    }
+
+    function generateTimeSlots() {
+        let timeSlots = [];
+        const temp = new Date();
+        temp.setHours(startHour, 0, 0, 0);
+        while (temp.getHours() < endHour || (temp.getHours() === endHour && temp.getMinutes() === 0)) {
+            const t = `${pad(temp.getHours())}:${pad(temp.getMinutes())}`;
+            timeSlots.push(t);
+            temp.setMinutes(temp.getMinutes() + slotIntervalMin);
+        }
+        return timeSlots;
+    }
+
+    async function loadWeekSchedule() {
+        if (!selectedProfessionalId || !selectedServiceId) {
+            loadingStatusEl.innerHTML = 'Error: ID de servicio/profesional no cargado.';
+            return;
         }
 
-        await loadWeekSchedule(); 
+        loadingStatusEl.innerHTML = '<span class="spinner"></span> Cargando agenda del profesional...';
         
-      } else {
-        // Slot no existe, lo creamos (disponible)
-        const { data, error } = await supabaseClient
-          .from('agendas')
-          .insert([{
-            profesional_id: currentProfessionalId,
-            fecha: date,
-            hora_inicio: time + ':00', 
-            disponible: true
-          }])
-          .select()
-          .single();
+        const startDate = getStartOfWeek(currentWeekStart);
+        const endDate = addDays(startDate, 6); 
 
-        if (error) throw error;
-        data.hora_inicio = time;
-        agendaMap.set(key, data);
+        document.getElementById('current-week-display').textContent = 
+            `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
         
-        await loadWeekSchedule(); 
-      }
-    } catch (err) {
-      console.error('Error guardando/eliminando disponibilidad:', err);
-      alert('Ocurrió un error al guardar/eliminar la disponibilidad. Revisa la consola.');
-    } finally {
-      cell.classList.remove('saving');
+        const { data: agendaData, error } = await supabaseClient
+            .from('agendas')
+            .select('*')
+            .eq('profesional_id', selectedProfessionalId)
+            .gte('fecha', toISODate(startDate))
+            .lte('fecha', toISODate(endDate))
+            .order('hora_inicio', { ascending: true });
+
+        if (error) {
+            console.error('Error al cargar agenda:', error);
+            loadingStatusEl.innerHTML = 'Error al cargar la agenda. Intenta más tarde.';
+            return;
+        }
+
+        const agendaMap = new Map();
+        (agendaData || []).forEach(item => {
+            const hora = formatTime(item.hora_inicio);
+            const key = `${item.fecha}|${hora}`;
+            agendaMap.set(key, item);
+        });
+        
+        renderCalendar(agendaMap);
+        loadingStatusEl.textContent = ''; 
     }
-  }
 
-  /****************** Navegación semanas ******************/
-  prevWeekBtn.addEventListener('click', async () => {
-    startOfWeekDate = addDays(startOfWeekDate, -7);
-    await loadWeekSchedule();
-  });
-  nextWeekBtn.addEventListener('click', async () => {
-    startOfWeekDate = addDays(startOfWeekDate, 7);
-    await loadWeekSchedule();
-  });
-
-  /****************** Auth y carga inicial ******************/
-  async function checkAuth(){
-    try {
-      agendaStatus.innerHTML = '<span class="spinner"></span> Verificando sesión...';
-      const resp = await supabaseClient.auth.getUser();
-      const user = resp?.data?.user ?? null;
-      
-      if (!user) {
-        window.location.href = 'portal.html';
-        return;
-      }
-
-      const { data: prof, error: profError } = await supabaseClient
-          .from('profesionales')
-          .select('id,nombre,email')
-          .eq('email', user.email)
-          .maybeSingle(); 
-
-      if (profError || !prof) {
-        welcomeMessage.textContent = 'Error cargando perfil';
-        sidebarNameEl.textContent = 'Usuario';
-        sidebarSubEl.textContent = `Error: Perfil no encontrado para ${user.email}`;
-        agendaStatus.innerHTML = '<span style="color:#7a1f1f">Necesita configuración</span>';
+    function renderCalendar(agendaMap) {
+        const scheduleContainer = document.getElementById('schedule-container');
+        scheduleContainer.innerHTML = '';
+        const timeSlots = generateTimeSlots();
         
-        await supabaseClient.auth.signOut();
-        window.location.href = 'portal.html';
-        return;
-      }
+        let currentDayIter = new Date(getStartOfWeek(currentWeekStart));
+        const today = new Date(); today.setHours(0, 0, 0, 0); 
+        
+        selectedTimeSlot = null;
 
-      currentProfessionalId = prof.id;
-      welcomeMessage.textContent = `¡Hola, ${prof.nombre}!`;
-      sidebarNameEl.textContent = prof.nombre;
-      sidebarSubEl.textContent = prof.email || '';
+        for (let i = 0; i < 7; i++) {
+            const dayKey = toISODate(currentDayIter);
+            const isPastDay = currentDayIter < today; 
 
-      generateTimeSlots();
-      
-      setTimeout(async () => {
-          await loadWeekSchedule();
-          await loadCompletedEvolutions(); // 🛑 Cargar historial al inicio
-          agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--muted)">Listo</span>';
-      }, 50); 
+            let daySlotsHTML = '';
+            let hasSlots = false;
 
-    } catch (err) {
-      console.error('checkAuth error (fatal):', err);
-      await supabaseClient.auth.signOut();
-      window.location.href = 'portal.html';
+            for (const time of timeSlots) {
+                const key = `${dayKey}|${time}`;
+                const slot = agendaMap.get(key);
+                
+                const slotDateTime = new Date(`${dayKey}T${time}:00`);
+                const isPastHour = slotDateTime < new Date();
+                
+                const isBooked = slot && !slot.disponible;
+                const isAvailable = slot && slot.disponible;
+                
+                const isUnavailable = isPastDay || isPastHour || isBooked || !isAvailable;
+
+                if (isAvailable) hasSlots = true;
+
+                daySlotsHTML += `
+                    <div class="time-slot ${isUnavailable ? 'booked' : ''} ${isAvailable ? 'available-slot' : ''}" 
+                         data-id="${slot ? slot.id : ''}" 
+                         data-date="${dayKey}" 
+                         data-time="${time}"
+                         onclick="${isUnavailable ? '' : 'selectTimeSlot(this)'}">
+                       ${time}
+                    </div>
+                `;
+            }
+            
+            scheduleContainer.innerHTML += `
+                <div class="day-column">
+                    <div class="day-header ${isPastDay ? 'past-day' : ''}">
+                        ${currentDayIter.toLocaleDateString('es-ES', { weekday: 'short' })}<br><span class="day-number">${currentDayIter.getDate()}</span>
+                    </div>
+                    <div class="time-slot-container">
+                        ${hasSlots ? daySlotsHTML : '<p style="font-size:0.85rem; color:var(--muted); text-align:center;">No hay horas.</p>'}
+                    </div>
+                </div>
+            `;
+            currentDayIter.setDate(currentDayIter.getDate() + 1); 
+        }
     }
-  }
 
-  /****************** Logout ******************/
-  logoutBtn.addEventListener('click', async () => {
-    await supabaseClient.auth.signOut();
-    window.location.href = 'portal.html';
-  });
+    async function selectTimeSlot(element) {
+        if (element.classList.contains('booked')) return; 
 
-  /****************** Tabs UI ******************/
-  document.querySelectorAll('.menu-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-      btn.classList.add('active');
-      const tab = btn.dataset.tab;
-      if (tab) document.getElementById(tab).classList.add('active');
+        document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+        
+        element.classList.add('selected');
+        
+        selectedTimeSlot = {
+            id: element.dataset.id,
+            date: element.dataset.date,
+            time: element.dataset.time
+        };
+        
+        // 1. Marcar slot como no disponible provisionalmente en la BD
+        loadingStatusEl.innerHTML = '<span class="spinner"></span> Reservando provisionalmente el slot...';
+        
+        const { error: updateError } = await supabaseClient
+            .from('agendas')
+            .update({ 
+                disponible: false,
+                paciente_nombre: 'PROVISIONAL', // Marcador provisional
+                comentarios: 'PROVISIONAL' 
+            })
+            .eq('id', selectedTimeSlot.id);
+            
+        loadingStatusEl.textContent = ''; 
+
+        if (updateError) {
+             console.error("Error al marcar slot como provisional:", updateError);
+             element.classList.remove('selected');
+             element.classList.add('booked');
+             alert("Esta hora acaba de ser reservada por otra persona. Por favor, elige otro slot.");
+             loadWeekSchedule(); // Recargar para mostrar el slot como 'booked'
+             return;
+        }
+
+        // Si es exitoso, mostrar el modal de confirmación
+        showModal();
+    }
+
+    function changeWeek(direction) {
+        currentWeekStart = addDays(currentWeekStart, direction * 7);
+        loadWeekSchedule();
+    }
+    
+    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const statusMessage = document.getElementById('booking-status-message');
+        const confirmBtn = document.getElementById('confirm-payment-btn');
+        confirmBtn.disabled = true;
+        statusMessage.textContent = 'Recopilando datos y preparando pago...';
+        
+        // Recolección y validación de Datos
+        const nombre = document.getElementById('paciente_nombre').value;
+        const rut = document.getElementById('paciente_rut').value;
+        const fechaNac = document.getElementById('paciente_fecha_nac').value; 
+        const email = document.getElementById('paciente_email').value;
+        const celular = document.getElementById('paciente_celular').value;
+        const prevision = document.getElementById('paciente_prevision').value; 
+        const comentarios = document.getElementById('comentarios').value;
+        const monto = document.getElementById('webpay-monto').value;
+        const isMontoValid = parseInt(monto) > 0;
+
+        if (!selectedTimeSlot || !nombre || !rut || !fechaNac || !email || !celular || !prevision || !isMontoValid) {
+             statusMessage.textContent = 'Por favor, completa todos los campos requeridos y selecciona una hora válida.';
+             confirmBtn.disabled = false;
+             return;
+        }
+
+        // 2. Actualizar el registro provisional en la tabla 'agendas' con los datos finales del paciente
+        const { error: finalUpdateError } = await supabaseClient
+            .from('agendas')
+            .update({
+                paciente_nombre: nombre,
+                paciente_rut: rut,
+                paciente_fecha_nac: fechaNac,
+                paciente_prevision: prevision,
+                comentarios: comentarios,
+                paciente_email: email,
+                paciente_celular: celular,
+                disponible: false // Sigue siendo false, pero ahora es una reserva real
+            })
+            .eq('id', selectedTimeSlot.id);
+
+        if (finalUpdateError) {
+            statusMessage.textContent = 'Error al confirmar los datos en la base de datos. Intenta de nuevo.';
+            console.error("Error al confirmar datos finales:", finalUpdateError);
+            confirmBtn.disabled = false;
+            return;
+        }
+
+
+        // --- CREACIÓN DINÁMICA DEL FORMULARIO DE WEBPAY ---
+        const webpayForm = document.createElement('form');
+        webpayForm.name = 'rec20108_btn1';
+        webpayForm.method = 'post';
+        webpayForm.action = 'https://www.webpay.cl/backpub/external/form-pay';
+        
+        // Campos ocultos requeridos por Webpay (Solo idFormulario y monto)
+        webpayForm.innerHTML = `
+            <input type='hidden' name='idFormulario' value='326331' />
+            <input type='hidden' name='monto' value='${monto}' />
+        `;
+        
+        // Agregar el formulario al cuerpo y enviarlo
+        document.body.appendChild(webpayForm);
+        statusMessage.textContent = 'Redirigiendo a Webpay...';
+        hideModal(); // Ocultar modal antes de redirigir
+        webpayForm.submit(); 
+        
+        // Si Webpay falla, el slot seguirá marcado como no disponible en Supabase, 
+        // lo que requiere manejo manual o un webhook para revertirlo.
     });
-  });
 
-  /****************** Inicializar ******************/
-  document.addEventListener('DOMContentLoaded', () => {
-      checkAuth();
-  });
 
+    // --- INICIALIZACIÓN ---
+    document.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        selectedServiceId = parseInt(params.get('service_id'));
+        selectedServiceName = params.get('service_name') ? decodeURIComponent(params.get('service_name')) : 'Terapia No Definida';
+        
+        if (!selectedServiceId) {
+            selectedServiceDisplayEl.textContent = 'Error: ID de servicio no especificado. (service_id=1 por defecto para el ejemplo)';
+            selectedServiceId = 1; // Default para no romper la app
+        }
+        
+        selectedServiceDisplayEl.textContent = selectedServiceName;
+
+        if (await loadUniqueProfessional()) {
+            currentWeekStart = getStartOfWeek(new Date());
+            loadWeekSchedule();
+        }
+    });
 </script>
+
 </body>
 </html>
