@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Panel de Control | Speech Psychology</title>
+  <title>Panel de Control | ÓTICA</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -14,8 +14,8 @@
   <style>
     /* ---------- Estilos (preservados + mejoras) ---------- */
     :root{
-      --primary:#2b3a67;
-      --accent:#e0a35e;
+      --primary:#0f4c81; /* Azul Profundo de ÓTICA */
+      --accent:#2b8af6; /* Brillo Azul de ÓTICA */
       --bg:#f8f9fa;
       --muted:#6c757d;
       --success: #1e7e34; /* Verde para citas/confirmación */
@@ -241,7 +241,7 @@
     .header-panel{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #e9ecef}
     .header-panel h2{font-family:'Playfair Display',serif;color:var(--primary);font-size:2.2rem;margin:0}
     .logout-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700}
-    .logout-btn:hover{background:#d19a55}
+    .logout-btn:hover{background:#0f4c81}
 
     .tab-content{display:none;background:#fff;padding:36px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-bottom:18px}
     .tab-content.active{display:block}
@@ -262,8 +262,8 @@
     .cell.available{background:#fff;border:1px solid #f1f1f1;color:var(--primary)}
     /* CLASES DE AGENDAMIENTO */
     .cell.active{background:var(--accent);color:#fff}
-    .cell.booked{background:var(--success);color:#fff;cursor:not-allowed} 
-    .cell.booked-cell{background:var(--success);color:#fff;cursor:not-allowed}
+    .cell.booked{background:var(--success);color:#fff;cursor:pointer} 
+    .cell.booked-cell{background:var(--success);color:#fff;cursor:pointer}
     /* FIN CLASES DE AGENDAMIENTO */
     .info-msg{color:var(--muted);font-weight:600}
 
@@ -329,7 +329,7 @@
         <div id="agenda-tab" class="tab-content active">
           <div class="section-header">
             <h3>Gestión de Agenda</h3>
-            <p>Selecciona los días y horarios para generar tu agenda semanal. Haz click sobre un slot disponible (<span style="color:var(--accent);font-weight:700">Naranja</span>) para eliminarlo.</p>
+            <p>Selecciona los días y horarios para generar tu agenda semanal. Haz click sobre un slot disponible (<span style="color:var(--accent);font-weight:700">Azul Brillante</span>) para eliminarlo.</p>
           </div>
 
           <div class="section-header">
@@ -873,7 +873,13 @@
         }
 
         cell.addEventListener('click', async (ev) => {
-          if (cell.classList.contains('booked-cell')) return; 
+          // Si el slot está reservado, llamamos a la función para liberar la hora
+          if (cell.classList.contains('booked-cell')) {
+              const record = agendaMap.get(cell.dataset.key);
+              if (record) releaseBookedSlot(cell, record.id, record.paciente_nombre);
+              return;
+          }
+          // Si está disponible o vacío, llamamos a la función de alternar disponibilidad
           await toggleCellAvailability(cell);
         });
 
@@ -889,22 +895,132 @@
     renderReservasSidebar(selectedReservaDate); 
   }
   
+  /****************** Liberar Slot Reservado (NUEVA FUNCIÓN) ******************/
+  async function releaseBookedSlot(cell, agendaId, patientName) {
+      if (!confirm(`¿Está seguro que desea LIBERAR la hora reservada por ${patientName}? Esto eliminará la reserva del sistema.`)) {
+          return;
+      }
+
+      cell.classList.add('saving');
+
+      try {
+          // 1. Eliminamos el registro de la tabla agendas
+          const { error: deleteError } = await supabaseClient
+              .from('agendas')
+              .delete()
+              .eq('id', agendaId);
+
+          if (deleteError) throw deleteError;
+
+          // 2. Actualización visual instantánea
+          cell.classList.remove('booked', 'booked-cell', 'saving');
+          cell.classList.add('available');
+          cell.innerHTML = ``;
+          cell.title = `Disponible - ${cell.dataset.date} ${cell.dataset.time}`;
+          
+          // 3. Remover del estado local y recargar el panel lateral
+          agendaMap.delete(cell.dataset.key);
+          currentReservas = currentReservas.filter(r => r.id !== agendaId);
+          renderReservasSidebar(selectedReservaDate);
+          renderPendingAppointments();
+          
+          alert(`Hora para ${patientName} liberada con éxito.`);
+
+      } catch (err) {
+          console.error('Error al liberar la reserva:', err);
+          alert('Ocurrió un error al intentar liberar la hora. Revisa la consola (F12).');
+      } finally {
+          cell.classList.remove('saving');
+      }
+  }
+
+
+  /****************** Toggle disponibilidad (crear o ELIMINAR disponibilidad) ******************/
+  async function toggleCellAvailability(cell){
+    cell.classList.add('saving'); 
+    const date = cell.dataset.date;
+    const time = cell.dataset.time;
+    const key = cell.dataset.key;
+    const existing = agendaMap.get(key);
+
+    try {
+        if (existing && existing.disponible === true) {
+            // 1. ELIMINAR de la base de datos (deshabilitar slot)
+            const { error: deleteError } = await supabaseClient
+                .from('agendas')
+                .delete()
+                .eq('id', existing.id);
+
+            if (deleteError) throw deleteError;
+
+            // 2. ACTUALIZACIÓN VISUAL INSTANTÁNEA (Evitar "pestañazo")
+            cell.classList.remove('active');
+            cell.classList.add('available');
+            cell.innerHTML = ``;
+            cell.title = `${date} ${time}`;
+            agendaMap.delete(key); // Eliminar del mapa de estado local
+            
+        } else if (!existing) {
+            // 1. INSERTAR en la base de datos (habilitar slot)
+            const { data: newRecord, error: insertError } = await supabaseClient
+                .from('agendas')
+                .insert([{
+                    profesional_id: currentProfessionalId,
+                    fecha: date,
+                    hora_inicio: time + ':00', 
+                    disponible: true
+                }])
+                .select()
+                .single();
+
+            if (insertError) throw insertError;
+            
+            // 2. ACTUALIZACIÓN VISUAL INSTANTÁNEA (Evitar "pestañazo")
+            cell.classList.remove('available');
+            cell.classList.add('active');
+            cell.style.backgroundColor = 'var(--accent)';
+            cell.innerHTML = `<i class="fas fa-check"></i> ${time}`;
+            cell.title = `Disponible - ${date} ${time}`;
+            agendaMap.set(key, newRecord); // Añadir al mapa de estado local
+            
+        } else {
+            console.warn('Acción bloqueada: Slot reservado o lógica no manejada.', key);
+            return;
+        }
+
+        // NO HACEMOS loadWeekSchedule() aquí para evitar el parpadeo.
+        // Las reservas (panel lateral) no necesitan actualizarse inmediatamente al cambiar disponibilidad.
+
+    } catch (err) {
+        console.error('Error guardando/eliminando disponibilidad:', err);
+        alert('Ocurrió un error al guardar/eliminar la disponibilidad. Por favor, recarga la página si el cambio no se reflejó.');
+        // Si hay error, revertir clase de guardado
+        cell.classList.remove('saving'); 
+    } finally {
+        cell.classList.remove('saving');
+    }
+}
+  
   /****************** RENDERIZADO DEL PANEL LATERAL ******************/
   function renderReservasSidebar(dateStr = null) {
       let reservasToShow;
       
       if (dateStr) {
-          reservasToShow = currentReservas.filter(r => r.fecha === dateStr);
+          // Filtramos solo por las citas de ESE día Y que no estén evolucionadas
+          reservasToShow = currentReservas.filter(r => r.fecha === dateStr && r.evolucion_registrada !== true);
           reservaDiaActualEl.textContent = `Reservas para el ${formatDayName(dateStr)}`;
       } else {
-          reservasToShow = currentReservas;
-          reservaDiaActualEl.textContent = 'Reservas de la Semana (Total)';
+          // Si no se selecciona día, mostramos las citas pendientes (no evolucionadas) de la semana actual y futuras
+          reservasToShow = currentReservas.filter(r => r.evolucion_registrada !== true).sort((a, b) => {
+              return (a.fecha + a.hora_inicio).localeCompare(b.fecha + b.hora_inicio);
+          });
+          reservaDiaActualEl.textContent = 'Reservas Pendientes de Evolución';
       }
 
       reservaListContainerEl.innerHTML = '';
       
       if (reservasToShow.length === 0) {
-          reservaListContainerEl.innerHTML = `<p>No hay reservas ${dateStr ? 'para este día' : 'en esta semana'}.</p>`;
+          reservaListContainerEl.innerHTML = `<p>No hay reservas pendientes ${dateStr ? 'para este día' : 'en esta semana'}.</p>`;
           if (!dateStr) {
               reservaListContainerEl.innerHTML = '<div class="hint-box">Haz click en los encabezados de los días (Lun, Mar, etc.) para ver la lista de citas de ese día y sus detalles.</div>';
           }
@@ -933,128 +1049,27 @@
                   RUT: ${rutPaciente}<br>
                   Previsión: ${prevision}<br>
                   Motivo: <em>${motivo}</em>
+                  <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                      <button class="logout-btn" style="background: var(--danger); padding: 5px 10px; font-size: 0.85rem;" 
+                              onclick="releaseBookedSlot(null, '${reserva.id}', '${nombrePaciente}')">
+                          <i class="fas fa-trash-alt"></i> Liberar Hora
+                      </button>
+                  </div>
               </div>
           `;
           
-          li.addEventListener('click', () => {
-              alert(`Detalles de la Cita:\n
-              Hora: ${hora}\nDía: ${fecha}\n
-              Paciente: ${nombrePaciente}\nRUT: ${rutPaciente}\n
-              Edad: ${edad}\nPrevisión: ${prevision}\n
-              Motivo de Consulta: ${motivo}`);
-          });
-          
+          // Re-adjuntamos el listener para liberar desde el panel lateral
+          li.querySelector('.logout-btn').onclick = (e) => {
+               e.stopPropagation(); // Prevenir el alert
+               releaseBookedSlot(null, reserva.id, nombrePaciente);
+          };
+
           ul.appendChild(li);
       });
       
       reservaListContainerEl.appendChild(ul);
   }
-
-  /****************** Cargar agenda semana desde Supabase ******************/
-  async function loadWeekSchedule(){
-    agendaErrorBox.style.display = 'none';
-    agendaStatus.innerHTML = '<span class="spinner"></span> Cargando semana...';
-    calendarWrap.style.display = 'none';
-    try {
-      if (!currentProfessionalId) throw new Error('professional id undefined');
-
-      const start = toISODate(startOfWeekDate);
-      const end = toISODate(addDays(startOfWeekDate,6));
-
-      // 🛑 SELECT FINAL: Incluye todos los campos de paciente.
-      const { data, error } = await supabaseClient
-        .from('agendas')
-        .select('id, profesional_id, fecha, hora_inicio, disponible, paciente_nombre, paciente_rut, paciente_fecha_nac, paciente_prevision, comentarios, evolucion_registrada') 
-        .eq('profesional_id', currentProfessionalId)
-        .gte('fecha', start)
-        .lte('fecha', end)
-        .order('fecha', {ascending:true});
-
-      if (error) {
-        console.error('Error al traer agendas (Supabase error object):', error);
-        throw error;
-      }
-
-      agendaMap.clear();
-      currentReservas = []; 
-      
-      (data || []).forEach(item => {
-        const horaRaw = item.hora_inicio || item.hora_fin || null;
-        if (!horaRaw) return;
-        
-        const hora = String(horaRaw).substring(0,5); 
-        const key = `${item.fecha}|${hora}`;
-        agendaMap.set(key, item);
-        
-        if (item.disponible === false) {
-             currentReservas.push(item); 
-        }
-      });
-
-      renderCalendar();
-      renderPendingAppointments(); // 🛑 Actualizar la lista de pendientes
-      calendarWrap.style.display = 'block';
-      agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--muted)">Agenda cargada</span>';
-    } catch (err) {
-      console.error('loadWeekSchedule error:', err);
-      agendaErrorBox.style.display = 'block';
-      agendaErrorBox.textContent = 'No se pudo cargar la agenda de la semana. Revisa la consola (F12) para más detalles.';
-      agendaStatus.innerHTML = '<span style="color:#7a1f1f">Error al cargar semana</span>';
-    }
-  }
-
-  /****************** Toggle disponibilidad (crear o ELIMINAR) ******************/
-  async function toggleCellAvailability(cell){
-    cell.classList.add('saving'); 
-    const date = cell.dataset.date;
-    const time = cell.dataset.time;
-    const key = cell.dataset.key;
-    try {
-      const existing = agendaMap.get(key);
-
-      if (existing) {
-        if (existing.disponible === true) {
-             // LÓGICA DE ELIMINACIÓN
-            const { error: deleteError } = await supabaseClient
-                .from('agendas')
-                .delete()
-                .eq('id', existing.id);
-
-            if (deleteError) throw deleteError;
-        } else {
-             console.warn('Acción bloqueada: Slot reservado.', key);
-             return; 
-        }
-
-        await loadWeekSchedule(); 
-        
-      } else {
-        // Slot no existe, lo creamos (disponible)
-        const { data, error } = await supabaseClient
-          .from('agendas')
-          .insert([{
-            profesional_id: currentProfessionalId,
-            fecha: date,
-            hora_inicio: time + ':00', 
-            disponible: true
-          }])
-          .select()
-          .single();
-
-        if (error) throw error;
-        data.hora_inicio = time;
-        agendaMap.set(key, data);
-        
-        await loadWeekSchedule(); 
-      }
-    } catch (err) {
-      console.error('Error guardando/eliminando disponibilidad:', err);
-      alert('Ocurrió un error al guardar/eliminar la disponibilidad. Revisa la consola.');
-    } finally {
-      cell.classList.remove('saving');
-    }
-  }
-
+  
   /****************** Navegación semanas ******************/
   prevWeekBtn.addEventListener('click', async () => {
     startOfWeekDate = addDays(startOfWeekDate, -7);
