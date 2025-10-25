@@ -78,7 +78,7 @@
             margin-bottom: 80px;
         }
 
-        /* Estilos de Opción/Promoción (STEP 1) */
+        /* Estilos de Opción/Promoción (STEP 1 - AHORA ES LA VISTA INICIAL) */
         .option-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -93,7 +93,7 @@
             border: 2px solid #ddd;
             transition: all 0.3s;
             cursor: pointer;
-            text-align: left; /* Alineación para la lista */
+            text-align: left;
         }
         .option-card:hover {
              border-color: var(--accent);
@@ -338,7 +338,7 @@
                 
                 <div class="option-grid">
                     
-                    <div class="option-card" data-service-type="PROMO_GRUPO" data-price="25000" onclick="selectServiceType(this, 'PROMO_GRUPO', 25000)">
+                    <div class="option-card" data-service-type="PROMO_GRUPO" data-price="25000" onclick="showCalendarStep(this, 'PROMO_GRUPO', 25000)">
                         <h4><i class="fas fa-users"></i> Promoción Grupal</h4>
                         <p style="text-align: center; font-weight: 700;">VALOR: $25.000 P/P</p>
                         <ul>
@@ -349,7 +349,7 @@
                         </ul>
                     </div>
 
-                    <div class="option-card" data-service-type="ISAPRE" data-price="30000" onclick="selectServiceType(this, 'ISAPRE', 30000)">
+                    <div class="option-card" data-service-type="ISAPRE" data-price="30000" onclick="showCalendarStep(this, 'ISAPRE', 30000)">
                         <h4><i class="fas fa-shield-alt"></i> Atención ISAPRE</h4>
                         <p style="text-align: center; font-weight: 700;">VALOR: $30.000 (Reembolsable)</p>
                         <ul>
@@ -360,7 +360,7 @@
                         </ul>
                     </div>
 
-                    <div class="option-card" data-service-type="FONASA" data-price="25000" onclick="selectServiceType(this, 'FONASA', 25000)">
+                    <div class="option-card" data-service-type="FONASA" data-price="25000" onclick="showCalendarStep(this, 'FONASA', 25000)">
                         <h4><i class="fas fa-hospital"></i> Atención FONASA</h4>
                         <p style="text-align: center; font-weight: 700;">VALOR: $25.000 (Diferencial)</p>
                         <ul>
@@ -371,7 +371,7 @@
                         </ul>
                     </div>
                     
-                    <div class="option-card" data-service-type="PARTICULAR" data-price="32000" onclick="selectServiceType(this, 'PARTICULAR', 32000)">
+                    <div class="option-card" data-service-type="PARTICULAR" data-price="32000" onclick="showCalendarStep(this, 'PARTICULAR', 32000)">
                         <h4><i class="fas fa-user"></i> Atención Particular</h4>
                         <p style="text-align: center; font-weight: 700;">VALOR: $32.000</p>
                         <ul>
@@ -386,10 +386,6 @@
                 <div class="option-footer" style="margin-top: 20px;">
                      * El valor mostrado es el monto final por persona.
                 </div>
-                
-                <button id="next-step-btn" class="btn btn-agenda" style="margin-top: 25px; display: none;" onclick="showCalendarStep()">
-                    Paso Siguiente: Ver Agenda <i class="fas fa-arrow-right"></i>
-                </button>
             </div>
             
             <div id="step-3" style="display:none;">
@@ -446,6 +442,11 @@
                         <option value="ISAPRE">ISAPRE</option>
                         <option value="PARTICULAR">PARTICULAR</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="paciente_direccion">Dirección del Domicilio (*)</label>
+                    <input type="text" id="paciente_direccion" required placeholder="Ej: Santa Victoria 9615, La Florida">
                 </div>
 
                 <div class="form-group">
@@ -507,10 +508,10 @@
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
-    let selectedServiceId = 1; // Usamos un ID fijo para simplificar el flujo.
+    let selectedServiceId = 1; 
     let selectedServiceName = '';
-    let selectedServiceType = ''; // PROMO_GRUPO, ISAPRE, FONASA, PARTICULAR
-    let finalPrice = 0; // Almacena el monto final fijo seleccionado
+    let selectedServiceType = ''; 
+    let finalPrice = 0; 
 
     let selectedProfessionalId = null;
     let selectedTimeSlot = null;
@@ -522,7 +523,6 @@
     // Referencias DOM
     const step1El = document.getElementById('step-1');
     const step3El = document.getElementById('step-3');
-    const nextStepBtnEl = document.getElementById('next-step-btn');
     const optionCards = document.querySelectorAll('.option-card');
     const modalConfirmacionEl = document.getElementById('modal-confirmacion');
     const modalDateTimeEl = document.getElementById('modal-date-time');
@@ -572,28 +572,23 @@
         return amount.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
     }
 
-    // --- LÓGICA DEL PASO 1 (Selección de Servicio) ---
-    function selectServiceType(element, serviceType, price) {
+    // --- LÓGICA DEL PASO 1 (Selección y Redirección Inmediata) ---
+    function showCalendarStep(element, serviceType, price) {
+        // 1. Marcar el elemento seleccionado visualmente (opcional)
         optionCards.forEach(card => card.classList.remove('selected'));
         element.classList.add('selected');
         
+        // 2. Guardar estado del servicio
         selectedServiceType = serviceType;
-        finalPrice = price; // Guardar el precio fijo
+        finalPrice = price; 
         selectedServiceName = BASE_PRICES[serviceType].label;
         
-        // Configurar la previsión en el modal (pre-seleccionada)
-        previsionSelect.value = BASE_PRICES[serviceType].prevision;
-        
-        // Habilitar el botón de siguiente
-        nextStepBtnEl.style.display = 'inline-flex';
-    }
-
-    function showCalendarStep() {
-        if (!selectedServiceType) return;
+        // 3. Pasar al Paso 2 (Calendario)
         step1El.style.display = 'none';
         step3El.style.display = 'block';
         loadingStatusEl.textContent = 'Selecciona una hora disponible en el calendario.';
-        // Aseguramos que la carga de agenda se realice después de la selección
+        
+        // 4. Iniciar la carga de la agenda
         loadUniqueProfessional().then(success => {
             if (success) {
                 currentWeekStart = getStartOfWeek(new Date());
@@ -612,6 +607,9 @@
         document.body.style.overflow = 'hidden'; 
         
         document.getElementById('booking-status-message').textContent = '';
+        
+        // Configurar la previsión en el modal (pre-seleccionada y deshabilitada)
+        previsionSelect.value = BASE_PRICES[selectedServiceType].prevision;
         
         // Mostrar precio fijo
         document.getElementById('payment-amount-display').textContent = formatCLP(finalPrice);
@@ -670,7 +668,7 @@
         document.getElementById('current-week-display').textContent = 
             `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
         
-        // Modificación CLAVE: Sólo traemos los slots disponibles
+        // Traemos todos los slots disponibles
         const { data: agendaData, error } = await supabaseClient
             .from('agendas')
             .select('*')
@@ -753,6 +751,7 @@
     }
 
     async function selectTimeSlot(element) {
+        // 🛑 CLAVE: NO MARCAMOS COMO PROVISIONAL EN ESTE PUNTO.
         document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
         
         element.classList.add('selected');
@@ -760,32 +759,12 @@
         selectedTimeSlot = {
             id: element.dataset.id,
             date: element.dataset.date,
-            time: element.dataset.time
+            time: element.dataset.time,
+            element: element // Guardamos el elemento para actualizar el color después del éxito
         };
         
-        // 1. Marcar slot como no disponible provisionalmente en la BD
-        loadingStatusEl.innerHTML = '<span class="spinner"></span> Reservando provisionalmente el slot...';
+        loadingStatusEl.textContent = 'Hora seleccionada. Complete sus datos.';
         
-        const { error: updateError } = await supabaseClient
-            .from('agendas')
-            .update({ 
-                disponible: false,
-                paciente_nombre: 'PROVISIONAL', // Marcador provisional
-                comentarios: 'PROVISIONAL' 
-            })
-            .eq('id', selectedTimeSlot.id);
-            
-        loadingStatusEl.textContent = 'Slot provisionalmente reservado.'; 
-
-        if (updateError) {
-             console.error("Error al marcar slot como provisional:", updateError);
-             element.classList.remove('selected');
-             element.classList.add('booked'); // Marcar como ocupado y recargar
-             alert("Esta hora acaba de ser reservada por otra persona. Por favor, elige otro slot.");
-             loadWeekSchedule(); 
-             return;
-        }
-
         // Si es exitoso, mostrar el modal de confirmación
         showModal();
     }
@@ -802,7 +781,7 @@
         const statusMessage = document.getElementById('booking-status-message');
         const confirmBtn = document.getElementById('confirm-payment-btn');
         confirmBtn.disabled = true;
-        statusMessage.textContent = 'Recopilando datos y preparando pago...';
+        statusMessage.textContent = 'Confirmando datos y preparando pago...';
         
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
@@ -814,14 +793,15 @@
         const comentarios = document.getElementById('comentarios').value;
         const monto = document.getElementById('webpay-monto').value;
         const serviceTypeFinal = document.getElementById('service-type-hidden').value;
+        const direccion = document.getElementById('paciente_direccion').value; // NUEVO CAMPO
 
-        if (!monto || !nombre || !rut || !fechaNac || !email || !celular || !prevision) {
+        if (!monto || !nombre || !rut || !fechaNac || !email || !celular || !prevision || !direccion) {
              statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
              confirmBtn.disabled = false;
              return;
         }
         
-        // 2. Actualizar el registro provisional en la tabla 'agendas' con los datos finales del paciente
+        // 2. 🛑 CLAVE: Actualizar y MARCAR como reservado el slot solo en este punto
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
             .update({
@@ -829,18 +809,27 @@
                 paciente_rut: rut,
                 paciente_fecha_nac: fechaNac,
                 paciente_prevision: prevision,
-                comentarios: `[TIPO: ${serviceTypeFinal}] ${comentarios}`, // Guardamos el tipo de servicio en comentarios
+                paciente_direccion: direccion, // Guardar la dirección
+                comentarios: `[TIPO: ${serviceTypeFinal}] ${comentarios}`,
                 paciente_email: email,
                 paciente_celular: celular,
-                disponible: false // Finaliza como reserva real
+                disponible: false // Marcar FINALMENTE como reservado
             })
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            statusMessage.textContent = 'Error al confirmar los datos en la base de datos. Intenta de nuevo.';
+            statusMessage.textContent = 'Error: La hora ya fue reservada por otra persona (doble reserva). Por favor, cancela y elige otro slot.';
             console.error("Error al confirmar datos finales:", finalUpdateError);
             confirmBtn.disabled = false;
+            // No redirigimos a Webpay si el slot fue tomado.
             return;
+        }
+
+        // 3. ACTUALIZACIÓN VISUAL (Para que no vuelva a aparecer el slot disponible)
+        if (selectedTimeSlot.element) {
+            selectedTimeSlot.element.classList.add('booked');
+            selectedTimeSlot.element.classList.remove('selected', 'available-slot');
+            selectedTimeSlot.element.onclick = ''; // Desactivar clic
         }
 
 
@@ -866,12 +855,21 @@
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
-        // Inicializar el select de previsión y el botón de siguiente (oculto)
-        previsionSelect.value = 'PARTICULAR'; // Valor por defecto
-        nextStepBtnEl.style.display = 'none';
+        // Si hay parámetros URL, los usamos para cargar la opción (redundante ya que el index no envía parámetros)
+        // Pero es buena práctica si decide enviar parámetros en el futuro.
+        const params = new URLSearchParams(window.location.search);
         
-        // Aquí puedes forzar la carga si sabes el tipo de servicio desde el URL de la landing.
-        // Si no se usa URL parameters, el usuario debe hacer clic en el Paso 1.
+        // Solo para asegurar que una opción esté marcada al inicio si no se usa el click
+        if (!selectedServiceType) {
+             const defaultCard = document.querySelector('.option-card');
+             if (defaultCard) {
+                 // Forzamos la selección visual de la primera tarjeta al cargar, si no hay click
+                 defaultCard.classList.add('selected');
+                 selectedServiceType = defaultCard.dataset.serviceType;
+                 finalPrice = parseInt(defaultCard.dataset.price); 
+                 selectedServiceName = BASE_PRICES[selectedServiceType].label;
+             }
+        }
     });
 </script>
 
