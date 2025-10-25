@@ -1250,9 +1250,9 @@
       </nav>
 
       <div class="actions" role="group" aria-label="Acciones principales">
-        <button class="btn btn-primary" id="mainAgenda">
+        <a href="calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE" class="btn btn-primary" id="mainAgenda">
           <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
-        </button>
+        </a>
         <button class="hamburger" id="openMenu" aria-label="Abrir menú móvil" aria-expanded="false">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -1282,7 +1282,7 @@
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
 
-          <a href="#contacto" class="cta-hero" id="heroAgenda">
+          <a href="calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE" class="cta-hero" id="heroAgenda">
             <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
           </a>
         </div>
@@ -1577,7 +1577,7 @@
       <a href="#contacto" class="mobile-link">
         <i class="fas fa-phone"></i> Contacto
       </a>
-      <a href="#contacto" class="btn btn-primary mobile-btn">
+      <a href="calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE" class="btn btn-primary mobile-btn">
         <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
       </a>
     </nav>
@@ -1718,13 +1718,12 @@
         const mainAgendaBtn = document.getElementById('mainAgenda');
         
         if (mainAgendaBtn) {
-            mainAgendaBtn.addEventListener('click', function() {
-                const contactSection = document.getElementById('contacto');
-                if (contactSection) {
-                    contactSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+            mainAgendaBtn.addEventListener('click', function(e) {
+                // Previene el scroll del botón de agenda
+                e.preventDefault(); 
+                // Redirige al calendario (si es un botón) o deja que el <a> haga su trabajo (si es un enlace)
+                if (mainAgendaBtn.tagName === 'BUTTON') {
+                    window.location.href = "calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE";
                 }
             });
         }
