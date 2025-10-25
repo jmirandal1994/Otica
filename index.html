@@ -6,17 +6,14 @@
   <title>ÓTICA | Audiología Premium — Limpieza de oídos a domicilio</title>
   <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
   
-  <!-- SEO Meta Tags -->
   <meta name="description" content="Servicio profesional de audiología a domicilio. Limpieza de oídos, video otoscopia, evaluación audiométrica y venta de audífonos. Reembolsable con ISAPRES.">
   <meta name="keywords" content="audiología, limpieza oídos, audífonos, video otoscopia, domicilio, ISAPRES, FONASA">
   <meta name="author" content="ÓTICA">
   
-  <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="ÓTICA | Audiología Premium a Domicilio">
   <meta property="og:description" content="Servicio profesional de audiología a domicilio. Limpieza de oídos, evaluaciones y audífonos.">
   <meta property="og:type" content="website">
   
-  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
@@ -520,10 +517,12 @@
       padding: 20px 0;
     }
 
+    /* CORRECCIÓN: Se añade width: 200%; para el efecto de carrusel continuo */
     .isapre-track {
       display: flex;
       animation: scroll 25s linear infinite;
       gap: 32px;
+      width: 200%; 
     }
 
     .isapre-logo {
@@ -1155,12 +1154,10 @@
 </head>
 <body>
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <i class="fas fa-check-circle"></i> Reembolsable con ISAPRES • Valor diferencial FONASA — Reserva y solicita boleta
   </div>
 
-  <!-- HEADER -->
   <header>
     <div class="container nav" role="navigation" aria-label="Navegación principal">
       <div class="brand">
@@ -1177,7 +1174,7 @@
       </nav>
 
       <div class="actions" role="group" aria-label="Acciones principales">
-        <button class="btn btn-ghost" title="Llamar" onclick="window.open('tel:+569XXXXXXXX', '_self')">
+        <button class="btn btn-ghost" title="Llamar" onclick="window.open('tel:+56900000000', '_self')">
           <i class="fa-solid fa-phone"></i> Llamar
         </button>
         <button class="btn btn-primary" id="mainAgenda">
@@ -1190,7 +1187,6 @@
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero" id="inicio" aria-labelledby="heroTitle">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="waves" aria-hidden="true"></div>
@@ -1209,7 +1205,7 @@
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
 
-          <button class="btn-glass" onclick="window.open('tel:+569XXXXXXXX', '_self')">
+          <button class="btn-glass" onclick="window.open('tel:+56900000000', '_self')">
             <i class="fa-solid fa-phone"></i> Llamar
           </button>
 
@@ -1218,7 +1214,6 @@
           </a>
         </div>
 
-        <!-- ENHANCED ISAPRE SECTION -->
         <div class="isapre-section">
           <div class="isapre-header">
             <h3 class="isapre-title">
@@ -1229,7 +1224,6 @@
 
           <div class="isapre-carousel">
             <div class="isapre-track">
-              <!-- Aquí puedes insertar los logos reales de las ISAPRES -->
               <div class="isapre-logo" data-isapre="banmedica">
                 <img src="https://via.placeholder.com/100x60/1565d8/ffffff?text=BANMÉDICA" alt="Banmédica" onerror="this.parentElement.innerHTML='<div style=\'color:#1565d8;font-weight:bold;font-size:12px;text-align:center\'>BANMÉDICA</div>'">
               </div>
@@ -1248,7 +1242,6 @@
               <div class="isapre-logo" data-isapre="masvida">
                 <img src="https://via.placeholder.com/100x60/00bcd4/ffffff?text=MAS+VIDA" alt="Más Vida" onerror="this.parentElement.innerHTML='<div style=\'color:#00bcd4;font-weight:bold;font-size:12px;text-align:center\'>MAS VIDA</div>'">
               </div>
-              <!-- Duplicamos para efecto continuo -->
               <div class="isapre-logo" data-isapre="banmedica">
                 <img src="https://via.placeholder.com/100x60/1565d8/ffffff?text=BANMÉDICA" alt="Banmédica" onerror="this.parentElement.innerHTML='<div style=\'color:#1565d8;font-weight:bold;font-size:12px;text-align:center\'>BANMÉDICA</div>'">
               </div>
@@ -1302,7 +1295,6 @@
     </div>
   </section>
 
-  <!-- SERVICES -->
   <section class="services" id="servicios" aria-labelledby="servTitle">
     <div class="container">
       <div class="services-header">
@@ -1313,7 +1305,6 @@
       </div>
 
       <div class="grid-services" aria-live="polite" aria-label="Lista de servicios">
-        <!-- Service 1 -->
         <article class="service-card" role="article" aria-labelledby="s1">
           <div class="service-thumb">
             <img src="https://via.placeholder.com/72x72/2b8af6/ffffff?text=🏠" alt="Limpieza a domicilio" onerror="this.innerHTML='<div style=\'font-size:36px;color:#2b8af6\'>🏠</div>'">
@@ -1326,7 +1317,6 @@
           </div>
         </article>
 
-        <!-- Service 2 -->
         <article class="service-card" role="article" aria-labelledby="s2">
           <div class="service-thumb">
             <img src="https://via.placeholder.com/72x72/00c6d7/ffffff?text=📹" alt="Video otoscopia" onerror="this.innerHTML='<div style=\'font-size:36px;color:#00c6d7\'>📹</div>'">
@@ -1339,7 +1329,6 @@
           </div>
         </article>
 
-        <!-- Service 3 -->
         <article class="service-card" role="article" aria-labelledby="s3">
           <div class="service-thumb">
             <img src="https://via.placeholder.com/72x72/0f4c81/ffffff?text=🦻" alt="Audífonos" onerror="this.innerHTML='<div style=\'font-size:36px;color:#0f4c81\'>🦻</div>'">
@@ -1352,7 +1341,6 @@
           </div>
         </article>
 
-        <!-- Service 4 -->
         <article class="service-card" role="article" aria-labelledby="s4">
           <div class="service-thumb">
             <img src="https://via.placeholder.com/72x72/2b8af6/ffffff?text=📚" alt="Educación auditiva" onerror="this.innerHTML='<div style=\'font-size:36px;color:#2b8af6\'>📚</div>'">
@@ -1365,7 +1353,6 @@
           </div>
         </article>
 
-        <!-- Service 5 -->
         <article class="service-card" role="article" aria-labelledby="s5">
           <div class="service-thumb">
             <img src="https://via.placeholder.com/72x72/00c6d7/ffffff?text=🔊" alt="Evaluación audiométrica" onerror="this.innerHTML='<div style=\'font-size:36px;color:#00c6d7\'>🔊</div>'">
@@ -1378,7 +1365,6 @@
           </div>
         </article>
 
-        <!-- Service 6 -->
         <article class="service-card" role="article" aria-labelledby="s6">
           <div class="service-thumb">
             <img src="https://via.placeholder.com/72x72/0f4c81/ffffff?text=💻" alt="Teleconsulta" onerror="this.innerHTML='<div style=\'font-size:36px;color:#0f4c81\'>💻</div>'">
@@ -1394,7 +1380,6 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contacto" aria-labelledby="contactTitle">
     <div class="container">
       <h2 id="contactTitle">
@@ -1406,8 +1391,8 @@
             <i class="fas fa-map-marker-alt"></i> Atención a Domicilio — Región Metropolitana
           </strong>
           <p>
-            <i class="fas fa-phone"></i> Tel: <a href="tel:+569XXXXXXXX">+56 9 XXXXXXXX</a><br>
-            <i class="fas fa-envelope"></i> Email: <a href="/cdn-cgi/l/email-protection#2c45424a436c4358454f4d024f40"><span class="__cf_email__" data-cfemail="b6dfd8d0d9f6d9c2dfd5d798d5da">[email&#160;protected]</span></a>
+            <i class="fas fa-phone"></i> Tel: <a href="tel:+56900000000">+56 9 0000 0000</a><br>
+            <i class="fas fa-envelope"></i> Email: <a href="mailto:contacto@otica.cl">contacto@otica.cl</a>
           </p>
         </div>
         <div class="card-contact">
@@ -1436,7 +1421,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer role="contentinfo">
     <div class="container footer-grid">
       <div>
@@ -1457,7 +1441,7 @@
         <strong>
           <i class="fas fa-phone"></i> Contacto
         </strong>
-        <div class="footer-text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a03040c052a051e03090b440906">[email&#160;protected]</a><br>+56 9 XXXXXXXX</div>
+        <div class="footer-text"><a href="mailto:contacto@otica.cl">contacto@otica.cl</a><br>+56 9 0000 0000</div>
       </div>
 
       <div>
@@ -1483,12 +1467,10 @@
     </div>
   </footer>
 
-  <!-- FLOAT WHATSAPP -->
   <a class="whatsapp" href="https://wa.me/56900000000" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
   </a>
 
-  <!-- MOBILE MENU -->
   <div id="mobilePanel" class="mobile-panel" aria-hidden="true">
     <div class="mobile-header">
       <div class="mobile-brand">
@@ -1510,7 +1492,7 @@
       <a href="#contacto" class="mobile-link">
         <i class="fas fa-phone"></i> Contacto
       </a>
-      <a href="tel:+569XXXXXXXX" class="btn btn-ghost mobile-btn">
+      <a href="tel:+56900000000" class="btn btn-ghost mobile-btn">
         <i class="fa-solid fa-phone"></i> Llamar
       </a>
       <a href="#contacto" class="btn btn-primary mobile-btn">
@@ -1526,8 +1508,7 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     // Main JavaScript for ÓTICA website
     document.addEventListener('DOMContentLoaded', function() {
         console.log('ÓTICA website loaded successfully!');
