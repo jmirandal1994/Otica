@@ -35,7 +35,10 @@
       --gradient-primary: linear-gradient(135deg, var(--accent-1), var(--accent-3) 45%, var(--accent-2) 100%);
       --gradient-secondary: linear-gradient(90deg, var(--accent-3), var(--accent-2));
       /* Variable para el espaciado del carrusel */
-      --carousel-gap: 32px; 
+      --carousel-gap: 32px; /* Espaciado entre logos */
+      /* Variables para el cálculo exacto del carrusel */
+      --logo-width: 140px; 
+      --total-logo-set-width: calc(6 * var(--logo-width) + 5 * var(--carousel-gap)); /* 1000px */
     }
 
     * {
@@ -517,26 +520,26 @@
       overflow: hidden;
       margin: 24px 0;
       padding: 20px 0;
-      /* Necesario para ocultar los logos que se van desplazando */
       white-space: nowrap; 
     }
 
-    /* CORRECCIÓN 1: Ajuste del isapre-track */
+    /* CORRECCIÓN FINAL: Usando valores absolutos calculados */
     .isapre-track {
-      display: inline-block; /* Importante para que el width 200% funcione en línea */
+      display: inline-block;
       animation: scroll 25s linear infinite;
-      /* Eliminamos gap: 32px; para mejor control del ancho */
       white-space: nowrap;
-      width: 200%; /* El doble de ancho del contenedor visible */
+      /* (6 logos * 140px) + (6 logos * 32px de margen) = 840 + 192 = 1032px. Multiplicado por 2 (duplicado) */
+      width: calc(2 * var(--total-logo-set-width) + var(--carousel-gap)); 
     }
-
+    
     .isapre-logo {
       flex-shrink: 0;
-      width: 140px;
+      /* Usando variable */
+      width: var(--logo-width); 
       height: 80px;
       background: white;
       border-radius: 12px;
-      display: inline-flex; /* Cambiado a inline-flex para el carrusel */
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 8px 24px rgba(0,0,0,0.08);
@@ -544,7 +547,7 @@
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
-      /* CORRECCIÓN 2: Añadimos margen para simular el gap */
+      /* Aplicamos margen a la derecha para simular el gap */
       margin-right: var(--carousel-gap);
     }
 
@@ -582,12 +585,12 @@
     .isapre-logo[data-isapre="vidatres"] { background: linear-gradient(135deg, #fce4ec, #ffffff); }
     .isapre-logo[data-isapre="masvida"] { background: linear-gradient(135deg, #e1f5fe, #ffffff); }
 
-    /* CORRECCIÓN 3: Ajuste de la animación a % para asegurar el bucle */
+    /* CORRECCIÓN FINAL: Desplazamiento exacto del primer set de logos */
     @keyframes scroll {
       0% { transform: translateX(0); }
       100% { 
-        /* Calculamos el desplazamiento del 50% menos el margen del último logo duplicado */
-        transform: translateX(calc(-50% - var(--carousel-gap) / 2)); 
+        /* Se traslada exactamente la distancia calculada para los 6 logos + 5 márgenes */
+        transform: translateX(calc(-1 * var(--total-logo-set-width))); 
       }
     }
 
@@ -1175,7 +1178,7 @@
     <div class="container nav" role="navigation" aria-label="Navegación principal">
       <div class="brand">
         <a href="#inicio" aria-label="Ir al inicio">
-          <img src="https://via.placeholder.com/96x60/0f4c81/ffffff?text=ÓTICA" alt="Logo ÓTICA" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA5NiA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9IjYwIiBmaWxsPSIjMGY0YzgxIiByeD0iMTIiLz4KPHN2ZyB4PSIyNCIgeT0iMTUiIHdpZHRoPSI0OCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0wIDE4Yy00LjQxIDAtOC0zLjU5LTgtOHMzLjU5LTggOC04IDggMy41OSA4IDgtMy41OSA4LTggOHoiLz4KPHN2ZyB4PSIzNiIgeT0iMjciIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMjQgNiIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMCAwaDI0djZIMHoiLz4KPC9zdmc+CjwvZz4KPHRleHQgeD0iNDgiIHk9IjQ1IiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+w5NUSUNBPC90ZXh0Pgo8L3N2Zz4K'">
+          <img src="https://via.placeholder.com/96x60/0f4c81/ffffff?text=ÓTICA" alt="Logo ÓTICA" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA5NiA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9IjYwIiBmaWxsPSIjMGY0YzgxIiByeD0iMTIiLz4KPHN2ZyB4PSIyNCIgeT0iMTUiIHdpZHRoPSI0OCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0wIDE4Yy00LjQxIDAtOC0zLjU5LTgtOHMzLjU5LTggOC04IDggMy41OSA4IDgtMy41OSA4LTggOHoiLz4KPHN2ZyB4PSIzNiIgeT0iMjciIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMjQgNiIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMCAwaDI0djZIMHoiLz4KPC9zdmc+CjwvZz4KPHRleHQgeD0iNDgiIHk9IjQ1IiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250-c2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7Dk1USUNBPC90ZXh0Pgo8L3N2Zz4K'">
         </a>
         <div class="title">ÓTICA</div>
       </div>
