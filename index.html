@@ -128,7 +128,7 @@
     100% { left: 100%; }
   }
 
-  /* ===== HEADER (SIN CAMBIOS) ===== */
+  /* ===== HEADER (MODIFICADO: Sin botón "Llamar") ===== */
   header {
     position: sticky;
     top: 0;
@@ -246,21 +246,7 @@
     box-shadow: 0 20px 40px rgba(43,138,246,0.3);
   }
 
-  .btn-ghost {
-    background: rgba(255,255,255,0.8);
-    border: 2px solid rgba(43,138,246,0.1);
-    color: var(--text);
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-weight: 700;
-    backdrop-filter: blur(10px);
-  }
-
-  .btn-ghost:hover {
-    background: rgba(43,138,246,0.05);
-    border-color: var(--accent-3);
-    transform: translateY(-2px);
-  }
+  /* .btn-ghost (del botón llamar) ha sido eliminado */
 
   .hamburger {
     display: none;
@@ -277,7 +263,7 @@
     transform: scale(1.05);
   }
 
-  /* ===== HERO (SIN CAMBIOS) ===== */
+  /* ===== HERO (MODIFICADO: Sin botón "Llamar") ===== */
   .hero {
     position: relative;
     overflow: hidden;
@@ -444,23 +430,8 @@
   }
 
 
-  /* Enhanced glass button */
-  .btn-glass {
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    padding: 12px 20px;
-    border-radius: 999px;
-    color: white;
-    border: 2px solid rgba(255,255,255,0.1);
-    font-weight: 700;
-    transition: all 0.3s;
-  }
+  /* .btn-glass (del botón llamar) ha sido eliminado */
 
-  .btn-glass:hover {
-    background: rgba(255,255,255,0.25);
-    transform: translateY(-3px);
-    border-color: rgba(255,255,255,0.2);
-  }
 
   /* hero right illustration */
   .hero-figure {
@@ -911,7 +882,7 @@
     border: 0;
     font-size: 24px;
     transition: all 0.3s;
-    /* Usamos una animación de pulso más discreta para no chocar con el botón de Agenda */
+    /* Animación de pulso para el WhatsApp */
     animation: pulse-whatsapp 2s infinite; 
   }
 
@@ -1180,9 +1151,6 @@
       </nav>
 
       <div class="actions" role="group" aria-label="Acciones principales">
-        <button class="btn btn-ghost" title="Llamar" onclick="window.open('tel:+56900000000', '_self')">
-          <i class="fa-solid fa-phone"></i> Llamar
-        </button>
         <button class="btn btn-primary" id="mainAgenda">
           <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
         </button>
@@ -1210,10 +1178,6 @@
           <a href="https://wa.me/56900000000" class="cta-hero" aria-label="Contactar por WhatsApp" target="_blank" rel="noopener noreferrer">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
-
-          <button class="btn-glass" onclick="window.open('tel:+56900000000', '_self')">
-            <i class="fa-solid fa-phone"></i> Llamar
-          </button>
 
           <a href="#contacto" class="cta-hero" id="heroAgenda">
             <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
@@ -1476,9 +1440,6 @@
       </a>
       <a href="#contacto" class="mobile-link">
         <i class="fas fa-phone"></i> Contacto
-      </a>
-      <a href="tel:+56900000000" class="btn btn-ghost mobile-btn">
-        <i class="fa-solid fa-phone"></i> Llamar
       </a>
       <a href="#contacto" class="btn btn-primary mobile-btn">
         <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
