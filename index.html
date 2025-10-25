@@ -202,6 +202,20 @@
     transform: translateY(-2px);
   }
 
+  /* Estilo para el enlace de Acceso Profesional */
+  .access-link {
+    font-weight: 600;
+    color: var(--accent-1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.3s;
+  }
+
+  .access-link:hover {
+    background: rgba(43, 138, 246, 0.1);
+  }
+  /* Fin Estilo para el enlace de Acceso Profesional */
+
   .actions {
     display: flex;
     gap: 12px;
@@ -250,6 +264,13 @@
   .btn-primary#mainAgenda {
     animation: zoom-pulse 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
   }
+
+  @keyframes zoom-pulse {
+    0% { transform: scale(1); box-shadow: 0 20px 40px rgba(43, 138, 246, 0.25); }
+    50% { transform: scale(1.08); box-shadow: 0 25px 60px rgba(43, 138, 246, 0.8); } /* Más potente */
+    100% { transform: scale(1); box-shadow: 0 20px 40px rgba(43, 138, 246, 0.25); }
+  }
+
 
   .hamburger {
     display: none;
@@ -443,9 +464,10 @@
     animation: zoom-pulse 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
   }
 
+  /* Definición de la animación de pulso de zoom */
   @keyframes zoom-pulse {
     0% { transform: scale(1); box-shadow: 0 20px 40px rgba(43, 138, 246, 0.25); }
-    50% { transform: scale(1.08); box-shadow: 0 25px 60px rgba(43, 138, 246, 0.8); } /* Más potente */
+    50% { transform: scale(1.08); box-shadow: 0 25px 60px rgba(43, 138, 246, 0.8); }
     100% { transform: scale(1); box-shadow: 0 20px 40px rgba(43, 138, 246, 0.25); }
   }
 
@@ -1250,7 +1272,12 @@
       </nav>
 
       <div class="actions" role="group" aria-label="Acciones principales">
-        <a href="calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE" class="btn btn-primary" id="mainAgenda">
+        
+        <a href="portal.html" class="access-link">
+            <i class="fas fa-lock"></i> Acceso Profesional
+        </a>
+        
+        <a href="calendario-reserva-4-2.html?service_id=1&service_name=Limpieza%20de%20Oídos%20a%20Domicilio" class="btn btn-primary" id="mainAgenda">
           <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
         </a>
         <button class="hamburger" id="openMenu" aria-label="Abrir menú móvil" aria-expanded="false">
@@ -1282,7 +1309,7 @@
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
 
-          <a href="calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE" class="cta-hero" id="heroAgenda">
+          <a href="calendario-reserva-4-2.html?service_id=1&service_name=Limpieza%20de%20Oídos%20a%20Domicilio" class="cta-hero" id="heroAgenda">
             <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
           </a>
         </div>
@@ -1577,7 +1604,12 @@
       <a href="#contacto" class="mobile-link">
         <i class="fas fa-phone"></i> Contacto
       </a>
-      <a href="calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE" class="btn btn-primary mobile-btn">
+      
+      <a href="portal.html" class="mobile-link">
+        <i class="fas fa-lock"></i> Acceso Profesional
+      </a>
+      
+      <a href="calendario-reserva-4-2.html?service_id=1&service_name=Limpieza%20de%20Oídos%20a%20Domicilio" class="btn btn-primary mobile-btn">
         <i class="fa-solid fa-calendar-check"></i> Agenda tu hora
       </a>
     </nav>
@@ -1715,18 +1747,7 @@
 
     // Main agenda CTA logic
     function initializeMainAgenda() {
-        const mainAgendaBtn = document.getElementById('mainAgenda');
-        
-        if (mainAgendaBtn) {
-            mainAgendaBtn.addEventListener('click', function(e) {
-                // Previene el scroll del botón de agenda
-                e.preventDefault(); 
-                // Redirige al calendario (si es un botón) o deja que el <a> haga su trabajo (si es un enlace)
-                if (mainAgendaBtn.tagName === 'BUTTON') {
-                    window.location.href = "calendario-reserva-4.html?service_id=1&service_name=Limpieza%20de%20Oídos%20ISAPRE";
-                }
-            });
-        }
+        // No es necesario JavaScript aquí ya que los botones son enlaces <a> directos.
     }
 
     // Enhanced accessibility features
