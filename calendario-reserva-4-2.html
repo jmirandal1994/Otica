@@ -78,6 +78,72 @@
             margin-bottom: 80px;
         }
 
+        /* Estilos de Opción/Promoción (STEP 1) */
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .option-card {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: left; /* Alineación para la lista */
+        }
+        .option-card:hover {
+             border-color: var(--accent);
+             transform: translateY(-3px);
+        }
+        .option-card.selected {
+             border-color: var(--primary);
+             box-shadow: 0 4px 15px rgba(15, 76, 129, 0.2);
+        }
+        .option-card h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+            margin-top: 0;
+            text-align: center;
+        }
+        .option-card ul {
+            list-style: none;
+            padding-left: 0;
+            font-size: 0.9rem;
+            color: #444;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .option-card ul li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .option-card ul li i {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        .promo-special {
+            background: linear-gradient(90deg, #ffd700, #ffc400);
+            color: var(--primary);
+            font-weight: 700;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .option-footer {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
         /* Estilos de Calendario */
         .calendar-grid { 
             display: grid; 
@@ -100,13 +166,6 @@
         }
         
         /* Grid del Calendario (Responsivo) */
-        .calendar-grid { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            gap: 10px; 
-            margin-top: 20px;
-            overflow-x: auto;
-        }
         @media (max-width: 768px) {
             .calendar-grid {
                 grid-template-columns: repeat(7, 120px); 
@@ -157,7 +216,7 @@
             background-color: var(--accent);
             color: white;
             border-color: var(--accent);
-            box-shadow: 0 4px 8px rgba(43, 138, 246, 0.4); /* Sombra azul */
+            box-shadow: 0 4px 8px rgba(43, 138, 246, 0.4);
         }
         .time-slot.booked {
             background-color: #eee;
@@ -166,11 +225,8 @@
             cursor: not-allowed;
             text-decoration: line-through;
         }
-        .time-slot.past-day {
-            background-color: #f0f0f0;
-        }
 
-        /* --- CORRECCIONES DEL MODAL --- */
+        /* --- MODAL --- */
         .modal-overlay {
             position: fixed; 
             top: 0; 
@@ -216,9 +272,7 @@
         .modal-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 
         /* Estilos de Formulario MEJORADOS */
-        .modal-body { 
-            padding: 25px; 
-        }
+        .modal-body { padding: 25px; }
         .form-group { margin-bottom: 20px; }
         .form-group label { 
             display: block; 
@@ -244,7 +298,7 @@
             appearance: none;
         }
         .form-group select {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path fill="%230f4c81" d="M0,0 L5,6 L10,0 Z"/></svg>'); /* Icono de flecha con color de ÓTICA */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path fill="%230f4c81" d="M0,0 L5,6 L10,0 Z"/></svg>');
             background-repeat: no-repeat;
             background-position: right 10px center;
             padding-right: 30px;
@@ -266,17 +320,80 @@
     <div class="container">
         <div class="header-section">
             <h2>Agenda tu Sesión</h2>
-            <h3 id="selected-service-display">Cargando tipo de sesión...</h3>
+            <h3 id="selected-service-display">Flgo. Jorge Miranda Lopez</h3>
             <div style="margin-bottom: 15px;">
                  <a href="index.html" class="btn btn-nav"><i class="fas fa-chevron-left"></i> Volver a Servicios</a>
             </div>
-            <p id="loading-status" style="font-weight: 500;"><span class="spinner"></span> Cargando agenda del profesional...</p>
+            <p id="loading-status" style="font-weight: 500;">Selecciona una opción de atención para continuar.</p>
         </div>
 
         <div id="agendamiento-container">
             
-            <div id="step-3">
+            <div id="step-1" style="text-align: center;">
+                <h3>Paso 1: Selecciona tu Opción de Atención</h3>
+
+                <div class="promo-special">
+                    PROMOCIÓN: 2 o más personas en el mismo domicilio el valor se reduce a **$25.000 P/P**.
+                </div>
                 
+                <div class="option-grid">
+                    
+                    <div class="option-card" data-service-type="PROMO_GRUPO" data-price="25000" onclick="selectServiceType(this, 'PROMO_GRUPO', 25000)">
+                        <h4><i class="fas fa-users"></i> Promoción Grupal</h4>
+                        <p style="text-align: center; font-weight: 700;">VALOR: $25.000 P/P</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Evaluación Otoscópica Completa</li>
+                            <li><i class="fas fa-check-circle"></i> Limpieza Auditiva Ambos Oídos</li>
+                            <li><i class="fas fa-check-circle"></i> Informe (24 hrs posterior)</li>
+                            <li><i class="fas fa-check-circle"></i> Derivación a Exámenes (criterio profesional)</li>
+                        </ul>
+                    </div>
+
+                    <div class="option-card" data-service-type="ISAPRE" data-price="30000" onclick="selectServiceType(this, 'ISAPRE', 30000)">
+                        <h4><i class="fas fa-shield-alt"></i> Atención ISAPRE</h4>
+                        <p style="text-align: center; font-weight: 700;">VALOR: $30.000 (Reembolsable)</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Evaluación Otoscópica Completa</li>
+                            <li><i class="fas fa-check-circle"></i> Limpieza Auditiva Ambos Oídos</li>
+                            <li><i class="fas fa-check-circle"></i> Informe (24 hrs posterior)</li>
+                            <li><i class="fas fa-check-circle"></i> Derivación a Exámenes (criterio profesional)</li>
+                        </ul>
+                    </div>
+
+                    <div class="option-card" data-service-type="FONASA" data-price="25000" onclick="selectServiceType(this, 'FONASA', 25000)">
+                        <h4><i class="fas fa-hospital"></i> Atención FONASA</h4>
+                        <p style="text-align: center; font-weight: 700;">VALOR: $25.000 (Diferencial)</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Evaluación Otoscópica Completa</li>
+                            <li><i class="fas fa-check-circle"></i> Limpieza Auditiva Ambos Oídos</li>
+                            <li><i class="fas fa-check-circle"></i> Informe (24 hrs posterior)</li>
+                            <li><i class="fas fa-check-circle"></i> Derivación a Exámenes (criterio profesional)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="option-card" data-service-type="PARTICULAR" data-price="32000" onclick="selectServiceType(this, 'PARTICULAR', 32000)">
+                        <h4><i class="fas fa-user"></i> Atención Particular</h4>
+                        <p style="text-align: center; font-weight: 700;">VALOR: $32.000</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Evaluación Otoscópica Completa</li>
+                            <li><i class="fas fa-check-circle"></i> Limpieza Auditiva Ambos Oídos</li>
+                            <li><i class="fas fa-check-circle"></i> Informe (24 hrs posterior)</li>
+                            <li><i class="fas fa-check-circle"></i> Derivación a Exámenes (criterio profesional)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="option-footer" style="margin-top: 20px;">
+                     * El valor mostrado es el monto final por persona.
+                </div>
+                
+                <button id="next-step-btn" class="btn btn-agenda" style="margin-top: 25px; display: none;" onclick="showCalendarStep()">
+                    Paso Siguiente: Ver Agenda <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div id="step-3" style="display:none;">
+                <h3 style="margin-top: 0; color: var(--primary);">Paso 2: Selecciona Día y Hora Disponibles</h3>
                 <div class="calendar-nav mt-3">
                     <button onclick="changeWeek(-1)" class="btn btn-nav">
                         <i class="fas fa-chevron-left"></i> Anterior
@@ -312,14 +429,25 @@
         <div class="modal-body">
             <div class="hint-box" style="margin-bottom: 20px;">
                 <p style="margin: 5px 0;">Hora seleccionada: **<span id="modal-date-time"></span>**</p>
-                <p style="margin: 5px 0; font-weight: 600;">**Tipo de Terapia:** <span id="modal-service-name"></span></p>
+                <p style="margin: 5px 0; font-weight: 600;">**Opción:** <span id="modal-service-name"></span></p>
             </div>
             
             <form id="booking-form" class="mt-3">
+                
                 <div class="form-group">
                     <label for="paciente_nombre">Nombre Completo (*)</label>
                     <input type="text" id="paciente_nombre" required>
                 </div>
+                
+                <div class="form-group">
+                    <label for="paciente_prevision">Previsión Seleccionada (*)</label>
+                    <select id="paciente_prevision" required disabled>
+                        <option value="FONASA">FONASA</option>
+                        <option value="ISAPRE">ISAPRE</option>
+                        <option value="PARTICULAR">PARTICULAR</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label for="paciente_rut">RUT/DNI (*)</label>
                     <input type="text" id="paciente_rut" required>
@@ -340,20 +468,6 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="paciente_prevision">Previsión / Aseguradora (*)</label>
-                    <select id="paciente_prevision" required>
-                        <option value="">-- Selecciona tu Previsión --</option>
-                        <option value="Fonasa">Fonasa</option>
-                        <option value="Isapre Consalud">Isapre Consalud</option>
-                        <option value="Isapre Banmedica">Isapre Banmedica</option>
-                        <option value="Isapre Colmena">Isapre Colmena</option>
-                        <option value="Isapre Masvida">Isapre Masvida</option>
-                        <option value="Isapre Vidatres">Isapre Vidatres</option>
-                        <option value="Particular">Particular</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label for="comentarios">Motivo de Consulta (Opcional)</label>
                     <textarea id="comentarios" rows="3"></textarea>
                 </div>
@@ -363,9 +477,11 @@
                 <div style="margin-top: 25px; border-top: 1px solid #ddd; padding-top: 20px;">
                     <h4 style="color: var(--primary); margin-bottom: 15px;">Paso Final: Confirmar Hora y Proceder al Pago</h4>
                     
-                    <p style="font-size: 1.1rem; font-weight: 700;">Monto a Pagar: <span id="payment-amount-display" style="color: var(--accent);"></span></p>
+                    <p style="font-size: 1.1rem; font-weight: 700;">Monto Total: <span id="payment-amount-display" style="color: var(--accent);"></span></p>
                     
                     <input type='hidden' name='monto' id="webpay-monto" value='' />
+                    <input type='hidden' id="service-type-hidden">
+                    <input type='hidden' id="final-price-hidden">
 
                     <div style="display:flex; justify-content: space-between; margin-top: 20px;">
                         <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar / Volver</button>
@@ -391,8 +507,11 @@
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
-    let selectedServiceId = null; 
+    let selectedServiceId = 1; // Usamos un ID fijo para simplificar el flujo.
     let selectedServiceName = '';
+    let selectedServiceType = ''; // PROMO_GRUPO, ISAPRE, FONASA, PARTICULAR
+    let finalPrice = 0; // Almacena el monto final fijo seleccionado
+
     let selectedProfessionalId = null;
     let selectedTimeSlot = null;
     let currentWeekStart = new Date(); 
@@ -401,12 +520,26 @@
     const startHour = 8, endHour = 21, slotIntervalMin = 60; 
     
     // Referencias DOM
+    const step1El = document.getElementById('step-1');
+    const step3El = document.getElementById('step-3');
+    const nextStepBtnEl = document.getElementById('next-step-btn');
+    const optionCards = document.querySelectorAll('.option-card');
     const modalConfirmacionEl = document.getElementById('modal-confirmacion');
     const modalDateTimeEl = document.getElementById('modal-date-time');
     const modalServiceNameEl = document.getElementById('modal-service-name');
     const loadingStatusEl = document.getElementById('loading-status');
-    const selectedServiceDisplayEl = document.getElementById('selected-service-display');
+    const previsionSelect = document.getElementById('paciente_prevision');
+    const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
 
+
+    // --- BASE DE PRECIOS FIJOS ---
+    const BASE_PRICES = {
+        PROMO_GRUPO: { price: 25000, label: 'Promoción Grupal ($25.000 P/P)', prevision: 'PARTICULAR' },
+        ISAPRE: { price: 30000, label: 'Atención ISAPRE ($30.000 Reembolsable)', prevision: 'ISAPRE' },
+        FONASA: { price: 25000, label: 'Atención FONASA ($25.000 Diferencial)', prevision: 'FONASA' },
+        PARTICULAR: { price: 32000, label: 'Atención Particular ($32.000)', prevision: 'PARTICULAR' }
+    };
+    
     // --- UTILIDADES ---
     function getStartOfWeek(date) {
         const day = date.getDay();
@@ -423,7 +556,6 @@
         const [hours, minutes] = timeString.split(':');
         return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
     }
-    
     function calculateAge(dobString) {
         if (!dobString) return null;
         const today = new Date();
@@ -436,8 +568,40 @@
         }
         return age >= 0 ? age : null;
     }
+    function formatCLP(amount) {
+        return amount.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
+    }
 
+    // --- LÓGICA DEL PASO 1 (Selección de Servicio) ---
+    function selectServiceType(element, serviceType, price) {
+        optionCards.forEach(card => card.classList.remove('selected'));
+        element.classList.add('selected');
+        
+        selectedServiceType = serviceType;
+        finalPrice = price; // Guardar el precio fijo
+        selectedServiceName = BASE_PRICES[serviceType].label;
+        
+        // Configurar la previsión en el modal (pre-seleccionada)
+        previsionSelect.value = BASE_PRICES[serviceType].prevision;
+        
+        // Habilitar el botón de siguiente
+        nextStepBtnEl.style.display = 'inline-flex';
+    }
 
+    function showCalendarStep() {
+        if (!selectedServiceType) return;
+        step1El.style.display = 'none';
+        step3El.style.display = 'block';
+        loadingStatusEl.textContent = 'Selecciona una hora disponible en el calendario.';
+        // Aseguramos que la carga de agenda se realice después de la selección
+        loadUniqueProfessional().then(success => {
+            if (success) {
+                currentWeekStart = getStartOfWeek(new Date());
+                loadWeekSchedule();
+            }
+        });
+    }
+    
     // --- MANEJO DEL MODAL ---
     function showModal() {
         const datePart = new Date(selectedTimeSlot.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -449,35 +613,14 @@
         
         document.getElementById('booking-status-message').textContent = '';
         
-        // --- LÓGICA DE CÁLCULO DE MONTO Y PREPARACIÓN DE PAGO ---
-        let paymentAmount = 0;
-        let amountDisplay = 'Monto no definido';
-
-        if (selectedServiceName.includes('ISAPRE')) {
-            paymentAmount = 20000; // 20.000 CLP
-        } else if (selectedServiceName.includes('FONASA')) {
-            paymentAmount = 15000; // 15.000 CLP
-        }
+        // Mostrar precio fijo
+        document.getElementById('payment-amount-display').textContent = formatCLP(finalPrice);
+        document.getElementById('webpay-monto').value = finalPrice;
         
-        if (paymentAmount > 0) {
-            amountDisplay = paymentAmount.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
-        }
-        
-        // El ID de formulario y el monto siguen usando los valores de Webpay de ejemplo (326331)
-        document.getElementById('webpay-monto').value = paymentAmount;
-        document.getElementById('payment-amount-display').textContent = amountDisplay;
-        
-        // Cargar previsión predeterminada
-        const previsionSelect = document.getElementById('paciente_prevision');
-        if (selectedServiceName.includes('FONASA')) {
-            previsionSelect.value = 'Fonasa';
-        } else if (selectedServiceName.includes('ISAPRE')) {
-            previsionSelect.value = 'Isapre Consalud'; 
-        } else {
-             previsionSelect.value = '';
-        }
-        
-        document.getElementById('confirm-payment-btn').disabled = (paymentAmount === 0 || !selectedTimeSlot);
+        // Finalizar y habilitar botón
+        confirmPaymentBtn.disabled = false;
+        document.getElementById('final-price-hidden').value = finalPrice;
+        document.getElementById('service-type-hidden').value = selectedServiceType;
     }
 
     function hideModal() {
@@ -485,7 +628,7 @@
         document.body.style.overflow = '';
     }
     
-    // --- LÓGICA DEL CALENDARIO ---
+    // --- LÓGICA DEL CALENDARIO (Solo disponible) ---
     async function loadUniqueProfessional() {
         const { data: profData, error: profError } = await supabaseClient
             .from('profesionales')
@@ -514,8 +657,8 @@
     }
 
     async function loadWeekSchedule() {
-        if (!selectedProfessionalId || !selectedServiceId) {
-            loadingStatusEl.innerHTML = 'Error: ID de servicio/profesional no cargado.';
+        if (!selectedProfessionalId) {
+            loadingStatusEl.innerHTML = 'Error: ID de profesional no cargado.';
             return;
         }
 
@@ -527,10 +670,12 @@
         document.getElementById('current-week-display').textContent = 
             `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
         
+        // Modificación CLAVE: Sólo traemos los slots disponibles
         const { data: agendaData, error } = await supabaseClient
             .from('agendas')
             .select('*')
             .eq('profesional_id', selectedProfessionalId)
+            .eq('disponible', true) // Filtramos por disponible = TRUE
             .gte('fecha', toISODate(startDate))
             .lte('fecha', toISODate(endDate))
             .order('hora_inicio', { ascending: true });
@@ -549,7 +694,7 @@
         });
         
         renderCalendar(agendaMap);
-        loadingStatusEl.textContent = ''; 
+        loadingStatusEl.textContent = 'Selecciona una hora disponible en el calendario.'; 
     }
 
     function renderCalendar(agendaMap) {
@@ -576,22 +721,21 @@
                 const slotDateTime = new Date(`${dayKey}T${time}:00`);
                 const isPastHour = slotDateTime < new Date();
                 
-                const isBooked = slot && !slot.disponible;
                 const isAvailable = slot && slot.disponible;
                 
-                const isUnavailable = isPastDay || isPastHour || isBooked || !isAvailable;
-
-                if (isAvailable) hasSlots = true;
-
-                daySlotsHTML += `
-                    <div class="time-slot ${isUnavailable ? 'booked' : ''} ${isAvailable ? 'available-slot' : ''}" 
-                         data-id="${slot ? slot.id : ''}" 
-                         data-date="${dayKey}" 
-                         data-time="${time}"
-                         onclick="${isUnavailable ? '' : 'selectTimeSlot(this)'}">
-                       ${time}
-                    </div>
-                `;
+                // CONDICIÓN CLAVE: Solo renderizamos si está disponible Y no es hora/día pasado
+                if (isAvailable && !isPastDay && !isPastHour) {
+                    hasSlots = true;
+                    daySlotsHTML += `
+                        <div class="time-slot available-slot" 
+                             data-id="${slot.id}" 
+                             data-date="${dayKey}" 
+                             data-time="${time}"
+                             onclick="selectTimeSlot(this)">
+                           ${time}
+                        </div>
+                    `;
+                }
             }
             
             scheduleContainer.innerHTML += `
@@ -609,8 +753,6 @@
     }
 
     async function selectTimeSlot(element) {
-        if (element.classList.contains('booked')) return; 
-
         document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
         
         element.classList.add('selected');
@@ -633,14 +775,14 @@
             })
             .eq('id', selectedTimeSlot.id);
             
-        loadingStatusEl.textContent = ''; 
+        loadingStatusEl.textContent = 'Slot provisionalmente reservado.'; 
 
         if (updateError) {
              console.error("Error al marcar slot como provisional:", updateError);
              element.classList.remove('selected');
-             element.classList.add('booked');
+             element.classList.add('booked'); // Marcar como ocupado y recargar
              alert("Esta hora acaba de ser reservada por otra persona. Por favor, elige otro slot.");
-             loadWeekSchedule(); // Recargar para mostrar el slot como 'booked'
+             loadWeekSchedule(); 
              return;
         }
 
@@ -668,17 +810,17 @@
         const fechaNac = document.getElementById('paciente_fecha_nac').value; 
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
-        const prevision = document.getElementById('paciente_prevision').value; 
+        const prevision = previsionSelect.value;
         const comentarios = document.getElementById('comentarios').value;
         const monto = document.getElementById('webpay-monto').value;
-        const isMontoValid = parseInt(monto) > 0;
+        const serviceTypeFinal = document.getElementById('service-type-hidden').value;
 
-        if (!selectedTimeSlot || !nombre || !rut || !fechaNac || !email || !celular || !prevision || !isMontoValid) {
-             statusMessage.textContent = 'Por favor, completa todos los campos requeridos y selecciona una hora válida.';
+        if (!monto || !nombre || !rut || !fechaNac || !email || !celular || !prevision) {
+             statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
              confirmBtn.disabled = false;
              return;
         }
-
+        
         // 2. Actualizar el registro provisional en la tabla 'agendas' con los datos finales del paciente
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
@@ -687,10 +829,10 @@
                 paciente_rut: rut,
                 paciente_fecha_nac: fechaNac,
                 paciente_prevision: prevision,
-                comentarios: comentarios,
+                comentarios: `[TIPO: ${serviceTypeFinal}] ${comentarios}`, // Guardamos el tipo de servicio en comentarios
                 paciente_email: email,
                 paciente_celular: celular,
-                disponible: false // Sigue siendo false, pero ahora es una reserva real
+                disponible: false // Finaliza como reserva real
             })
             .eq('id', selectedTimeSlot.id);
 
@@ -719,29 +861,17 @@
         statusMessage.textContent = 'Redirigiendo a Webpay...';
         hideModal(); // Ocultar modal antes de redirigir
         webpayForm.submit(); 
-        
-        // Si Webpay falla, el slot seguirá marcado como no disponible en Supabase, 
-        // lo que requiere manejo manual o un webhook para revertirlo.
     });
 
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
-        const params = new URLSearchParams(window.location.search);
-        selectedServiceId = parseInt(params.get('service_id'));
-        selectedServiceName = params.get('service_name') ? decodeURIComponent(params.get('service_name')) : 'Terapia No Definida';
+        // Inicializar el select de previsión y el botón de siguiente (oculto)
+        previsionSelect.value = 'PARTICULAR'; // Valor por defecto
+        nextStepBtnEl.style.display = 'none';
         
-        if (!selectedServiceId) {
-            selectedServiceDisplayEl.textContent = 'Error: ID de servicio no especificado. (service_id=1 por defecto para el ejemplo)';
-            selectedServiceId = 1; // Default para no romper la app
-        }
-        
-        selectedServiceDisplayEl.textContent = selectedServiceName;
-
-        if (await loadUniqueProfessional()) {
-            currentWeekStart = getStartOfWeek(new Date());
-            loadWeekSchedule();
-        }
+        // Aquí puedes forzar la carga si sabes el tipo de servicio desde el URL de la landing.
+        // Si no se usa URL parameters, el usuario debe hacer clic en el Paso 1.
     });
 </script>
 
