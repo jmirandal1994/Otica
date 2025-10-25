@@ -34,7 +34,6 @@
     --maxw: 1200px;
     --gradient-primary: linear-gradient(135deg, var(--accent-1), var(--accent-3) 45%, var(--accent-2) 100%);
     --gradient-secondary: linear-gradient(90deg, var(--accent-3), var(--accent-2));
-    /* Variables de cálculo del carrusel ELIMINADAS */
   }
 
   * {
@@ -266,7 +265,7 @@
     transform: scale(1.05);
   }
 
-  /* ===== HERO (MODIFICADO: Orden de elementos) ===== */
+  /* ===== HERO (MODIFICADO: Imagen a la izquierda) ===== */
   .hero {
     position: relative;
     overflow: hidden;
@@ -279,8 +278,7 @@
     position: relative;
     z-index: 6;
     padding: 40px 0;
-    display: grid;
-    /* Columna de la foto a la izquierda en desktop */
+    /* CAMBIO: Foto a la izquierda, Contenido a la derecha */
     grid-template-columns: 420px 1fr; 
     gap: 40px;
     align-items: center;
@@ -291,12 +289,12 @@
   .hero-content {
     z-index: 6;
     text-align: center;
-    /* Columna del contenido a la derecha en desktop */
+    /* CAMBIO: Contenido en la segunda columna (a la derecha) */
     order: 2; 
   }
   
   .hero-figure {
-    /* Columna de la foto a la izquierda en desktop */
+    /* CAMBIO: Foto en la primera columna (a la izquierda) */
     order: 1; 
     display: flex;
     align-items: center;
@@ -438,22 +436,20 @@
     box-shadow: 0 32px 64px rgba(43,138,246,0.35);
   }
   
-  /* ANIMACIÓN DE ZOOM PARA BOTONES DE AGENDA */
+  /* ANIMACIÓN DE ZOOM PARA BOTONES DE AGENDA (Aumento de escala a 1.05) */
   .cta-hero#heroAgenda,
   .btn-primary#mainAgenda {
-    animation: zoom-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    animation: zoom-pulse 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
   }
 
   @keyframes zoom-pulse {
     0% { transform: scale(1); box-shadow: 0 20px 40px rgba(43, 138, 246, 0.25); }
-    50% { transform: scale(1.03); box-shadow: 0 25px 50px rgba(43, 138, 246, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 25px 55px rgba(43, 138, 246, 0.6); } /* Más potente */
     100% { transform: scale(1); box-shadow: 0 20px 40px rgba(43, 138, 246, 0.25); }
   }
 
 
-  /* Enhanced glass button (Eliminado: Sin botón de llamar) */
-
-
+  /* hero right illustration */
   .hero-figure img {
     width: 100%;
     max-width: 380px;
@@ -1010,25 +1006,26 @@
     color: var(--accent-1);
   }
 
-  /* ===== RESPONSIVE (ADAPTADO: Orden Móvil del Hero) ===== */
+  /* ===== RESPONSIVE (MODIFICADO: Orden de la Imagen Arriba en móvil) ===== */
   @media (max-width: 1100px) {
     .hero-inner {
+      /* Mantiene la distribución de 2 columnas para pantallas medianas */
       grid-template-columns: 1fr 360px;
     }
   }
 
   @media (max-width: 820px) {
-    /* Desactivar el Grid y forzar el orden de la foto primero en móvil */
+    /* En móvil, volvemos a la disposición de la imagen arriba del texto */
     .hero-inner {
       grid-template-columns: 1fr;
       gap: 24px;
       padding: 0 20px;
     }
     .hero-figure {
-      order: 1; /* Foto (hero-figure) primero */
+      order: 1; /* Foto va arriba en móvil */
     }
     .hero-content {
-      order: 2; /* Contenido (hero-content) después */
+      order: 2; /* Contenido va debajo en móvil */
     }
     
     /* El resto de estilos para móvil */
@@ -1213,22 +1210,22 @@
 
           <div class="isapre-logos-static">
             <div class="isapre-logo" data-isapre="banmedica">
-              <img src="https://via.placeholder.com/100x60/1565d8/ffffff?text=BANMÉDICA" alt="Banmédica" onerror="this.parentElement.innerHTML='<div style=\'color:#1565d8;font-weight:bold;font-size:12px;text-align:center\'>BANMÉDICA</div>'">
+              <img src="https://logomakr.com/p/85m88R/raw" alt="Logo Banmédica">
             </div>
             <div class="isapre-logo" data-isapre="colmena">
-              <img src="https://via.placeholder.com/100x60/ff9800/ffffff?text=COLMENA" alt="Colmena Golden Cross" onerror="this.parentElement.innerHTML='<div style=\'color:#ff9800;font-weight:bold;font-size:12px;text-align:center\'>COLMENA</div>'">
+              <img src="https://logomakr.com/p/iK6M8B/raw" alt="Logo Colmena Golden Cross">
             </div>
             <div class="isapre-logo" data-isapre="consalud">
-              <img src="https://via.placeholder.com/100x60/4caf50/ffffff?text=CONSALUD" alt="Consalud" onerror="this.parentElement.innerHTML='<div style=\'color:#4caf50;font-weight:bold;font-size:12px;text-align:center\'>CONSALUD</div>'">
+              <img src="https://logomakr.com/p/653D4b/raw" alt="Logo Consalud">
             </div>
             <div class="isapre-logo" data-isapre="cruzblanca">
-              <img src="https://via.placeholder.com/100x60/9c27b0/ffffff?text=CRUZ+BLANCA" alt="Cruz Blanca" onerror="this.parentElement.innerHTML='<div style=\'color:#9c27b0;font-weight:bold;font-size:10px;text-align:center\'>CRUZ BLANCA</div>'">
+              <img src="https://logomakr.com/p/q5F2u4/raw" alt="Logo Cruz Blanca">
             </div>
             <div class="isapre-logo" data-isapre="vidatres">
-              <img src="https://via.placeholder.com/100x60/e91e63/ffffff?text=VIDA+TRES" alt="Vida Tres" onerror="this.parentElement.innerHTML='<div style=\'color:#e91e63;font-weight:bold;font-size:12px;text-align:center\'>VIDA TRES</div>'">
+              <img src="https://logomakr.com/p/W4i7Vb/raw" alt="Logo Vida Tres">
             </div>
             <div class="isapre-logo" data-isapre="masvida">
-              <img src="https://via.placeholder.com/100x60/00bcd4/ffffff?text=MAS+VIDA" alt="Más Vida" onerror="this.parentElement.innerHTML='<div style=\'color:#00bcd4;font-weight:bold;font-size:12px;text-align:center\'>MAS VIDA</div>'">
+              <img src="https://logomakr.com/p/Q4Zg4m/raw" alt="Logo Más Vida">
             </div>
           </div>
           <div class="isapre-benefits">
@@ -1621,7 +1618,7 @@
                         'a, button, [tabindex]:not([tabindex="-1"])'
                     );
                     const firstElement = focusableElements[0];
-                    const lastElement = focusableElements[focusableablements.length - 1];
+                    const lastElement = focusableElements[focusableElements.length - 1];
                     
                     if (e.shiftKey) {
                         if (document.activeElement === firstElement) {
