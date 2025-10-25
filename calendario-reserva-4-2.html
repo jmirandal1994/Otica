@@ -19,6 +19,8 @@
             --muted: #6b7280; /* Gris de ÓTICA */
             --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08);
             --success: #1e7e34;
+            --danger: #d9534f; /* Añadido para mensajes de error */
+            --warning: #ffc107;
         }
 
         body {
@@ -285,6 +287,7 @@
         .form-group input[type="email"], 
         .form-group input[type="tel"], 
         .form-group input[type="date"],
+        .form-group input[type="number"], /* Añadido number para cantidad */
         .form-group select,
         .form-group textarea {
             width: 100%;
@@ -313,6 +316,14 @@
 
         footer { background-color: var(--primary); padding: 20px 0; margin-top: auto; }
         footer p { color: #f5f5f5; font-size: 0.9rem; text-align: center; margin: 0;}
+
+        /* Estilo para el mensaje de error del cálculo */
+        #promo-warning-message {
+            color: var(--danger);
+            font-weight: 700;
+            margin-top: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -435,6 +446,12 @@
                     <input type="text" id="paciente_nombre" required>
                 </div>
                 
+                <div class="form-group" id="group-person-count-container" style="display: none;">
+                    <label for="person_count">Cantidad de Personas (2 o más)</label>
+                    <input type="number" id="person_count" min="1" value="1" required oninput="calculatePromoTotal()">
+                    <div id="promo-warning-message"></div>
+                </div>
+
                 <div class="form-group">
                     <label for="paciente_prevision">Previsión Seleccionada (*)</label>
                     <select id="paciente_prevision" required disabled>
@@ -530,6 +547,10 @@
     const loadingStatusEl = document.getElementById('loading-status');
     const previsionSelect = document.getElementById('paciente_prevision');
     const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+    const personCountInput = document.getElementById('person_count');
+    const groupCountContainer = document.getElementById('group-person-count-container');
+    const promoWarningMessage = document.getElementById('promo-warning-message');
+    const paymentAmountDisplay = document.getElementById('payment-amount-display');
 
 
     // --- BASE DE PRECIOS FIJOS ---
@@ -572,6 +593,46 @@
         return amount.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
     }
 
+    // --- CÁLCULO DE PROMOCIÓN GRUPAL ---
+    function calculatePromoTotal() {
+        let count = parseInt(personCountInput.value) || 0;
+        let pricePerPerson = BASE_PRICES.PROMO_GRUPO.price;
+        let total = 0;
+
+        promoWarningMessage.textContent = '';
+        promoWarningMessage.style.color = 'var(--danger)';
+        confirmPaymentBtn.disabled = true;
+
+        if (count < 2) {
+            if (count === 1) {
+                promoWarningMessage.textContent = '¡Deben ser 2 o más personas para la promoción! Sugerencia: use la tarifa Particular ($32.000).';
+                // Si es solo 1, ponemos el valor de particular
+                total = BASE_PRICES.PARTICULAR.price;
+                paymentAmountDisplay.textContent = `${formatCLP(total)} (Tarifa Particular)`;
+                document.getElementById('service-type-hidden').value = 'PARTICULAR_SINGLE'; // Marcador
+                confirmPaymentBtn.disabled = false;
+
+            } else {
+                promoWarningMessage.textContent = 'La promoción requiere un mínimo de 2 personas.';
+                paymentAmountDisplay.textContent = 'Monto Total: N/A';
+                document.getElementById('webpay-monto').value = 0;
+                return;
+            }
+        } else {
+            // Promoción válida (2 o más)
+            total = count * pricePerPerson;
+            paymentAmountDisplay.textContent = formatCLP(total);
+            promoWarningMessage.textContent = '';
+            promoWarningMessage.style.color = 'var(--success)';
+            document.getElementById('service-type-hidden').value = 'PROMO_GRUPO';
+            confirmPaymentBtn.disabled = false;
+        }
+
+        document.getElementById('webpay-monto').value = total;
+        document.getElementById('final-price-hidden').value = total;
+    }
+
+
     // --- LÓGICA DEL PASO 1 (Selección y Redirección Inmediata) ---
     function showCalendarStep(element, serviceType, price) {
         // 1. Marcar el elemento seleccionado visualmente (opcional)
@@ -611,14 +672,23 @@
         // Configurar la previsión en el modal (pre-seleccionada y deshabilitada)
         previsionSelect.value = BASE_PRICES[selectedServiceType].prevision;
         
-        // Mostrar precio fijo
-        document.getElementById('payment-amount-display').textContent = formatCLP(finalPrice);
-        document.getElementById('webpay-monto').value = finalPrice;
-        
-        // Finalizar y habilitar botón
-        confirmPaymentBtn.disabled = false;
-        document.getElementById('final-price-hidden').value = finalPrice;
-        document.getElementById('service-type-hidden').value = selectedServiceType;
+        // MOSTRAR/OCULTAR CAMPO DE CANTIDAD DE PERSONAS
+        if (selectedServiceType === 'PROMO_GRUPO') {
+            groupCountContainer.style.display = 'block';
+            personCountInput.value = 2; // Forzar mínimo 2 al abrir
+            calculatePromoTotal();
+        } else {
+            groupCountContainer.style.display = 'none';
+            
+            // Mostrar precio fijo
+            paymentAmountDisplay.textContent = formatCLP(finalPrice);
+            document.getElementById('webpay-monto').value = finalPrice;
+            document.getElementById('final-price-hidden').value = finalPrice;
+            document.getElementById('service-type-hidden').value = selectedServiceType;
+            
+            // Finalizar y habilitar botón
+            confirmPaymentBtn.disabled = false;
+        }
     }
 
     function hideModal() {
@@ -668,7 +738,7 @@
         document.getElementById('current-week-display').textContent = 
             `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
         
-        // Traemos todos los slots disponibles
+        // Modificación CLAVE: Sólo traemos los slots disponibles
         const { data: agendaData, error } = await supabaseClient
             .from('agendas')
             .select('*')
@@ -800,6 +870,13 @@
              confirmBtn.disabled = false;
              return;
         }
+
+        // Si es Promoción Grupal, verificar que el monto sea válido (Calculado en JS)
+        if (serviceTypeFinal === 'PROMO_GRUPO' && (parseInt(monto) < (2 * 25000))) {
+             statusMessage.textContent = 'Error: La promoción requiere 2 o más personas.';
+             confirmBtn.disabled = false;
+             return;
+        }
         
         // 2. 🛑 CLAVE: Actualizar y MARCAR como reservado el slot solo en este punto
         const { error: finalUpdateError } = await supabaseClient
@@ -810,7 +887,7 @@
                 paciente_fecha_nac: fechaNac,
                 paciente_prevision: prevision,
                 paciente_direccion: direccion, // Guardar la dirección
-                comentarios: `[TIPO: ${serviceTypeFinal}] ${comentarios}`,
+                comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, // Guardamos el tipo de servicio y monto
                 paciente_email: email,
                 paciente_celular: celular,
                 disponible: false // Marcar FINALMENTE como reservado
@@ -818,10 +895,9 @@
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            statusMessage.textContent = 'Error: La hora ya fue reservada por otra persona (doble reserva). Por favor, cancela y elige otro slot.';
+            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
             console.error("Error al confirmar datos finales:", finalUpdateError);
             confirmBtn.disabled = false;
-            // No redirigimos a Webpay si el slot fue tomado.
             return;
         }
 
@@ -855,21 +931,8 @@
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
-        // Si hay parámetros URL, los usamos para cargar la opción (redundante ya que el index no envía parámetros)
-        // Pero es buena práctica si decide enviar parámetros en el futuro.
-        const params = new URLSearchParams(window.location.search);
-        
-        // Solo para asegurar que una opción esté marcada al inicio si no se usa el click
-        if (!selectedServiceType) {
-             const defaultCard = document.querySelector('.option-card');
-             if (defaultCard) {
-                 // Forzamos la selección visual de la primera tarjeta al cargar, si no hay click
-                 defaultCard.classList.add('selected');
-                 selectedServiceType = defaultCard.dataset.serviceType;
-                 finalPrice = parseInt(defaultCard.dataset.price); 
-                 selectedServiceName = BASE_PRICES[selectedServiceType].label;
-             }
-        }
+        // Inicializar el input de cantidad para que llame a la función de cálculo
+        personCountInput.addEventListener('input', calculatePromoTotal);
     });
 </script>
 
