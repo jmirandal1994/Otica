@@ -519,9 +519,9 @@
 </footer>
 
 <script>
-    // CREDENCIALES DE SUPABASE ACTUALIZADAS (CLAVE ORIGINAL RESTAURADA)
+    // CREDENCIALES DE SUPABASE RESTAURADAS AL VALOR ORIGINAL
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlib3B0bWVjYm90ZmZoeSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzYxMzU3MjE0LCJleHAiOjIwNzY5MjgxNDR9.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -889,7 +889,7 @@
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
             .update({
-                profesional_id: selectedProfessionalId, // ⬅️ CORRECCIÓN: Se mantiene para evitar el Error 400
+                profesional_id: selectedProfessionalId, // ⬅️ Incluido para evitar el Error 400 (FK)
                 paciente_nombre: nombre,
                 paciente_rut: rut,
                 paciente_fecha_nac: fechaNac,
@@ -905,7 +905,7 @@
         if (finalUpdateError) {
             statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
             
-            // 🚨 LOG DE DEPURACIÓN (Muestra el error real en la consola F12)
+            // 🚨 LOG DE DEPURACIÓN 
             console.error("Error REAL al confirmar datos finales:", finalUpdateError); 
             
             confirmBtn.disabled = false;
