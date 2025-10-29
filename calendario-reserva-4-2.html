@@ -519,9 +519,9 @@
 </footer>
 
 <script>
-    // CREDENCIALES DE SUPABASE ACTUALIZADAS
+    // CREDENCIALES DE SUPABASE ACTUALIZADAS (CLAVE ORIGINAL RESTAURADA)
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlib3B0bWVjYm90ZmZoeSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzYxMzU3MjE0LCJleHAiOjIwNzY5MjgxNDQ.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlib3B0bWVjYm90ZmZoeSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzYxMzU3MjE0LCJleHAiOjIwNzY5MjgxNDR9.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -889,7 +889,7 @@
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
             .update({
-                profesional_id: selectedProfessionalId, // ⬅️ CORRECCIÓN FINAL: Asegura que el FK (UUID) se envíe correctamente.
+                profesional_id: selectedProfessionalId, // ⬅️ CORRECCIÓN: Se mantiene para evitar el Error 400
                 paciente_nombre: nombre,
                 paciente_rut: rut,
                 paciente_fecha_nac: fechaNac,
