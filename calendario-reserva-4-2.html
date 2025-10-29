@@ -909,16 +909,17 @@
         }
 
 
-        // --- CREACIÓN DINÁMICA DEL FORMULARIO DE WEBPAY ---
+        // --- CREACIÓN DINÁMICA DEL FORMULARIO DE WEBPAY con el botón proporcionado ---
         const webpayForm = document.createElement('form');
         webpayForm.name = 'rec20108_btn1';
         webpayForm.method = 'post';
         webpayForm.action = 'https://www.webpay.cl/backpub/external/form-pay';
         
-        // Campos ocultos requeridos por Webpay (Solo idFormulario y monto)
+        // Campos ocultos requeridos por Webpay (Usando tu ID 329986 y el monto dinámico)
         webpayForm.innerHTML = `
-            <input type='hidden' name='idFormulario' value='326331' />
+            <input type='hidden' name='idFormulario' value='329986' />
             <input type='hidden' name='monto' value='${monto}' />
+            <input type='image' title='Imagen' name='button1' src='https://www.webpay.cl/assets/img/boton_webpaycl.svg' value='Boton 1' />
         `;
         
         // Agregar el formulario al cuerpo y enviarlo
