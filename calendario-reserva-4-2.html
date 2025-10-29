@@ -521,7 +521,7 @@
 <script>
     // CREDENCIALES DE SUPABASE ACTUALIZADAS
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlib3B0bWVjYm90ZmZoeSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzYxMzU3MjE0LCJleHAiOjIwNzY5MjgxNDQ.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -889,7 +889,7 @@
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
             .update({
-                profesional_id: selectedProfessionalId, // ⬅️ CORRECCIÓN: Añadido para evitar el Error 400
+                profesional_id: selectedProfessionalId, // ⬅️ CORRECCIÓN FINAL: Asegura que el FK (UUID) se envíe correctamente.
                 paciente_nombre: nombre,
                 paciente_rut: rut,
                 paciente_fecha_nac: fechaNac,
@@ -926,10 +926,11 @@
         webpayForm.method = 'post';
         webpayForm.action = 'https://www.webpay.cl/backpub/external/form-pay';
         
-        // Campos ocultos requeridos por Webpay (Solo idFormulario y monto)
+        // Campos ocultos requeridos por Webpay (Usando tu ID 329986 y el monto dinámico)
         webpayForm.innerHTML = `
-            <input type='hidden' name='idFormulario' value='326331' />
+            <input type='hidden' name='idFormulario' value='329986' />
             <input type='hidden' name='monto' value='${monto}' />
+            <input type='image' title='Imagen' name='button1' src='https://www.webpay.cl/assets/img/boton_webpaycl.svg' value='Boton 1' />
         `;
         
         // Agregar el formulario al cuerpo y enviarlo
