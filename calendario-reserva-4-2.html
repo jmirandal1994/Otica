@@ -853,6 +853,13 @@
         confirmBtn.disabled = true;
         statusMessage.textContent = 'Confirmando datos y preparando pago...';
         
+        // 🛑 VERIFICACIÓN DE ID DEL SLOT (Añadido para diagnóstico)
+        if (!selectedTimeSlot || !selectedTimeSlot.id) {
+             statusMessage.textContent = 'Error interno: La hora seleccionada no tiene un ID válido. Por favor, selecciona la hora nuevamente.';
+             confirmBtn.disabled = false;
+             return;
+        }
+
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
@@ -896,7 +903,10 @@
 
         if (finalUpdateError) {
             statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
-            console.error("Error al confirmar datos finales:", finalUpdateError);
+            
+            // 🚨 LOG DE DEPURACIÓN (Muestra el error real en la consola F12)
+            console.error("Error REAL al confirmar datos finales:", finalUpdateError); 
+            
             confirmBtn.disabled = false;
             return;
         }
