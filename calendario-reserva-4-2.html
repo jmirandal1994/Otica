@@ -519,7 +519,7 @@
 </footer>
 
 <script>
-    // CREDENCIALES DE SUPABASE RESTAURADAS AL VALOR ORIGINAL
+    // CREDENCIALES DE SUPABASE ACTUALIZADAS
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
@@ -853,13 +853,6 @@
         confirmBtn.disabled = true;
         statusMessage.textContent = 'Confirmando datos y preparando pago...';
         
-        // 🛑 VERIFICACIÓN DE ID DEL SLOT (Añadido para diagnóstico)
-        if (!selectedTimeSlot || !selectedTimeSlot.id) {
-             statusMessage.textContent = 'Error interno: La hora seleccionada no tiene un ID válido. Por favor, selecciona la hora nuevamente.';
-             confirmBtn.disabled = false;
-             return;
-        }
-
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
@@ -889,7 +882,6 @@
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
             .update({
-                profesional_id: selectedProfessionalId, // ⬅️ Incluido para evitar el Error 400 (FK)
                 paciente_nombre: nombre,
                 paciente_rut: rut,
                 paciente_fecha_nac: fechaNac,
@@ -904,10 +896,7 @@
 
         if (finalUpdateError) {
             statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
-            
-            // 🚨 LOG DE DEPURACIÓN 
-            console.error("Error REAL al confirmar datos finales:", finalUpdateError); 
-            
+            console.error("Error al confirmar datos finales:", finalUpdateError);
             confirmBtn.disabled = false;
             return;
         }
@@ -926,11 +915,10 @@
         webpayForm.method = 'post';
         webpayForm.action = 'https://www.webpay.cl/backpub/external/form-pay';
         
-        // Campos ocultos requeridos por Webpay (Usando tu ID 329986 y el monto dinámico)
+        // Campos ocultos requeridos por Webpay (Solo idFormulario y monto)
         webpayForm.innerHTML = `
-            <input type='hidden' name='idFormulario' value='329986' />
+            <input type='hidden' name='idFormulario' value='326331' />
             <input type='hidden' name='monto' value='${monto}' />
-            <input type='image' title='Imagen' name='button1' src='https://www.webpay.cl/assets/img/boton_webpaycl.svg' value='Boton 1' />
         `;
         
         // Agregar el formulario al cuerpo y enviarlo
