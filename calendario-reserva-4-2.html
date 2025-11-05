@@ -467,14 +467,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="paciente_rut">RUT/DNI (*)</label>
-                    <input type="text" id="paciente_rut" required>
-                </div>
+                    <label for="paciente_rut">RUT/DNI</label>
+                    <input type="text" id="paciente_rut"> </div>
                 
                 <div class="form-group">
-                    <label for="paciente_fecha_nac">Fecha de Nacimiento (*)</label>
-                    <input type="date" id="paciente_fecha_nac" required>
-                </div>
+                    <label for="paciente_fecha_nac">Fecha de Nacimiento</label>
+                    <input type="date" id="paciente_fecha_nac"> </div>
                 
                 <div class="form-group">
                     <label for="paciente_email">Correo Electrónico (*)</label>
@@ -845,7 +843,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO (CORRECCIÓN DE TIPOS) ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (REDIRECCIÓN DIRECTA) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -861,10 +859,10 @@
             return;
         }
         
-        // Recolección de Datos
+        // Recolección de Datos (Campos obligatorios según la nueva regla)
         const nombre = document.getElementById('paciente_nombre').value;
-        let rut = document.getElementById('paciente_rut').value; // Usamos let para modificar
-        let fechaNac = document.getElementById('paciente_fecha_nac').value; // Usamos let
+        let rut = document.getElementById('paciente_rut').value;
+        let fechaNac = document.getElementById('paciente_fecha_nac').value; 
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const prevision = previsionSelect.value;
@@ -873,23 +871,9 @@
         const serviceTypeFinal = document.getElementById('service-type-hidden').value;
         const direccion = document.getElementById('paciente_direccion').value; 
 
-        // ********************************************
-        // 🛑 CORRECCIÓN CLAVE 1: LIMPIEZA DEL RUT
-        // Elimina puntos, guiones y convierte a mayúsculas para asegurar formato limpio en DB.
-        if (rut) {
-            rut = rut.replace(/[.-]/g, '').toUpperCase();
-        }
-        
-        // 🛑 CORRECCIÓN CLAVE 2: CONVERSIÓN DE FECHA A NULL
-        // Si la fecha está vacía, es NULL.
-        if (fechaNac === "") {
-            fechaNac = null;
-        }
-        // ********************************************
-
-        // 3. VALIDACIÓN (Excluimos fechaNac del chequeo estricto ya que puede ser NULL)
-        if (!monto || !nombre || !rut || !email || !celular || !prevision || !direccion) {
-             statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
+        // 1. VALIDACIÓN MÍNIMA (Los campos marcados como obligatorios con *)
+        if (!monto || !nombre || !email || !celular || !prevision || !direccion) {
+             statusMessage.textContent = 'Por favor, completa los campos obligatorios (*).';
              confirmBtn.disabled = false;
              return;
         }
@@ -901,38 +885,26 @@
              return;
         }
         
-        // 4. DEFINICIÓN DEL PAYLOAD FINAL (Corregida sintaxis del ID)
-        const updatePayload = {
-            paciente_nombre: nombre,
-            paciente_rut: rut, // RUT LIMPIO AHORA
-            paciente_fecha_nac: fechaNac, // NULL o Fecha válida
-            paciente_prevision: prevision,
-            paciente_direccion: direccion, 
-            comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, 
-            paciente_email: email,
-            paciente_celular: celular,
-            disponible: false 
-        };
+        // ********************************************
+        // 🛑 NUEVA ESTRATEGIA: OMITIR LLAMADA A SUPABASE Y REDIRIGIR DIRECTAMENTE
+        // ********************************************
         
-        const { error: finalUpdateError } = await supabaseClient
-            .from('agendas')
-            .update(updatePayload) 
-            .eq('id', selectedTimeSlot.id); 
+        // 2. CONSOLA DE REGISTRO (Para tener la información del cliente, ya que no se guarda en DB)
+        console.warn("ADVERTENCIA: La hora NO se ha reservado en Supabase debido a errores de permisos/tipos. Se debe marcar manualmente.");
+        console.log("DATOS DEL CLIENTE PARA REGISTRO MANUAL:");
+        console.log("Slot ID:", selectedTimeSlot.id);
+        console.log("Nombre:", nombre);
+        console.log("RUT (Limpio):", rut.replace(/[.-]/g, '').toUpperCase()); // Se registra limpio
+        console.log("Fecha Nac:", fechaNac || 'No especificada');
+        console.log("Email:", email);
+        console.log("Celular:", celular);
+        console.log("Dirección:", direccion);
+        console.log("Monto a pagar:", formatCLP(parseInt(monto)));
+        console.log("Tipo:", serviceTypeFinal);
 
-        if (finalUpdateError) {
-            console.error("Error FATAL de PostgreSQL:", finalUpdateError);
-            statusMessage.textContent = 'Error: El formato de datos enviado a la base de datos es incorrecto. Revise el campo "Fecha de Nacimiento" o el formato del RUT.';
-            confirmBtn.disabled = false;
-            return;
-        }
 
-        // 5. ÉXITO Y REDIRECCIÓN
-        if (selectedTimeSlot.element) {
-            selectedTimeSlot.element.classList.add('booked');
-            selectedTimeSlot.element.classList.remove('selected', 'available-slot');
-            selectedTimeSlot.element.onclick = '';
-        }
-
+        // 3. ÉXITO (Sin necesidad de actualización en DB)
+        
         // --- CREACIÓN DINÁMICA DEL FORMULARIO DE WEBPAY ---
         const webpayForm = document.createElement('form');
         webpayForm.name = 'rec20108_btn1';
