@@ -521,6 +521,7 @@
 <script>
     // CREDENCIALES DE SUPABASE - CLAVE service_role INSERTADA PARA DIAGNÓSTICO (INSEGURO)
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
+    // RECUERDA REVERTIR ESTA CLAVE DESPUÉS DEL DIAGNÓSTICO
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTM1MjIxNCwiZXhwIjoyMDc2OTI4MjE0fQ.oyYKZlpY5dAmhvyERDoQVaIGjVyDck--5ON8ih3CH-c'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
@@ -844,7 +845,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (CORRECCIÓN DE TIPOS) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -860,10 +861,10 @@
             return;
         }
         
-        // Recolección y validación de Datos
+        // Recolección de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
-        const fechaNac = document.getElementById('paciente_fecha_nac').value; 
+        let fechaNac = document.getElementById('paciente_fecha_nac').value; // Usamos let
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const prevision = previsionSelect.value;
@@ -872,11 +873,22 @@
         const serviceTypeFinal = document.getElementById('service-type-hidden').value;
         const direccion = document.getElementById('paciente_direccion').value; 
 
-        if (!monto || !nombre || !rut || !fechaNac || !email || !celular || !prevision || !direccion) {
+        // ********************************************
+        // 🛑 CORRECCIÓN CLAVE PARA EL ERROR 400 (Tipo de Dato DATE)
+        // Convertimos el string vacío ("") a NULL para que PostgreSQL lo acepte en la columna DATE
+        if (fechaNac === "") {
+            fechaNac = null;
+        }
+        // ********************************************
+
+        // Validación de campos requeridos (si un campo es required en HTML, debería tener valor)
+        // Usamos el 'fechaNac' modificado que puede ser null si el campo HTML estaba vacío.
+        if (!monto || !nombre || !rut || !email || !celular || !prevision || !direccion) {
              statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
              confirmBtn.disabled = false;
              return;
         }
+        // Nota: No incluimos fechaNac en la validación de string vacío si permitimos que sea null.
 
         // Si es Promoción Grupal, verificar que el monto sea válido (Calculado en JS)
         if (serviceTypeFinal === 'PROMO_GRUPO' && (parseInt(monto) < (2 * 25000))) {
@@ -885,38 +897,37 @@
              return;
         }
         
-        // 2. 🛑 CORRECCIÓN CLAVE PARA ERROR 400: Definir el PAYLOAD SIN INCLUIR EL CAMPO 'id'
+        // 2. 🛑 DEFINICIÓN DEL PAYLOAD FINAL (Corregida la sintaxis del ID en pasos anteriores)
         const updatePayload = {
             paciente_nombre: nombre,
             paciente_rut: rut,
-            paciente_fecha_nac: fechaNac,
+            paciente_fecha_nac: fechaNac, // Aquí puede ser una fecha o NULL
             paciente_prevision: prevision,
-            paciente_direccion: direccion, // Guardar la dirección
-            comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, // Guardamos el tipo de servicio y monto
+            paciente_direccion: direccion, 
+            comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, 
             paciente_email: email,
             paciente_celular: celular,
-            disponible: false // Marcar FINALMENTE como reservado
+            disponible: false 
         };
         
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
-            .update(updatePayload) // Usamos el payload explícito (sin 'id')
-            .eq('id', selectedTimeSlot.id); // Usamos el ID solo para el filtro (CLAVE)
+            .update(updatePayload) 
+            .eq('id', selectedTimeSlot.id); 
 
         if (finalUpdateError) {
-            console.error("Error al confirmar datos finales:", finalUpdateError);
-            statusMessage.textContent = 'Error al confirmar los datos. Por favor, revisa la consola para ver si el error se ha resuelto con la clave service_role. Si no funciona, el problema no es de permisos.';
+            console.error("Error FATAL de PostgreSQL:", finalUpdateError);
+            statusMessage.textContent = 'Error: El formato de datos enviado a la base de datos es incorrecto. Revise el campo "Fecha de Nacimiento" o el formato del RUT.';
             confirmBtn.disabled = false;
             return;
         }
 
-        // 3. ACTUALIZACIÓN VISUAL (Para que no vuelva a aparecer el slot disponible)
+        // 3. ACTUALIZACIÓN VISUAL y REDIRECCIÓN
         if (selectedTimeSlot.element) {
             selectedTimeSlot.element.classList.add('booked');
             selectedTimeSlot.element.classList.remove('selected', 'available-slot');
-            selectedTimeSlot.element.onclick = ''; // Desactivar clic
+            selectedTimeSlot.element.onclick = '';
         }
-
 
         // --- CREACIÓN DINÁMICA DEL FORMULARIO DE WEBPAY ---
         const webpayForm = document.createElement('form');
@@ -930,10 +941,9 @@
             <input type='hidden' name='monto' value='${monto}' />
         `;
         
-        // Agregar el formulario al cuerpo y enviarlo
         document.body.appendChild(webpayForm);
         statusMessage.textContent = 'Redirigiendo a Webpay...';
-        hideModal(); // Ocultar modal antes de redirigir
+        hideModal(); 
         webpayForm.submit(); 
     });
 
