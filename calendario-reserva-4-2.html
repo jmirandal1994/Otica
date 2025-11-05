@@ -475,8 +475,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="paciente_fecha_nac">Fecha de Nacimiento (*)</label>
-                    <input type="date" id="paciente_fecha_nac" required>
+                    <label for="paciente_fecha_nac">Fecha de Nacimiento (Opcional)</label>
+                    <input type="date" id="paciente_fecha_nac">
                 </div>
                 
                 <div class="form-group">
@@ -847,7 +847,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO (MODIFICADA PARA CHEQUEAR FECHA) ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (MODIFICADA PARA EXCLUIR FECHA DE NACIMIENTO) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -859,7 +859,7 @@
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
-        const fechaNac = document.getElementById('paciente_fecha_nac').value; // CAMPO DE FECHA
+        const fechaNac = document.getElementById('paciente_fecha_nac').value; // AÚN se lee, pero no se valida ni se envía si está vacío
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const prevision = previsionSelect.value;
@@ -868,16 +868,9 @@
         const serviceTypeFinal = document.getElementById('service-type-hidden').value;
         const direccion = document.getElementById('paciente_direccion').value; 
 
-        // 1. VALIDACIÓN DE CAMPOS OBLIGATORIOS (incluida la FECHA)
+        // 1. VALIDACIÓN DE CAMPOS OBLIGATORIOS RESTANTES
         if (!monto || !nombre || !rut || !email || !celular || !prevision || !direccion) {
-             statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
-             confirmBtn.disabled = false;
-             return;
-        }
-
-        // 🛑 CORRECCIÓN CLAVE: DOBLE CHEQUEO DEL VALOR DE LA FECHA DE NACIMIENTO
-        if (!fechaNac || fechaNac.trim() === '') {
-             statusMessage.textContent = 'ERROR: Por favor, selecciona tu Fecha de Nacimiento correctamente en el formulario.';
+             statusMessage.textContent = 'Por favor, completa todos los campos requeridos (*).';
              confirmBtn.disabled = false;
              return;
         }
@@ -889,25 +882,34 @@
              confirmBtn.disabled = false;
              return;
         }
+
+        // --- PREPARACIÓN DEL OBJETO DE DATOS ---
+        // Se crea un objeto que contiene los datos que se enviarán al UPDATE.
+        const updateData = {
+            paciente_nombre: nombre,
+            paciente_rut: rut,
+            paciente_prevision: prevision,
+            paciente_direccion: direccion, 
+            comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`,
+            paciente_email: email,
+            paciente_celular: celular,
+            disponible: false 
+        };
+
+        // 🛑 LÓGICA CLAVE: Solo enviamos paciente_fecha_nac si tiene un valor.
+        // Esto previene el error 400 si el campo es NOT NULL en la DB pero está vacío en el formulario.
+        if (fechaNac && fechaNac.trim() !== '') {
+            updateData.paciente_fecha_nac = fechaNac;
+        }
         
         // 2. 🛑 CLAVE: Actualizar y MARCAR como reservado el slot solo en este punto
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
-            .update({
-                paciente_nombre: nombre,
-                paciente_rut: rut,
-                paciente_fecha_nac: fechaNac, // Envío del valor de la fecha
-                paciente_prevision: prevision,
-                paciente_direccion: direccion, // Guardar la dirección
-                comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, // Guardamos el tipo de servicio y monto
-                paciente_email: email,
-                paciente_celular: celular,
-                disponible: false // Marcar FINALMENTE como reservado
-            })
+            .update(updateData) // Usamos el objeto dinámico
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o los datos sean inválidos. Por favor, elige otro slot.';
+            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o un campo obligatorio esté incompleto. Por favor, elige otro slot.';
             console.error("Error al confirmar datos finales:", finalUpdateError);
             confirmBtn.disabled = false;
             return;
@@ -943,6 +945,9 @@
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
+        // Eliminamos el atributo 'required' del input de fecha en el DOM para la compatibilidad visual
+        document.getElementById('paciente_fecha_nac').removeAttribute('required');
+        
         // Inicializar el input de cantidad para que llame a la función de cálculo
         personCountInput.addEventListener('input', calculatePromoTotal);
     });
