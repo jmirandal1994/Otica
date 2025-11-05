@@ -521,7 +521,7 @@
 <script>
     // CREDENCIALES DE SUPABASE - CLAVE service_role INSERTADA PARA DIAGNÓSTICO (INSEGURO)
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    // RECUERDA REVERTIR ESTA CLAVE DESPUÉS DEL DIAGNÓSTICO
+    // ADVERTENCIA: Esta clave service_role debe ser reemplazada por la clave anon para producción
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTM1MjIxNCwiZXhwIjoyMDc2OTI4MjE0fQ.oyYKZlpY5dAmhvyERDoQVaIGjVyDck--5ON8ih3CH-c'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
@@ -874,22 +874,20 @@
         const direccion = document.getElementById('paciente_direccion').value; 
 
         // ********************************************
-        // 🛑 CORRECCIÓN CLAVE PARA EL ERROR 400 (Tipo de Dato DATE)
-        // Convertimos el string vacío ("") a NULL para que PostgreSQL lo acepte en la columna DATE
+        // 🛑 CORRECCIÓN CLAVE: CONVERSIÓN Y EXCLUSIÓN EN VALIDACIÓN
+        // 1. Si la fecha está vacía, es NULL.
         if (fechaNac === "") {
             fechaNac = null;
         }
         // ********************************************
 
-        // Validación de campos requeridos (si un campo es required en HTML, debería tener valor)
-        // Usamos el 'fechaNac' modificado que puede ser null si el campo HTML estaba vacío.
+        // 2. VALIDACIÓN: Excluimos fechaNac del chequeo estricto ya que puede ser NULL
         if (!monto || !nombre || !rut || !email || !celular || !prevision || !direccion) {
              statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
              confirmBtn.disabled = false;
              return;
         }
-        // Nota: No incluimos fechaNac en la validación de string vacío si permitimos que sea null.
-
+        
         // Si es Promoción Grupal, verificar que el monto sea válido (Calculado en JS)
         if (serviceTypeFinal === 'PROMO_GRUPO' && (parseInt(monto) < (2 * 25000))) {
              statusMessage.textContent = 'Error: La promoción requiere 2 o más personas.';
@@ -897,7 +895,7 @@
              return;
         }
         
-        // 2. 🛑 DEFINICIÓN DEL PAYLOAD FINAL (Corregida la sintaxis del ID en pasos anteriores)
+        // 3. DEFINICIÓN DEL PAYLOAD FINAL (Corregida sintaxis del ID)
         const updatePayload = {
             paciente_nombre: nombre,
             paciente_rut: rut,
@@ -917,12 +915,13 @@
 
         if (finalUpdateError) {
             console.error("Error FATAL de PostgreSQL:", finalUpdateError);
+            // Este mensaje personalizado te ayuda a saber qué falló
             statusMessage.textContent = 'Error: El formato de datos enviado a la base de datos es incorrecto. Revise el campo "Fecha de Nacimiento" o el formato del RUT.';
             confirmBtn.disabled = false;
             return;
         }
 
-        // 3. ACTUALIZACIÓN VISUAL y REDIRECCIÓN
+        // 4. ACTUALIZACIÓN VISUAL y REDIRECCIÓN
         if (selectedTimeSlot.element) {
             selectedTimeSlot.element.classList.add('booked');
             selectedTimeSlot.element.classList.remove('selected', 'available-slot');
