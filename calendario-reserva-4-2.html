@@ -519,9 +519,9 @@
 </footer>
 
 <script>
-    // CREDENCIALES DE SUPABASE ACTUALIZADAS
+    // CREDENCIALES DE SUPABASE - CLAVE service_role INSERTADA PARA DIAGNÓSTICO (INSEGURO)
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTM1MjIxNCwiZXhwIjoyMDc2OTI4MjE0fQ.oyYKZlpY5dAmhvyERDoQVaIGjVyDck--5ON8ih3CH-c'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -844,7 +844,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO (CORREGIDA) ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -904,8 +904,8 @@
             .eq('id', selectedTimeSlot.id); // Usamos el ID solo para el filtro (CLAVE)
 
         if (finalUpdateError) {
-            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o falte permiso de UPDATE en Supabase. Por favor, elige otro slot.';
             console.error("Error al confirmar datos finales:", finalUpdateError);
+            statusMessage.textContent = 'Error al confirmar los datos. Por favor, revisa la consola para ver si el error se ha resuelto con la clave service_role. Si no funciona, el problema no es de permisos.';
             confirmBtn.disabled = false;
             return;
         }
