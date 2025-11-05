@@ -454,7 +454,7 @@
 
                 <div class="form-group">
                     <label for="paciente_prevision">Previsión Seleccionada (*)</label>
-                    <select id="paciente_prevision" required> 
+                    <select id="paciente_prevision" required disabled>
                         <option value="FONASA">FONASA</option>
                         <option value="ISAPRE">ISAPRE</option>
                         <option value="PARTICULAR">PARTICULAR</option>
@@ -519,11 +519,10 @@
 </footer>
 
 <script>
-    // CREDENCIALES DE SUPABASE - RESTAURADAS A SU ESTADO ORIGINAL PARA EVITAR 401
+    // CREDENCIALES DE SUPABASE ACTUALIZADAS
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlibHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
-    // CLIENTE RESTAURADO: Si este funcionaba para SELECT, lo mantendremos así.
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
     let selectedServiceId = 1; 
@@ -670,7 +669,7 @@
         
         document.getElementById('booking-status-message').textContent = '';
         
-        // Configurar la previsión en el modal (pre-seleccionada)
+        // Configurar la previsión en el modal (pre-seleccionada y deshabilitada)
         previsionSelect.value = BASE_PRICES[selectedServiceType].prevision;
         
         // MOSTRAR/OCULTAR CAMPO DE CANTIDAD DE PERSONAS
@@ -854,13 +853,6 @@
         confirmBtn.disabled = true;
         statusMessage.textContent = 'Confirmando datos y preparando pago...';
         
-        // CORRECCIÓN MANTENIDA: Verificar que un slot esté realmente seleccionado y tenga un ID.
-        if (!selectedTimeSlot || !selectedTimeSlot.id) {
-             statusMessage.textContent = 'Error: No se ha seleccionado una hora válida.';
-             confirmBtn.disabled = false;
-             return;
-        }
-
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
@@ -887,30 +879,24 @@
         }
         
         // 2. 🛑 CLAVE: Actualizar y MARCAR como reservado el slot solo en este punto
-        const updatePayload = {
-            paciente_nombre: nombre,
-            paciente_rut: rut,
-            paciente_fecha_nac: fechaNac,
-            paciente_prevision: prevision, 
-            paciente_direccion: direccion, 
-            comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, 
-            paciente_email: email,
-            paciente_celular: celular,
-            disponible: false // Marcar FINALMENTE como reservado
-        };
-        
-        // 💡 CONSEJO DE DEPURACIÓN: Si vuelve el error 400 (API Key), prueba a DESCOMENTAR solo esta línea:
-        // statusMessage.textContent = `Intentando actualizar slot ID: ${selectedTimeSlot.id}`; 
-        
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
-            .update(updatePayload) // Usamos el payload definido
+            .update({
+                paciente_nombre: nombre,
+                paciente_rut: rut,
+                paciente_fecha_nac: fechaNac,
+                paciente_prevision: prevision,
+                paciente_direccion: direccion, // Guardar la dirección
+                comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, // Guardamos el tipo de servicio y monto
+                paciente_email: email,
+                paciente_celular: celular,
+                disponible: false // Marcar FINALMENTE como reservado
+            })
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            console.error("Error al confirmar datos finales:", finalUpdateError); 
-            // El error 400 original debe estar aquí. Revisa la pestaña 'Red' si falla.
             statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
+            console.error("Error al confirmar datos finales:", finalUpdateError);
             confirmBtn.disabled = false;
             return;
         }
