@@ -454,7 +454,7 @@
 
                 <div class="form-group">
                     <label for="paciente_prevision">Previsión Seleccionada (*)</label>
-                    <select id="paciente_prevision" required disabled>
+                    <select id="paciente_prevision" required> 
                         <option value="FONASA">FONASA</option>
                         <option value="ISAPRE">ISAPRE</option>
                         <option value="PARTICULAR">PARTICULAR</option>
@@ -644,6 +644,9 @@
         finalPrice = price; 
         selectedServiceName = BASE_PRICES[serviceType].label;
         
+        // CORRECCIÓN: Si el select está habilitado para pruebas, lo actualizamos aquí.
+        // previsionSelect.value = BASE_PRICES[serviceType].prevision; 
+        
         // 3. Pasar al Paso 2 (Calendario)
         step1El.style.display = 'none';
         step3El.style.display = 'block';
@@ -669,7 +672,8 @@
         
         document.getElementById('booking-status-message').textContent = '';
         
-        // Configurar la previsión en el modal (pre-seleccionada y deshabilitada)
+        // Configurar la previsión en el modal
+        // NOTA: Se quita el 'disabled' para pruebas, pero se mantiene la preselección:
         previsionSelect.value = BASE_PRICES[selectedServiceType].prevision;
         
         // MOSTRAR/OCULTAR CAMPO DE CANTIDAD DE PERSONAS
@@ -853,6 +857,13 @@
         confirmBtn.disabled = true;
         statusMessage.textContent = 'Confirmando datos y preparando pago...';
         
+        // CORRECCIÓN CLAVE: Verificar que un slot esté realmente seleccionado y que tenga un ID.
+        if (!selectedTimeSlot || !selectedTimeSlot.id) {
+             statusMessage.textContent = 'Error: No se ha seleccionado una hora válida. Por favor, vuelva al calendario.';
+             confirmBtn.disabled = false;
+             return;
+        }
+
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
@@ -879,24 +890,30 @@
         }
         
         // 2. 🛑 CLAVE: Actualizar y MARCAR como reservado el slot solo en este punto
+        const updatePayload = {
+            paciente_nombre: nombre,
+            paciente_rut: rut,
+            paciente_fecha_nac: fechaNac,
+            paciente_prevision: prevision, // Aseguramos que el valor se envía, incluso si el select estaba deshabilitado
+            paciente_direccion: direccion, 
+            comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, 
+            paciente_email: email,
+            paciente_celular: celular,
+            disponible: false // Marcar FINALMENTE como reservado
+        };
+        
+        // 💡 CONSEJO DE DEPURACIÓN: Descomentar la siguiente línea para verificar los datos enviados en la Consola (F12)
+        // console.log("Payload enviado a Supabase:", updatePayload);
+
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
-            .update({
-                paciente_nombre: nombre,
-                paciente_rut: rut,
-                paciente_fecha_nac: fechaNac,
-                paciente_prevision: prevision,
-                paciente_direccion: direccion, // Guardar la dirección
-                comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, // Guardamos el tipo de servicio y monto
-                paciente_email: email,
-                paciente_celular: celular,
-                disponible: false // Marcar FINALMENTE como reservado
-            })
+            .update(updatePayload) // Usamos el payload definido
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
-            console.error("Error al confirmar datos finales:", finalUpdateError);
+            // 💡 CONSEJO DE DEPURACIÓN: Esto mostrará el error exacto en la consola
+            console.error("Error al confirmar datos finales (posiblemente ID o API key):", finalUpdateError); 
+            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o falte la API Key. Por favor, elige otro slot e inténtalo de nuevo.';
             confirmBtn.disabled = false;
             return;
         }
@@ -933,6 +950,11 @@
     document.addEventListener('DOMContentLoaded', async () => {
         // Inicializar el input de cantidad para que llame a la función de cálculo
         personCountInput.addEventListener('input', calculatePromoTotal);
+        
+        // CORRECCIÓN: Si el select de previsión estaba deshabilitado, lo volvemos a deshabilitar
+        // después de que se inicialice el DOM, PERO SE ELIMINÓ EL DISABLED EN EL HTML.
+        // Si quieres volver a deshabilitarlo (una vez que resuelvas el error 400), usa:
+        // previsionSelect.disabled = true;
     });
 </script>
 
