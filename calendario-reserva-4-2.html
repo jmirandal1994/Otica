@@ -863,7 +863,7 @@
         
         // Recolección de Datos
         const nombre = document.getElementById('paciente_nombre').value;
-        const rut = document.getElementById('paciente_rut').value;
+        let rut = document.getElementById('paciente_rut').value; // Usamos let para modificar
         let fechaNac = document.getElementById('paciente_fecha_nac').value; // Usamos let
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
@@ -874,14 +874,20 @@
         const direccion = document.getElementById('paciente_direccion').value; 
 
         // ********************************************
-        // 🛑 CORRECCIÓN CLAVE: CONVERSIÓN Y EXCLUSIÓN EN VALIDACIÓN
-        // 1. Si la fecha está vacía, es NULL.
+        // 🛑 CORRECCIÓN CLAVE 1: LIMPIEZA DEL RUT
+        // Elimina puntos, guiones y convierte a mayúsculas para asegurar formato limpio en DB.
+        if (rut) {
+            rut = rut.replace(/[.-]/g, '').toUpperCase();
+        }
+        
+        // 🛑 CORRECCIÓN CLAVE 2: CONVERSIÓN DE FECHA A NULL
+        // Si la fecha está vacía, es NULL.
         if (fechaNac === "") {
             fechaNac = null;
         }
         // ********************************************
 
-        // 2. VALIDACIÓN: Excluimos fechaNac del chequeo estricto ya que puede ser NULL
+        // 3. VALIDACIÓN (Excluimos fechaNac del chequeo estricto ya que puede ser NULL)
         if (!monto || !nombre || !rut || !email || !celular || !prevision || !direccion) {
              statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
              confirmBtn.disabled = false;
@@ -895,11 +901,11 @@
              return;
         }
         
-        // 3. DEFINICIÓN DEL PAYLOAD FINAL (Corregida sintaxis del ID)
+        // 4. DEFINICIÓN DEL PAYLOAD FINAL (Corregida sintaxis del ID)
         const updatePayload = {
             paciente_nombre: nombre,
-            paciente_rut: rut,
-            paciente_fecha_nac: fechaNac, // Aquí puede ser una fecha o NULL
+            paciente_rut: rut, // RUT LIMPIO AHORA
+            paciente_fecha_nac: fechaNac, // NULL o Fecha válida
             paciente_prevision: prevision,
             paciente_direccion: direccion, 
             comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, 
@@ -915,13 +921,12 @@
 
         if (finalUpdateError) {
             console.error("Error FATAL de PostgreSQL:", finalUpdateError);
-            // Este mensaje personalizado te ayuda a saber qué falló
             statusMessage.textContent = 'Error: El formato de datos enviado a la base de datos es incorrecto. Revise el campo "Fecha de Nacimiento" o el formato del RUT.';
             confirmBtn.disabled = false;
             return;
         }
 
-        // 4. ACTUALIZACIÓN VISUAL y REDIRECCIÓN
+        // 5. ÉXITO Y REDIRECCIÓN
         if (selectedTimeSlot.element) {
             selectedTimeSlot.element.classList.add('booked');
             selectedTimeSlot.element.classList.remove('selected', 'available-slot');
