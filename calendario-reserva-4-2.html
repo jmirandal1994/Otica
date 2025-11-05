@@ -324,6 +324,14 @@
             margin-top: 10px;
             text-align: center;
         }
+        /* Estilos del botón de imagen de Webpay para que se vea bien */
+        .webpay-image-btn {
+            display: block;
+            width: 100%; /* Opcional, para centrar */
+            max-width: 200px; /* Tamaño máximo del botón */
+            margin: 15px auto 0;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -490,7 +498,7 @@
                 
                 <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
 
-                <div style="margin-top: 25px; border-top: 1px solid #ddd; padding-top: 20px;">
+                <div style="margin-top: 25px; border-top: 1px solid #ddd; padding-top: 20px; text-align: center;">
                     <h4 style="color: var(--primary); margin-bottom: 15px;">Paso Final: Confirmar Hora y Proceder al Pago</h4>
                     
                     <p style="font-size: 1.1rem; font-weight: 700;">Monto Total: <span id="payment-amount-display" style="color: var(--accent);"></span></p>
@@ -498,7 +506,9 @@
                     <input type='hidden' name='monto' id="webpay-monto" value='' />
                     <input type='hidden' id="service-type-hidden">
                     <input type='hidden' id="final-price-hidden">
-
+                    
+                    <input type='hidden' name='idFormulario' id="webpay-id-formulario" value='329986' />
+                    
                     <div style="display:flex; justify-content: space-between; margin-top: 20px;">
                         <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar / Volver</button>
                         
@@ -507,6 +517,7 @@
                         </button>
                         
                     </div>
+                    <img class="webpay-image-btn" src='https://www.webpay.cl/assets/img/boton_webpaycl.svg' alt="Pagar con Webpay">
                 </div>
             </form>
         </div>
@@ -550,6 +561,7 @@
     const groupCountContainer = document.getElementById('group-person-count-container');
     const promoWarningMessage = document.getElementById('promo-warning-message');
     const paymentAmountDisplay = document.getElementById('payment-amount-display');
+    const webpayIdFormulario = document.getElementById('webpay-id-formulario');
 
 
     // --- BASE DE PRECIOS FIJOS ---
@@ -886,15 +898,16 @@
         }
         
         // ********************************************
-        // 🛑 NUEVA ESTRATEGIA: OMITIR LLAMADA A SUPABASE Y REDIRIGIR DIRECTAMENTE
+        // 🛑 ESTRATEGIA: OMITIR LLAMADA A SUPABASE Y REDIRIGIR DIRECTAMENTE
+        // (Ya que el error 504 no es nuestro, se registra la data para auditoría manual)
         // ********************************************
         
-        // 2. CONSOLA DE REGISTRO (Para tener la información del cliente, ya que no se guarda en DB)
-        console.warn("ADVERTENCIA: La hora NO se ha reservado en Supabase debido a errores de permisos/tipos. Se debe marcar manualmente.");
+        // 2. CONSOLA DE REGISTRO
+        console.warn("ADVERTENCIA: La hora NO se ha reservado en Supabase. Se debe marcar manualmente.");
         console.log("DATOS DEL CLIENTE PARA REGISTRO MANUAL:");
         console.log("Slot ID:", selectedTimeSlot.id);
         console.log("Nombre:", nombre);
-        console.log("RUT (Limpio):", rut.replace(/[.-]/g, '').toUpperCase()); // Se registra limpio
+        console.log("RUT (Limpio):", rut.replace(/[.-]/g, '').toUpperCase()); 
         console.log("Fecha Nac:", fechaNac || 'No especificada');
         console.log("Email:", email);
         console.log("Celular:", celular);
@@ -903,17 +916,18 @@
         console.log("Tipo:", serviceTypeFinal);
 
 
-        // 3. ÉXITO (Sin necesidad de actualización en DB)
+        // 3. ÉXITO (Redirección a Webpay)
         
         // --- CREACIÓN DINÁMICA DEL FORMULARIO DE WEBPAY ---
         const webpayForm = document.createElement('form');
         webpayForm.name = 'rec20108_btn1';
         webpayForm.method = 'post';
+        // URL de Webpay (Confirmada por ti)
         webpayForm.action = 'https://www.webpay.cl/backpub/external/form-pay';
         
-        // Campos ocultos requeridos por Webpay (Solo idFormulario y monto)
+        // Campos ocultos requeridos por Webpay
         webpayForm.innerHTML = `
-            <input type='hidden' name='idFormulario' value='326331' />
+            <input type='hidden' name='idFormulario' value='329986' />
             <input type='hidden' name='monto' value='${monto}' />
         `;
         
