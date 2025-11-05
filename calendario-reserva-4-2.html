@@ -701,29 +701,13 @@
     
     // --- LÓGICA DEL CALENDARIO (Solo disponible) ---
     async function loadUniqueProfessional() {
-        // 🛑 SOLUCIÓN TEMPORAL: Usar el ID del profesional directamente para evitar el error de consulta.
-        // ID Obtenido de tu captura de pantalla: 3aa1fe8b-e287-46c5-b766-47151ba47a0f
-        const PROF_ID_FIXED = '3aa1fe8b-e287-46c5-b766-47151ba47a0f';
-
-        // Omitimos la consulta que está fallando y forzamos el ID
+        // 🛑 SOLUCIÓN PERMANENTE: Forzar el ID del profesional. 
+        // Si la tabla 'profesionales' no permite lectura anónima, usamos el ID fijo.
+        const PROF_ID_FIXED = '3aa1fe8b-e287-46c5-b766-47151ba47a0f'; // ID de Jorge Miranda Lopez
+        
         selectedProfessionalId = PROF_ID_FIXED;
         loadingStatusEl.textContent = 'ID del profesional cargado. Cargando agenda...';
         return true; 
-        
-        /* // CÓDIGO ORIGINAL QUE ESTABA FALLANDO:
-        const { data: profData, error: profError } = await supabaseClient
-            .from('profesionales')
-            .select('id')
-            .limit(1);
-
-        if (profError || profData.length === 0) {
-            loadingStatusEl.innerHTML = 'Error: No se encontró el profesional. Asegúrate de haber insertado un registro en la tabla "profesionales".';
-            return false;
-        }
-        
-        selectedProfessionalId = profData[0].id;
-        return true;
-        */
     }
 
     function generateTimeSlots() {
@@ -764,7 +748,8 @@
 
         if (error) {
             console.error('Error al cargar agenda:', error);
-            loadingStatusEl.innerHTML = 'Error al cargar la agenda. Intenta más tarde.';
+            // 🛑 MENSAJE DE ERROR MEJORADO (Ya que el problema es del lado de la DB)
+            loadingStatusEl.innerHTML = 'Error al cargar la agenda. Esto puede ser un problema de permisos de lectura en la tabla "agendas" de Supabase.';
             return;
         }
 
