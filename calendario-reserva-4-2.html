@@ -519,23 +519,12 @@
 </footer>
 
 <script>
-    // CREDENCIALES DE SUPABASE ACTUALIZADAS
+    // CREDENCIALES DE SUPABASE - RESTAURADAS A SU ESTADO ORIGINAL PARA EVITAR 401
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlibHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
-
-    // <<<<<<<<<<<<<<<<< CORRECCIÓN CLAVE PARA EL ERROR 400 >>>>>>>>>>>>>>>>>
-    // Forzamos la inclusión de la clave anon en los headers para asegurar la autenticación
-    // del rol anónimo en las llamadas a la API REST.
-    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-        global: {
-            headers: {
-                'Authorization': `Bearer ${supabaseAnonKey}`,
-                'apikey': supabaseAnonKey
-            }
-        }
-    });
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FIN CORRECCIÓN >>>>>>>>>>>>>>>>>>>>>>>>>
+    // CLIENTE RESTAURADO: Si este funcionaba para SELECT, lo mantendremos así.
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
     let selectedServiceId = 1; 
     let selectedServiceName = '';
@@ -865,9 +854,9 @@
         confirmBtn.disabled = true;
         statusMessage.textContent = 'Confirmando datos y preparando pago...';
         
-        // CORRECCIÓN CLAVE: Verificar que un slot esté realmente seleccionado y que tenga un ID.
+        // CORRECCIÓN MANTENIDA: Verificar que un slot esté realmente seleccionado y tenga un ID.
         if (!selectedTimeSlot || !selectedTimeSlot.id) {
-             statusMessage.textContent = 'Error: No se ha seleccionado una hora válida. Por favor, vuelva al calendario.';
+             statusMessage.textContent = 'Error: No se ha seleccionado una hora válida.';
              confirmBtn.disabled = false;
              return;
         }
@@ -909,15 +898,19 @@
             paciente_celular: celular,
             disponible: false // Marcar FINALMENTE como reservado
         };
-
+        
+        // 💡 CONSEJO DE DEPURACIÓN: Si vuelve el error 400 (API Key), prueba a DESCOMENTAR solo esta línea:
+        // statusMessage.textContent = `Intentando actualizar slot ID: ${selectedTimeSlot.id}`; 
+        
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
             .update(updatePayload) // Usamos el payload definido
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            console.error("Error al confirmar datos finales (posiblemente ID o API key):", finalUpdateError); 
-            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o falte la API Key. Por favor, elige otro slot e inténtalo de nuevo.';
+            console.error("Error al confirmar datos finales:", finalUpdateError); 
+            // El error 400 original debe estar aquí. Revisa la pestaña 'Red' si falla.
+            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
             confirmBtn.disabled = false;
             return;
         }
