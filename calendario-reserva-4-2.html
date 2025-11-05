@@ -524,7 +524,7 @@
 <script>
     // CREDENCIALES DE SUPABASE ACTUALIZADAS
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlibHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -847,7 +847,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO (MODIFICADA PARA EXCLUIR FECHA DE NACIMIENTO) ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (CORRECCIÓN FINAL) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -859,7 +859,7 @@
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
-        const fechaNac = document.getElementById('paciente_fecha_nac').value; // AÚN se lee, pero no se valida ni se envía si está vacío
+        const fechaNac = document.getElementById('paciente_fecha_nac').value;
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const prevision = previsionSelect.value;
@@ -884,7 +884,6 @@
         }
 
         // --- PREPARACIÓN DEL OBJETO DE DATOS ---
-        // Se crea un objeto que contiene los datos que se enviarán al UPDATE.
         const updateData = {
             paciente_nombre: nombre,
             paciente_rut: rut,
@@ -896,17 +895,19 @@
             disponible: false 
         };
 
-        // 🛑 LÓGICA CLAVE: Solo enviamos paciente_fecha_nac si tiene un valor.
-        // Esto previene el error 400 si el campo es NOT NULL en la DB pero está vacío en el formulario.
+        // Solo enviamos paciente_fecha_nac si tiene un valor (para evitar NOT NULL fail en la DB)
         if (fechaNac && fechaNac.trim() !== '') {
             updateData.paciente_fecha_nac = fechaNac;
         }
         
         // 2. 🛑 CLAVE: Actualizar y MARCAR como reservado el slot solo en este punto
+        // Usamos .select('id').single() para limpiar la respuesta del servidor y evitar el error 400.
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
-            .update(updateData) // Usamos el objeto dinámico
-            .eq('id', selectedTimeSlot.id);
+            .update(updateData) 
+            .eq('id', selectedTimeSlot.id)
+            .select('id') // <-- LIMPIEZA DE RESPUESTA
+            .single(); // <-- LIMPIEZA DE RESPUESTA
 
         if (finalUpdateError) {
             statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o un campo obligatorio esté incompleto. Por favor, elige otro slot.';
@@ -945,9 +946,6 @@
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
-        // Eliminamos el atributo 'required' del input de fecha en el DOM para la compatibilidad visual
-        document.getElementById('paciente_fecha_nac').removeAttribute('required');
-        
         // Inicializar el input de cantidad para que llame a la función de cálculo
         personCountInput.addEventListener('input', calculatePromoTotal);
     });
