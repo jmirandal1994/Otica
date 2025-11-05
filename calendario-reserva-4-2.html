@@ -111,6 +111,9 @@
             margin-top: 0;
             text-align: center;
         }
+        .option-card p {
+            font-family: 'Montserrat', sans-serif; /* Asegurar fuente para consistencia */
+        }
         .option-card ul {
             list-style: none;
             padding-left: 0;
@@ -844,7 +847,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (MODIFICADA PARA CHEQUEAR FECHA) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -856,20 +859,29 @@
         // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
-        const fechaNac = document.getElementById('paciente_fecha_nac').value; 
+        const fechaNac = document.getElementById('paciente_fecha_nac').value; // CAMPO DE FECHA
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const prevision = previsionSelect.value;
         const comentarios = document.getElementById('comentarios').value;
         const monto = document.getElementById('webpay-monto').value;
         const serviceTypeFinal = document.getElementById('service-type-hidden').value;
-        const direccion = document.getElementById('paciente_direccion').value; // NUEVO CAMPO
+        const direccion = document.getElementById('paciente_direccion').value; 
 
-        if (!monto || !nombre || !rut || !fechaNac || !email || !celular || !prevision || !direccion) {
+        // 1. VALIDACIÓN DE CAMPOS OBLIGATORIOS (incluida la FECHA)
+        if (!monto || !nombre || !rut || !email || !celular || !prevision || !direccion) {
              statusMessage.textContent = 'Por favor, completa todos los campos requeridos.';
              confirmBtn.disabled = false;
              return;
         }
+
+        // 🛑 CORRECCIÓN CLAVE: DOBLE CHEQUEO DEL VALOR DE LA FECHA DE NACIMIENTO
+        if (!fechaNac || fechaNac.trim() === '') {
+             statusMessage.textContent = 'ERROR: Por favor, selecciona tu Fecha de Nacimiento correctamente en el formulario.';
+             confirmBtn.disabled = false;
+             return;
+        }
+
 
         // Si es Promoción Grupal, verificar que el monto sea válido (Calculado en JS)
         if (serviceTypeFinal === 'PROMO_GRUPO' && (parseInt(monto) < (2 * 25000))) {
@@ -884,7 +896,7 @@
             .update({
                 paciente_nombre: nombre,
                 paciente_rut: rut,
-                paciente_fecha_nac: fechaNac,
+                paciente_fecha_nac: fechaNac, // Envío del valor de la fecha
                 paciente_prevision: prevision,
                 paciente_direccion: direccion, // Guardar la dirección
                 comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, // Guardamos el tipo de servicio y monto
@@ -895,7 +907,7 @@
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada. Por favor, elige otro slot.';
+            statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o los datos sean inválidos. Por favor, elige otro slot.';
             console.error("Error al confirmar datos finales:", finalUpdateError);
             confirmBtn.disabled = false;
             return;
