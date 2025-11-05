@@ -701,6 +701,16 @@
     
     // --- LÓGICA DEL CALENDARIO (Solo disponible) ---
     async function loadUniqueProfessional() {
+        // 🛑 SOLUCIÓN TEMPORAL: Usar el ID del profesional directamente para evitar el error de consulta.
+        // ID Obtenido de tu captura de pantalla: 3aa1fe8b-e287-46c5-b766-47151ba47a0f
+        const PROF_ID_FIXED = '3aa1fe8b-e287-46c5-b766-47151ba47a0f';
+
+        // Omitimos la consulta que está fallando y forzamos el ID
+        selectedProfessionalId = PROF_ID_FIXED;
+        loadingStatusEl.textContent = 'ID del profesional cargado. Cargando agenda...';
+        return true; 
+        
+        /* // CÓDIGO ORIGINAL QUE ESTABA FALLANDO:
         const { data: profData, error: profError } = await supabaseClient
             .from('profesionales')
             .select('id')
@@ -713,6 +723,7 @@
         
         selectedProfessionalId = profData[0].id;
         return true;
+        */
     }
 
     function generateTimeSlots() {
