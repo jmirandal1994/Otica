@@ -521,9 +521,21 @@
 <script>
     // CREDENCIALES DE SUPABASE ACTUALIZADAS
     const supabaseUrl = 'https://wnnrvjybptmecbotffhy.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlicHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnJ2anlibHRtZWNib3RmZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNTIyMTQsImV4cCI6MjA3NjkyODIxNH0.VglHrgHV7lukMDqVWWTKuyXDolT-s0cGtzMPcKtTixw'; 
     const { createClient } = supabase;
-    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+
+    // <<<<<<<<<<<<<<<<< CORRECCIÓN CLAVE PARA EL ERROR 400 >>>>>>>>>>>>>>>>>
+    // Forzamos la inclusión de la clave anon en los headers para asegurar la autenticación
+    // del rol anónimo en las llamadas a la API REST.
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: {
+            headers: {
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'apikey': supabaseAnonKey
+            }
+        }
+    });
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FIN CORRECCIÓN >>>>>>>>>>>>>>>>>>>>>>>>>
 
     let selectedServiceId = 1; 
     let selectedServiceName = '';
@@ -644,9 +656,6 @@
         finalPrice = price; 
         selectedServiceName = BASE_PRICES[serviceType].label;
         
-        // CORRECCIÓN: Si el select está habilitado para pruebas, lo actualizamos aquí.
-        // previsionSelect.value = BASE_PRICES[serviceType].prevision; 
-        
         // 3. Pasar al Paso 2 (Calendario)
         step1El.style.display = 'none';
         step3El.style.display = 'block';
@@ -672,8 +681,7 @@
         
         document.getElementById('booking-status-message').textContent = '';
         
-        // Configurar la previsión en el modal
-        // NOTA: Se quita el 'disabled' para pruebas, pero se mantiene la preselección:
+        // Configurar la previsión en el modal (pre-seleccionada)
         previsionSelect.value = BASE_PRICES[selectedServiceType].prevision;
         
         // MOSTRAR/OCULTAR CAMPO DE CANTIDAD DE PERSONAS
@@ -894,16 +902,13 @@
             paciente_nombre: nombre,
             paciente_rut: rut,
             paciente_fecha_nac: fechaNac,
-            paciente_prevision: prevision, // Aseguramos que el valor se envía, incluso si el select estaba deshabilitado
+            paciente_prevision: prevision, 
             paciente_direccion: direccion, 
             comentarios: `[TIPO: ${serviceTypeFinal}, MONTO: ${formatCLP(parseInt(monto))}] ${comentarios}`, 
             paciente_email: email,
             paciente_celular: celular,
             disponible: false // Marcar FINALMENTE como reservado
         };
-        
-        // 💡 CONSEJO DE DEPURACIÓN: Descomentar la siguiente línea para verificar los datos enviados en la Consola (F12)
-        // console.log("Payload enviado a Supabase:", updatePayload);
 
         const { error: finalUpdateError } = await supabaseClient
             .from('agendas')
@@ -911,7 +916,6 @@
             .eq('id', selectedTimeSlot.id);
 
         if (finalUpdateError) {
-            // 💡 CONSEJO DE DEPURACIÓN: Esto mostrará el error exacto en la consola
             console.error("Error al confirmar datos finales (posiblemente ID o API key):", finalUpdateError); 
             statusMessage.textContent = 'Error al confirmar los datos. Es posible que la hora haya sido tomada o falte la API Key. Por favor, elige otro slot e inténtalo de nuevo.';
             confirmBtn.disabled = false;
@@ -950,11 +954,6 @@
     document.addEventListener('DOMContentLoaded', async () => {
         // Inicializar el input de cantidad para que llame a la función de cálculo
         personCountInput.addEventListener('input', calculatePromoTotal);
-        
-        // CORRECCIÓN: Si el select de previsión estaba deshabilitado, lo volvemos a deshabilitar
-        // después de que se inicialice el DOM, PERO SE ELIMINÓ EL DISABLED EN EL HTML.
-        // Si quieres volver a deshabilitarlo (una vez que resuelvas el error 400), usa:
-        // previsionSelect.disabled = true;
     });
 </script>
 
