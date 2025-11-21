@@ -509,15 +509,13 @@
                     
                     <input type='hidden' name='idFormulario' id="webpay-id-formulario" value='329986' />
                     
-                    <div style="display:flex; justify-content: space-between; margin-top: 20px;">
-                        <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar / Volver</button>
-                        
-                        <button type='submit' class="btn btn-agenda" id="confirm-payment-btn" style="display: flex; align-items: center; gap: 8px;">
-                            Confirmar Hora y Pagar <i class="fas fa-credit-card"></i>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button type="button" onclick="hideModal()" class="btn btn-nav" style="margin-bottom: 20px;">Cancelar / Volver</button>
+
+                        <button type='submit' class="webpay-image-btn" id="confirm-payment-btn" style="background: none; border: none; padding: 0; width: 100%; max-width: 200px; margin: 0 auto; display: block; cursor: pointer;">
+                            <img style="width: 100%;" src='https://www.webpay.cl/assets/img/boton_webpaycl.svg' alt="Pagar con Webpay">
                         </button>
-                        
                     </div>
-                    <img class="webpay-image-btn" src='https://www.webpay.cl/assets/img/boton_webpaycl.svg' alt="Pagar con Webpay">
                 </div>
             </form>
         </div>
@@ -855,6 +853,32 @@
         loadWeekSchedule();
     }
     
+    // --- NUEVA FUNCIÓN: REGISTRO DE INTENTO DE PAGO (AUDITORÍA) ---
+    async function registerBookingAttempt(data) {
+        // Intentamos registrar todos los datos del formulario antes de la redirección a Webpay
+        const { error } = await supabaseClient
+            .from('booking_attempts') // Usar el nombre de la tabla de auditoría que has creado
+            .insert([{
+                slot_id: data.slotId,
+                professional_id: selectedProfessionalId,
+                service_type: data.serviceTypeFinal,
+                amount: data.monto,
+                customer_name: data.nombre,
+                customer_email: data.email,
+                customer_phone: data.celular,
+                address: data.direccion,
+                rut: data.rut,
+                birth_date: data.fechaNac || null,
+                comments: data.comentarios,
+                status: 'PENDING_PAYMENT' 
+            }]);
+
+        if (error) {
+            console.error("Error al registrar intento de reserva para auditoría:", error);
+            // IMPORTANTE: No bloqueamos la redirección a Webpay por un error de log.
+        }
+    }
+
     // --- LÓGICA DE ENVÍO DE FORMULARIO (REDIRECCIÓN DIRECTA) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -871,10 +895,10 @@
             return;
         }
         
-        // Recolección de Datos (Campos obligatorios según la nueva regla)
+        // Recolección de Datos (incluyendo opcionales)
         const nombre = document.getElementById('paciente_nombre').value;
-        let rut = document.getElementById('paciente_rut').value;
-        let fechaNac = document.getElementById('paciente_fecha_nac').value; 
+        const rut = document.getElementById('paciente_rut').value;
+        const fechaNac = document.getElementById('paciente_fecha_nac').value; 
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const prevision = previsionSelect.value;
@@ -890,30 +914,30 @@
              return;
         }
         
-        // Si es Promoción Grupal, verificar que el monto sea válido (Calculado en JS)
-        if (serviceTypeFinal === 'PROMO_GRUPO' && (parseInt(monto) < (2 * 25000))) {
+        // Si es Promoción Grupal, verificar que el monto sea válido
+        if (serviceTypeFinal === 'PROMO_GRUPO' && (parseInt(monto) < (2 * BASE_PRICES.PROMO_GRUPO.price))) {
              statusMessage.textContent = 'Error: La promoción requiere 2 o más personas.';
              confirmBtn.disabled = false;
              return;
         }
         
         // ********************************************
-        // 🛑 ESTRATEGIA: OMITIR LLAMADA A SUPABASE Y REDIRIGIR DIRECTAMENTE
-        // (Ya que el error 504 no es nuestro, se registra la data para auditoría manual)
+        // 🛑 PASO DE AUDITORÍA: REGISTRO DEL INTENTO DE PAGO
         // ********************************************
-        
-        // 2. CONSOLA DE REGISTRO
-        console.warn("ADVERTENCIA: La hora NO se ha reservado en Supabase. Se debe marcar manualmente.");
-        console.log("DATOS DEL CLIENTE PARA REGISTRO MANUAL:");
-        console.log("Slot ID:", selectedTimeSlot.id);
-        console.log("Nombre:", nombre);
-        console.log("RUT (Limpio):", rut.replace(/[.-]/g, '').toUpperCase()); 
-        console.log("Fecha Nac:", fechaNac || 'No especificada');
-        console.log("Email:", email);
-        console.log("Celular:", celular);
-        console.log("Dirección:", direccion);
-        console.log("Monto a pagar:", formatCLP(parseInt(monto)));
-        console.log("Tipo:", serviceTypeFinal);
+        statusMessage.textContent = 'Registrando intento y redirigiendo a Webpay...';
+
+        await registerBookingAttempt({
+            slotId: selectedTimeSlot.id,
+            serviceTypeFinal: serviceTypeFinal,
+            monto: monto,
+            nombre: nombre,
+            email: email,
+            celular: celular,
+            direccion: direccion,
+            rut: rut,
+            fechaNac: fechaNac,
+            comentarios: comentarios
+        });
 
 
         // 3. ÉXITO (Redirección a Webpay)
@@ -932,7 +956,6 @@
         `;
         
         document.body.appendChild(webpayForm);
-        statusMessage.textContent = 'Redirigiendo a Webpay...';
         hideModal(); 
         webpayForm.submit(); 
     });
