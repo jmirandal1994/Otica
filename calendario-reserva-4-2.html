@@ -357,7 +357,7 @@
                 
                 <div class="option-grid">
                     
-                    <div class="option-card" data-service-type="PROMO_GRUPO" data-price="25000" onclick="showCalendarStep(this, 'PROMO_GRUPO', 25000)">
+                    <div class="option-card" data-service-type="PROMO_GRUPO" data-price="22000" onclick="showCalendarStep(this, 'PROMO_GRUPO', 22000)">
                         <h4><i class="fas fa-users"></i> Promoción Grupal</h4>
                         <p style="text-align: center; font-weight: 700;">VALOR: $22.000 P/P</p>
                         <ul>
@@ -368,9 +368,9 @@
                         </ul>
                     </div>
 
-                    <div class="option-card" data-service-type="ISAPRE" data-price="30000" onclick="showCalendarStep(this, 'ISAPRE', 30000)">
+                    <div class="option-card" data-service-type="ISAPRE" data-price="27000" onclick="showCalendarStep(this, 'ISAPRE', 27000)">
                         <h4><i class="fas fa-shield-alt"></i> Atención ISAPRE</h4>
-                        <p style="text-align: center; font-weight: 700;">VALOR: $27.000 (Reembolsable) VALOR PROMOCIONAL*</p>
+                        <p style="text-align: center; font-weight: 700;">VALOR: $27.000 (Reembolsable) PROMOCION*</p>
                         <ul>
                             <li><i class="fas fa-check-circle"></i> Evaluación Otoscópica Completa</li>
                             <li><i class="fas fa-check-circle"></i> Limpieza Auditiva Ambos Oídos</li>
@@ -379,7 +379,7 @@
                         </ul>
                     </div>
 
-                    <div class="option-card" data-service-type="FONASA" data-price="25000" onclick="showCalendarStep(this, 'FONASA', 25000)">
+                    <div class="option-card" data-service-type="FONASA" data-price="24000" onclick="showCalendarStep(this, 'FONASA', 24000)">
                         <h4><i class="fas fa-hospital"></i> Atención FONASA</h4>
                         <p style="text-align: center; font-weight: 700;">VALOR: $24.000 (Diferencial)</p>
                         <ul>
@@ -390,7 +390,7 @@
                         </ul>
                     </div>
                     
-                    <div class="option-card" data-service-type="PARTICULAR" data-price="32000" onclick="showCalendarStep(this, 'PARTICULAR', 32000)">
+                    <div class="option-card" data-service-type="PARTICULAR" data-price="30000" onclick="showCalendarStep(this, 'PARTICULAR', 30000)">
                         <h4><i class="fas fa-user"></i> Atención Particular</h4>
                         <p style="text-align: center; font-weight: 700;">VALOR: $30.000</p>
                         <ul>
@@ -427,7 +427,7 @@
                 <h3>¡Reserva Exitosa!</h3>
                 <div class="booking-summary" style="background-color: #f3f7fd; border: 1px solid var(--accent); padding: 30px; border-radius: 8px;">
                     <p style="color: var(--primary); font-size:1.1rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito.</p>
-                    <p>Te enviaremos los detalles de tu sesión al correo. ¡Gracias por confiar en **ÓTICA**!</p>
+                    <p>Te enviaremos los detalles de tu sesión al correo. ¡Gracias por confiar en ÓTICA!</p>
                 </div>
                 <a href="index.html" class="btn btn-agenda mt-3" style="margin-top: 20px;">Volver al Inicio</a>
             </div>
@@ -562,7 +562,7 @@
     const webpayIdFormulario = document.getElementById('webpay-id-formulario');
 
 
-    // --- BASE DE PRECIOS FIJOS ---
+    // --- BASE DE PRECIOS FIJOS (AJUSTADOS SEGÚN LA IMAGEN VISIBLE) ---
     const BASE_PRICES = {
         PROMO_GRUPO: { price: 22000, label: 'Promoción Grupal ($22.000 P/P)', prevision: 'PARTICULAR' },
         ISAPRE: { price: 27000, label: 'Atención ISAPRE ($27.000 Reembolsable)', prevision: 'ISAPRE' },
@@ -605,7 +605,7 @@
     // --- CÁLCULO DE PROMOCIÓN GRUPAL ---
     function calculatePromoTotal() {
         let count = parseInt(personCountInput.value) || 0;
-        let pricePerPerson = BASE_PRICES.PROMO_GRUPO.price;
+        let pricePerPerson = BASE_PRICES.PROMO_GRUPO.price; // $22.000
         let total = 0;
 
         promoWarningMessage.textContent = '';
@@ -614,10 +614,10 @@
 
         if (count < 2) {
             if (count === 1) {
-                promoWarningMessage.textContent = '¡Deben ser 2 o más personas para la promoción! Sugerencia: use la tarifa Particular ($32.000).';
-                // Si es solo 1, ponemos el valor de particular
-                total = BASE_PRICES.PARTICULAR.price;
-                paymentAmountDisplay.textContent = `${formatCLP(total)} (Tarifa Particular)`;
+                // Para 1 persona, usamos la tarifa particular ($30.000) según la lógica original, aunque el valor del promo-special superior diga $25.000
+                total = BASE_PRICES.PARTICULAR.price; // $30.000
+                promoWarningMessage.textContent = `¡Deben ser 2 o más personas para la promoción! Se aplicará la Tarifa Particular de ${formatCLP(total)}.`;
+                paymentAmountDisplay.textContent = formatCLP(total);
                 document.getElementById('service-type-hidden').value = 'PARTICULAR_SINGLE'; // Marcador
                 confirmPaymentBtn.disabled = false;
 
@@ -628,7 +628,7 @@
                 return;
             }
         } else {
-            // Promoción válida (2 o más)
+            // Promoción válida (2 o más a $22.000 P/P)
             total = count * pricePerPerson;
             paymentAmountDisplay.textContent = formatCLP(total);
             promoWarningMessage.textContent = '';
@@ -650,7 +650,8 @@
         
         // 2. Guardar estado del servicio
         selectedServiceType = serviceType;
-        finalPrice = price; 
+        // NOTA: El 'price' pasado es ahora el precio de la tarjeta, pero el precio final se toma de BASE_PRICES
+        finalPrice = BASE_PRICES[serviceType].price; 
         selectedServiceName = BASE_PRICES[serviceType].label;
         
         // 3. Pasar al Paso 2 (Calendario)
